@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/note/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/note/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/note/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/note/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/note/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/note/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/note/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="python web 部署," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="python web 部署">
+<meta name="keywords" content="python web 部署">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python web 程序的几种部署方式解读">
+<meta property="og:url" content="http://mingmings.org/note/python-web-程序的几种部署方式.html">
+<meta property="og:site_name" content="异类深呼吸">
+<meta property="og:description" content="python web 部署">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-03-04T05:17:12.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="python web 程序的几种部署方式解读">
+<meta name="twitter:description" content="python web 部署">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/note/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://mingmings.org/note/python-web-程序的几种部署方式.html"/>
+
+
+
+
+
+  <title>python web 程序的几种部署方式解读 | 异类深呼吸</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-55424732-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?fe4164c60a9dd0e73810fa0243796a5d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/note/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">异类深呼吸</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/note/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/note/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/note/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/note/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://mingmings.org/note/note/python-web-程序的几种部署方式.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="宋大明明">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/note/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="异类深呼吸">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">python web 程序的几种部署方式解读</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-07-27T15:42:38+08:00">
+                2015-07-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/note/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  python web 部署
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote class="blockquote-center">别为不属于你的观众，演不擅长的人生！</blockquote>
+
+<a id="more"></a>
+<p>这两年的运维人员多数人都折腾过 python 的 web 框架，python 的兴起也是一方面，但是多数人仅仅只是写，部署到线上算是另一码事，看到这篇文章介绍的比较全面，转载之，转载自 <a href="http://lutaf.com/141.htm" target="_blank" rel="noopener">鲁塔弗的博客</a></p>
+<h2 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h2><h3 id="1-1-简介"><a href="#1-1-简介" class="headerlink" title="1.1 简介"></a>1.1 简介</h3><p>python 有很多 web 开发框架，代码写完了，部署上线是个大事，通常来说，web 应用一般是三层结构</p>
+<p>web server —-&gt;application —–&gt; DB server</p>
+<ul>
+<li>主流的 web server 一个巴掌就能数出来，apache，lighttpd，nginx，iis</li>
+<li>application, 中文名叫做应用服务，就是你基于某个 web framework 写的应用代码</li>
+<li>DB server 泛指存储服务，web 开发中用 mysql 比较多，最近几年因为网站规模扩大，memcache，redis 这种 key-value 等存储也流行开来</li>
+</ul>
+<p>放在最前面的 web server 主要有 3 个功能</p>
+<ul>
+<li>高效率处理静态文件,web server 基本上都是用 c 开发，调用是 native 的函数，对 IO，文件传输都做针对性的优化</li>
+<li>充当一个简易的网络防火墙，可以 deny 一些 ip，简单的控制并发连接数量等等，聊胜于无</li>
+<li>处理高并发短连接请求，把成千上万用户的 request 通过内网的几十个长连接进行转发，原因一个是 web server 处理高并发很专业，另外一个原因是大部分的 application 所用的框架都不具备处理高并发的能力</li>
+</ul>
+<p>实际上，市面上有部分 web framework 由于内置了支持 epoll/kqueue 等高效网络库，而具备了处理高并发的能力，比如说 python 的 tornado，java 系的 tomcat,jetty 等等，有人就去掉前端的 web server，直接裸奔，但是在部署公网应用时候，最好别这样做，因为前面提到的 1,2 两个原因，用户 brower 到 web server 的网络状况是千奇百怪，你无法想象的，</p>
+<p>web server 强烈建议使用 nginx，原因有三</p>
+<ul>
+<li>性能非常卓越，非常稳定</li>
+<li>安装简单，依赖包少</li>
+<li>conf 文件非常容易配置，比 apache/lighttpd 都要简单</li>
+</ul>
+<h3 id="1-2-部署"><a href="#1-2-部署" class="headerlink" title="1.2 部署"></a>1.2 部署</h3><ul>
+<li><p>mod_python<br>这是 apache 内置的模块，很严重的依赖于 mod_python 编译使用的 python 版本，和 apache 配套使用，不推荐</p>
+</li>
+<li><p>cgi<br>这个太 old，不推荐，而且 nginx 不支持 cgi 方式，只能用 lighttpd 或者 apache</p>
+</li>
+<li><p>fastcgi<br>这个是目前流行最广的做法，通过 flup 模块来支持的，在 nginx 里对应的配置指令是 fastcgi_pass</p>
+</li>
+<li><p>spawn-fcgi<br>这个是 fastcgi 多进程管理程序，lighttpd 安装包附带的，和 flup 效果一样，区别是 flup 是 python 代码级引入，spawn-fcgi 是外部程序。spawn-fcgi 用途很广，可以支持任意语言开发的代码，php, python, perl,只要你代码实现了 fastcgi 接口，它都可以帮你管理你的进程</p>
+</li>
+<li><p>scgi<br>全名是 Simple Common Gateway Interface，也是 cgi 的替代版本，scgi 协议很简单,我觉得和 fastcgi 差不多，只是没有怎么推广开来，nginx 对应的配置指令是 scgi_pass，你想用就用，flup 也支持。</p>
+</li>
+<li><p>http<br>nginx 使用 proxy_pass 转发,这个要求后端 appplication 必须内置一个能处理高并发的 http server，在 python 的 web 框架当中，只能选择 tornado.</p>
+</li>
+<li><p>tornado<br>python 程序员喜欢发明轮子，tornado 除了是一个 web framework 之外，它还可以单独提供高性能 http server，所以，如果你采用其他 python 框架写代码，比如说 bottle，也一样可以通过 import tornado 来启动一个高性能的 http server，同样的可以采用 http 协议和 nginx 一起来部署。扩展开来，python 包里面能处理高并发的 http server 还有很多，比如说 gevent，也可以被其他框架引用来支持 http 方式部署。</p>
+</li>
+</ul>
+<p>现实当中，用 java 来做 web 程序，通常就用 http 和 nginx 配合，应用服务器选择 tomcat 或者 jetty</p>
+<ul>
+<li><p>uwsgi,包括4部分组成</p>
+<ul>
+<li>uwsgi协议</li>
+<li>web server内置支持协议模块</li>
+<li>application服务器协议支持模块</li>
+<li>进程控制程序</li>
+</ul>
+</li>
+</ul>
+<p>nginx 从 0.8.4 开始内置支持 uwsgi 协议，uwsgi 协议非常简单，一个 4 个字节 header + 一个 body，body 可以是很多协议的包，比如说 http，cgi 等（通过 header 里面字段标示），我曾经做个一个小规模的性能对比测试，结果表明，uwsgi 和 fastcgi 相比，性能没有太明显的优势,也可能是数据集较小的原因</p>
+<p>uwsgi 的特点在于自带的进程控制程序.它是用 c 语言编写，使用 natvie 函数，其实和 spawn-fcgi/php-fpm 类似。所以 uwsgi 可以支持多种应用框架，包括( python, lua, ruby, erlang, go )等等</p>
+<ul>
+<li><p>Gunicorn<br>和 uwsgi 类似的工具，从 rails 的部署工具 (Unicorn) 移植过来的。但是它使用的协议是 WSGI，全称是 Python Web Server Gateway Interface ，这是 python2.5 时定义的官方标准( PEP 333 )，根红苗正，而且部署比较简单，<a href="http://gunicorn.org/" target="_blank" rel="noopener">http://gunicorn.org/</a> 上有详细教程</p>
+</li>
+<li><p>mod_wsgi<br>apache 的一个 module，也是支持 WSGI 协议,源码地址在 <a href="https://code.google.com/p/modwsgi/" target="_blank" rel="noopener">https://code.google.com/p/modwsgi/</a></p>
+</li>
+</ul>
+<h3 id="1-3-fastcgi-协议和-http-协议在代码部署中的的优劣对比"><a href="#1-3-fastcgi-协议和-http-协议在代码部署中的的优劣对比" class="headerlink" title="1.3 fastcgi 协议和 http 协议在代码部署中的的优劣对比"></a>1.3 fastcgi 协议和 http 协议在代码部署中的的优劣对比</h3><ul>
+<li><p>fastcgi 虽然是二进制协议，相对于 http 协议，并不节省资源。二进制协议，只能节省数字的表达，比如 1234567，用字符串表示需要 7 个 Byte，用数字就是 4 个 Byte，而字符串到哪里都一样</p>
+</li>
+<li><p>fastcgi 在传输数据的时候，为了兼容 cgi 协议，还要带上一堆 cgi 的环境变量，所以和 http 协议相比，用 fastcgi 传输数据并不省，反而多一些</p>
+</li>
+<li><p>fastcgi 唯一的优点是，它是长连接的，用户并发 1000 个 request，fastcgi 可能就用 10 个 链接转发给后端的 appplication，如果用 http 协议，那来多少给多少，会向后端 appplication 发起 1000 个请求</p>
+</li>
+<li><p>http 代理转发方式，在面对超高并发的情况下会出问题，因为 tcp 协议栈当中，port 是 int16 整型 你本地新建一个 connect，需要消耗一个端口，最多能到 65536。外部并发几十万个请求，port 池耗干，你的服务器只能拒绝响应了</p>
+</li>
+</ul>
+<p>文章最后作者喜欢个人站点程序习惯是用 fastcgi 协议部署 python 程序，简单省事，选择技术方案，一定要选择最简单最常见的。推荐大家尝试 Gunicorn ，这是未来发展方向。</p>
+<p>&emsp;&emsp;</p>
+<blockquote>
+<p>参考阅读</p>
+<ul>
+<li><a href="http://lutaf.com/141.htm" target="_blank" rel="noopener">鲁塔弗的博客</a></li>
+</ul>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/note/tags/python-web-部署/" rel="tag"># python web 部署</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/note/python-web-开发中常用的第三方库.html" rel="next" title="python web 开发中常用的第三方库">
+                <i class="fa fa-chevron-left"></i> python web 开发中常用的第三方库
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/note/zabbix-报警之微信报警.html" rel="prev" title="zabbix 报警之微信报警">
+                zabbix 报警之微信报警 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">宋大明明</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/note/archives/">
+              
+                  <span class="site-state-item-count">78</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、简介"><span class="nav-number">1.</span> <span class="nav-text">一、简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-简介"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-部署"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 部署</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-fastcgi-协议和-http-协议在代码部署中的的优劣对比"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 fastcgi 协议和 http 协议在代码部署中的的优劣对比</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2014 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">宋大明明</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/note/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/note/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/note/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

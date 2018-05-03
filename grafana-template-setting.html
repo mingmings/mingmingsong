@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/note/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/note/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/note/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/note/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/note/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/note/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/note/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="grafana template," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="许多人的所谓成熟，不过是被世俗磨去了棱角，变得世故而实际了。那不是成熟，而是精神的早衰和个性的夭亡。真正的成熟，应当是独立的个性的形成，真实自我的发现，精神上的结果和丰收  不得不说这个官方文档都没有，只能借助作者的一段 YouTube 视频介绍，对整个 template 作一个简单的了解，线上机器开始同一平台机器多了之后开始不得不考虑这个功能，单一的手动加这个真心会崩溃的，所以花了点时间看了这个">
+<meta name="keywords" content="grafana template">
+<meta property="og:type" content="article">
+<meta property="og:title" content="grafana template setting">
+<meta property="og:url" content="http://mingmings.org/note/grafana-template-setting.html">
+<meta property="og:site_name" content="异类深呼吸">
+<meta property="og:description" content="许多人的所谓成熟，不过是被世俗磨去了棱角，变得世故而实际了。那不是成熟，而是精神的早衰和个性的夭亡。真正的成熟，应当是独立的个性的形成，真实自我的发现，精神上的结果和丰收  不得不说这个官方文档都没有，只能借助作者的一段 YouTube 视频介绍，对整个 template 作一个简单的了解，线上机器开始同一平台机器多了之后开始不得不考虑这个功能，单一的手动加这个真心会崩溃的，所以花了点时间看了这个">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://mingmings.qiniudn.com/dashboard/show%20template.png">
+<meta property="og:image" content="http://mingmings.qiniudn.com/dashboard/template%20group.png">
+<meta property="og:image" content="http://mingmings.qiniudn.com/dashboard/template%20host.png">
+<meta property="og:updated_time" content="2016-06-17T03:30:40.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="grafana template setting">
+<meta name="twitter:description" content="许多人的所谓成熟，不过是被世俗磨去了棱角，变得世故而实际了。那不是成熟，而是精神的早衰和个性的夭亡。真正的成熟，应当是独立的个性的形成，真实自我的发现，精神上的结果和丰收  不得不说这个官方文档都没有，只能借助作者的一段 YouTube 视频介绍，对整个 template 作一个简单的了解，线上机器开始同一平台机器多了之后开始不得不考虑这个功能，单一的手动加这个真心会崩溃的，所以花了点时间看了这个">
+<meta name="twitter:image" content="http://mingmings.qiniudn.com/dashboard/show%20template.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/note/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://mingmings.org/note/grafana-template-setting.html"/>
+
+
+
+
+
+  <title>grafana template setting | 异类深呼吸</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-55424732-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?fe4164c60a9dd0e73810fa0243796a5d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/note/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">异类深呼吸</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/note/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/note/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/note/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/note/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://mingmings.org/note/note/grafana-template-setting.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="宋大明明">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/note/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="异类深呼吸">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">grafana template setting</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-07-10T00:21:59+08:00">
+                2015-07-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/note/categories/dashboard/" itemprop="url" rel="index">
+                    <span itemprop="name">dashboard</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote class="blockquote-center">许多人的所谓成熟，不过是被世俗磨去了棱角，变得世故而实际了。那不是成熟，而是精神的早衰和个性的夭亡。真正的成熟，应当是独立的个性的形成，真实自我的发现，精神上的结果和丰收</blockquote>
+
+<p>不得不说这个官方文档都没有，只能借助作者的一段 YouTube 视频介绍，对整个 template 作一个简单的了解，线上机器开始同一平台机器多了之后开始不得不考虑这个功能，单一的手动加这个真心会崩溃的，所以花了点时间看了这个视频，思路很明确<br><a id="more"></a></p>
+<h2 id="一、grafana-template"><a href="#一、grafana-template" class="headerlink" title="一、grafana template"></a>一、grafana template</h2><h3 id="1-1-准备"><a href="#1-1-准备" class="headerlink" title="1.1 准备"></a>1.1 准备</h3><p>zabbix 可以称得上企业级的监控，template 不可忽略，强大的高度定制化的模板系统可以批量应用大量的机器上，grafana 如果大批量的添加也必须使用这个功能，开始的时候都只是少量可以自己手动添加，现在想直接添加 20 台机器的监控，template 就不可或缺了。不过发现 grafana 的 template 定义和 zabbix 并不相同。</p>
+<p>简单来讲，grafana 的 template 并不是全局生效，只能针对一个 dashboard ，至少暂时针对现在的 2.0.x 版本都是这样，详情见 <a href="https://github.com/alexanderzobnin/grafana-zabbix/issues/36" target="_blank" rel="noopener">grafana zabbix issue</a> 这个状况有望再下一个版本进行改进，关于这点会持续关注。</p>
+<p>目前的需求，就是挂上一个小 hadoop 集群，之前在 zabbix 中已添加完毕，所以需要在 grafana 中接入，之前是一台台添加，这次 20 台，再手动就是变态了。所以直接上 template，不过上面已经说到，没有文档，只有一段 YouTube 视频，再看看官方 issue，差不多也琢磨出来了。整理如下。先来个整体展示<br><img src="http://mingmings.qiniudn.com/dashboard/show%20template.png" alt="show template"></p>
+<h3 id="1-2-新建-template"><a href="#1-2-新建-template" class="headerlink" title="1.2 新建 template"></a>1.2 新建 template</h3><blockquote>
+<p>所谓的 template 是一组 variables 的集合，所以新建模板就是新建 variables</p>
+</blockquote>
+<p>我按照 zabbix 的经验先按照组进行划分<br><img src="http://mingmings.qiniudn.com/dashboard/template%20group.png" alt="template group"></p>
+<p>Variable</p>
+<pre><code>- name：新建变量的名称
+
+- type：类型
+    - query：仅作查询变量，目前使用的就是这种
+    - interval：周期变量，目前我还没用，猜测可能用在时间周期那块
+    - custom：自定义变量
+</code></pre><p>value options：变量选项</p>
+<pre><code>- query：这里可以根据通配符指定查询范围，应该也支持正则
+
+- regex：就是具体的通配符写法了，我这里就是只取出 zabbix 中 Hadoop 组
+
+- All value：会匹配出所有取出的元素，进而可以进行加工处理
+</code></pre><p>Multi-value selection：多变量选择</p>
+<pre><code>- enable：开关，就是上图中那个前面的多选框，如果关闭，则只能单选，想在一张图中展示多选项，就是靠着这个选项
+
+- multi format：变量匹配规则
+    - glob：一般格式
+    - regex value：正则规则
+</code></pre><p>Display option：显示选项</p>
+<pre><code>- variable label：变量标签，可以显示同一个格式前缀
+</code></pre><p>Value groups/tags：变量组，可以将一些变量扔到一个组里，再统一应用，这个我还没琢磨明白</p>
+<p>preview value：预览，就是直接显示匹配到了哪些</p>
+<blockquote>
+<p>到了这里我们已经可以匹配出我需要的 Hadoop 组了</p>
+</blockquote>
+<p>下面就可以新建 host 来进行匹配出我们需要的主机了</p>
+<p><img src="http://mingmings.qiniudn.com/dashboard/template%20host.png" alt="template host"></p>
+<p>这里比较给力的功能是直接可以继承刚才的 group 变量来进行 host 的查询匹配，和新建 group 不同的是</p>
+<ul>
+<li>query 中的查询直接使用 $group 处理的结果</li>
+<li>regex：直接匹配主机名，主机名来源于 zabbix 的 host</li>
+</ul>
+<h3 id="1-3-应用-template"><a href="#1-3-应用-template" class="headerlink" title="1.3 应用 template"></a>1.3 应用 template</h3><p>记得我上面说的，template variable 现在这个版本中只存在于 dashboard 中，所以得新建一个 dashboard，再来新建 template variable。</p>
+<p>完成这两部之后新建一个 row 测试一下结果，我新建了一个 <code>text panel</code>，其他 panel 原理相同</p>
+<ul>
+<li>general 信息随意，控制 panel 的位置和大小的</li>
+<li>edit text中，我填写了如下信息  <figure class="highlight lsl"><table><tr><td class="code"><pre><span class="line">主机名：  $host  </span><br><span class="line">CPU：物理<span class="number">2</span> / <span class="number">6</span> cores / <span class="number">24</span>  core  </span><br><span class="line">RAM： <span class="number">96</span>G</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<blockquote>
+<p>因为他这是同一批次机器，配置都相同，就是主机名不同，所以我就偷懒了，其实按照我的理解，后面的 CPU 和 RAM 信息都可以用变量替换</p>
+</blockquote>
+<p>完成之后你会发觉按照就会出现上面我的第一个图的效果，选择变量进行替换，就会看到主机名跟着变化，这样一个简单的 template variable 应用就可以了，所以后面可以想象，只要是可以抽象出来的都可以设置变量等，到时候只需要新建一个 dashboard 就可以完成所有机器的监控，只要变量写的够牛逼，够全面就可以</p>
+<h3 id="1-4-疑问和顾虑"><a href="#1-4-疑问和顾虑" class="headerlink" title="1.4 疑问和顾虑"></a>1.4 疑问和顾虑</h3><blockquote>
+<p>没官方文档，所以最好的方式只能去看源码了，但是我不懂 go，所以现在暂且没去看，如果到了后面想玩转 grafana 的话只能去学点 go 看看源码了</p>
+</blockquote>
+<p>对于后续 grafana 的使用会慢慢放出来，也欢迎有使用 grafana 的交流一起探讨探讨</p>
+<p>&emsp;&emsp;</p>
+<blockquote>
+<p>参考阅读</p>
+<ul>
+<li><a href="http://docs.grafana.org/reference/templating/" target="_blank" rel="noopener">Templated Dashboards</a></li>
+<li><a href="https://www.youtube.com/watch?list=PLDGkOdUX1Ujo3wHw9-z5Vo12YLqXRjzg2&amp;v=FhNUrueWwOk" target="_blank" rel="noopener">grafana template on youtube vedio</a></li>
+</ul>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/note/tags/grafana-template/" rel="tag"># grafana template</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/note/django-1-7-manage-py-详解.html" rel="next" title="django 1.7 manage.py 详解">
+                <i class="fa fa-chevron-left"></i> django 1.7 manage.py 详解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/note/zabbix 自定义 item key 监控 MySQL 详解.html" rel="prev" title="zabbix 自定义 item key 监控 MySQL 详解">
+                zabbix 自定义 item key 监控 MySQL 详解 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">宋大明明</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/note/archives/">
+              
+                  <span class="site-state-item-count">78</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、grafana-template"><span class="nav-number">1.</span> <span class="nav-text">一、grafana template</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-准备"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-新建-template"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 新建 template</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-应用-template"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 应用 template</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-疑问和顾虑"><span class="nav-number">1.4.</span> <span class="nav-text">1.4 疑问和顾虑</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2014 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">宋大明明</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/note/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/note/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/note/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

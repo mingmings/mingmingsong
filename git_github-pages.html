@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/note/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/note/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/note/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/note/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/note/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/note/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/note/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="github page,user page,organization page," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="日子总是像从指尖渡过的细纱，在不经意间悄然滑落。那些往日的忧愁和误用伤，在似水流年的荡涤下随波轻轻地逝去，而留下的欢乐和笑靥就在记忆深处历久弥新。">
+<meta name="keywords" content="github page,user page,organization page">
+<meta property="og:type" content="article">
+<meta property="og:title" content="github pages">
+<meta property="og:url" content="http://mingmings.org/note/git_github-pages.html">
+<meta property="og:site_name" content="异类深呼吸">
+<meta property="og:description" content="日子总是像从指尖渡过的细纱，在不经意间悄然滑落。那些往日的忧愁和误用伤，在似水流年的荡涤下随波轻轻地逝去，而留下的欢乐和笑靥就在记忆深处历久弥新。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://mingmings.qiniudn.com/git_github%E7%BB%84%E7%BB%87-1.jpg">
+<meta property="og:image" content="http://mingmings.qiniudn.com/git_github%E7%BB%84%E7%BB%87-2.jpg">
+<meta property="og:image" content="http://mingmings.qiniudn.com/git_github%E7%BB%84%E7%BB%87-3.jpg">
+<meta property="og:image" content="http://mingmings.qiniudn.com/git_github%E7%BB%84%E7%BB%87-4.jpg">
+<meta property="og:updated_time" content="2017-03-03T07:30:54.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="github pages">
+<meta name="twitter:description" content="日子总是像从指尖渡过的细纱，在不经意间悄然滑落。那些往日的忧愁和误用伤，在似水流年的荡涤下随波轻轻地逝去，而留下的欢乐和笑靥就在记忆深处历久弥新。">
+<meta name="twitter:image" content="http://mingmings.qiniudn.com/git_github%E7%BB%84%E7%BB%87-1.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/note/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://mingmings.org/note/git_github-pages.html"/>
+
+
+
+
+
+  <title>github pages | 异类深呼吸</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-55424732-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?fe4164c60a9dd0e73810fa0243796a5d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/note/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">异类深呼吸</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/note/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/note/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/note/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/note/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://mingmings.org/note/note/git_github-pages.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="宋大明明">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/note/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="异类深呼吸">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">github pages</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-01T16:05:39+08:00">
+                2017-03-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/note/categories/github/" itemprop="url" rel="index">
+                    <span itemprop="name">github</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><blockquote class="blockquote-center">日子总是像从指尖渡过的细纱，在不经意间悄然滑落。那些往日的忧愁和误用伤，在似水流年的荡涤下随波轻轻地逝去，而留下的欢乐和笑靥就在记忆深处历久弥新。</blockquote><br><a id="more"></a></p>
+<p>&emsp;&emsp;现在的博客用的是 github 上的 <code>github page</code> 服务，准确说是 <code>user page</code>服务，今天突然有需求弄个 <code>organizations page</code>，所以从新建组织到使用 page 的服务全部弄了遍，因为 <code>user page</code> 和 <code>organizations page</code> 流程大体相同，所以将二者重新整理下</p>
+<h2 id="一、准备部分"><a href="#一、准备部分" class="headerlink" title="一、准备部分"></a>一、准备部分</h2><h3 id="1-1-准备-organizations-账号"><a href="#1-1-准备-organizations-账号" class="headerlink" title="1.1 准备 organizations 账号"></a>1.1 准备 organizations 账号</h3><blockquote>
+<p>从蒋鑫大大的文章中可以看到：组织是非登录账号，不能像创建普通登录账号那样直接创建，而是需要以 GitHub 用户身份登录，然后再创建自己的组织，创建者成为组织天然的管理者。所以第一步根据自己的 github 账号创建一个组织</p>
+</blockquote>
+<p><img src="http://mingmings.qiniudn.com/git_github%E7%BB%84%E7%BB%87-1.jpg" width="300" height="325"><br>基础信息<br><img src="http://mingmings.qiniudn.com/git_github%E7%BB%84%E7%BB%87-2.jpg" width="300" height="325"><br>邀请成员，这部可以跳过<br><img src="http://mingmings.qiniudn.com/git_github%E7%BB%84%E7%BB%87-3.jpg" width="300" height="325"><br>到此，一个 organizations 就创建完成了，下面就可以按照自己的需要创建 repo，创建 team 等一些列操作，蒋鑫大大的文章中写的很清晰，这里不再赘述</p>
+<h3 id="1-2-使用-pages-服务"><a href="#1-2-使用-pages-服务" class="headerlink" title="1.2 使用 pages 服务"></a>1.2 使用 pages 服务</h3><p>1、创建 repo，用来存储生成的 page 生成的代码</p>
+<blockquote>
+<p>这里的步骤和 <code>user page</code> 的步骤相同，user page 是创建自己 <code>username.github.io</code>，这里就是 <code>organization_name.github.io</code></p>
+</blockquote>
+<p><img src="http://mingmings.qiniudn.com/git_github%E7%BB%84%E7%BB%87-4.jpg" width="300" height="325"></p>
+<p>2、初始化 repo，提交代码</p>
+<blockquote>
+</blockquote>
+<figure class="highlight crmsh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 下载 repo</span></span><br><span class="line">git <span class="keyword">clone</span> <span class="title">git</span>@github.com:<span class="tag">&lt;organizations_name&gt;</span>/<span class="tag">&lt;organizations_nam&gt;</span>.github.io.git</span><br><span class="line"></span><br><span class="line"><span class="comment"># 新增内容</span></span><br><span class="line">echo <span class="string">"organizations pages success..."</span> &gt; index.html</span><br><span class="line"></span><br><span class="line"><span class="comment"># 提交并推送</span></span><br><span class="line">git add index.html</span><br><span class="line">git commit -m <span class="string">"first commit"</span></span><br><span class="line">git push origin <span class="literal">master</span></span><br></pre></td></tr></table></figure>
+<p>稍等片刻，浏览器访问<code>https://&lt;organization_name&gt;.github.io/</code> 可以看到<br><code>organizations pages success...</code></p>
+<p>到此，就全部完成了<code>organization pages</code> 基础部分了，至于下面用什么框架来生成内容都看列为看官的兴趣爱好了，我的博客使用的是基于 nodejs 的 hexo 来生成静态博客的内容，当然了，对 organization page 也是可行的，不过静态博客的框架还有很多，看自己习惯哪个了…</p>
+<h3 id="1-3-使用静态博客框架"><a href="#1-3-使用静态博客框架" class="headerlink" title="1.3 使用静态博客框架"></a>1.3 使用静态博客框架</h3><blockquote>
+<p>其他框架可能得参考下往上的文章了，这里我是用的 hexo，就理清怎么用 hexo 搭建吧，往上的详细教程特别多，这里不再赘述，主要还是要弄清楚思路和流程</p>
+</blockquote>
+<p>&emsp;&emsp;刚才其实上面说了，整个流程大致是【准备 github 账号 -&gt; 准备 repo -&gt; 本地使用静态博客框架生成博客内容 -&gt; 推送到 repo，展现 -&gt; 自定义域名、主题、优化等】</p>
+<p>&emsp;&emsp;上面的内容已经完成了 github 仓库的内容，剩余的内容可以全部在本地完成，本地无非是需要个环境来用框架生成博客内容，本地预览等等一些列功能，主流的博客框架都支持这些基本的功能。我这里环境是 osx，其他环境可能得看官自己尝试一下</p>
+<p>1、准备 node 环境</p>
+<blockquote>
+<p>这里可以用 brew install node 来装，也可以源码，也可以下载官方提供的 mac 专用的包来，也可以先装 nvm 等版本控制器，这里推荐使用 nvm</p>
+</blockquote>
+<p>使用 <code>brew</code> 安裝 NVM<br><figure class="highlight mipsasm"><table><tr><td class="code"><pre><span class="line">$ <span class="keyword">brew </span><span class="keyword">install </span>nvm</span><br></pre></td></tr></table></figure></p>
+<p>将下面内容加入 <code>.bash_profile</code>（或 <code>.zshrc</code>）<br><figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line"><span class="builtin-name">export</span> <span class="attribute">NVM_DIR</span>=~/.nvm</span><br><span class="line">source $(brew --prefix nvm)/nvm.sh</span><br></pre></td></tr></table></figure></p>
+<p>重新載入生效<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">source</span> .bash_profile</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">source</span> .zshrc</span></span><br></pre></td></tr></table></figure></p>
+<p>测试即可<br><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">$ nvm</span><br><span class="line"></span><br><span class="line">Node Version Manager</span><br><span class="line"></span><br><span class="line">Usage:</span><br><span class="line">  nvm <span class="keyword">help</span>                              <span class="keyword">Show</span> this message</span><br><span class="line">  nvm <span class="comment">--version                         Print out the latest released version of nvm</span></span><br><span class="line">  nvm <span class="keyword">install</span> [-s] &lt;<span class="keyword">version</span>&gt;            Download <span class="keyword">and</span> <span class="keyword">install</span> a &lt;<span class="keyword">version</span>&gt;, [-s] <span class="keyword">from</span> source. Uses .nvmrc <span class="keyword">if</span> available</span><br><span class="line">  nvm <span class="keyword">uninstall</span> &lt;<span class="keyword">version</span>&gt;               <span class="keyword">Uninstall</span> a <span class="keyword">version</span></span><br><span class="line">  nvm <span class="keyword">use</span> &lt;<span class="keyword">version</span>&gt;                     <span class="keyword">Modify</span> <span class="keyword">PATH</span> <span class="keyword">to</span> <span class="keyword">use</span> &lt;<span class="keyword">version</span>&gt;. Uses .nvmrc <span class="keyword">if</span> available</span><br><span class="line">  nvm run &lt;<span class="keyword">version</span>&gt; [&lt;args&gt;]            Run &lt;<span class="keyword">version</span>&gt; <span class="keyword">with</span> &lt;args&gt; <span class="keyword">as</span> arguments. Uses .nvmrc <span class="keyword">if</span> available <span class="keyword">for</span> &lt;<span class="keyword">version</span>&gt;</span><br><span class="line">  nvm <span class="keyword">current</span>                           Display currently activated <span class="keyword">version</span></span><br><span class="line">  nvm ls                                <span class="keyword">List</span> installed <span class="keyword">versions</span></span><br><span class="line">  nvm ls &lt;<span class="keyword">version</span>&gt;                      <span class="keyword">List</span> <span class="keyword">versions</span> matching a given description</span><br><span class="line">  nvm ls-remote                         <span class="keyword">List</span> remote <span class="keyword">versions</span> available <span class="keyword">for</span> <span class="keyword">install</span></span><br><span class="line">  nvm deactivate                        <span class="keyword">Undo</span> effects <span class="keyword">of</span> <span class="string">`nvm`</span> <span class="keyword">on</span> <span class="keyword">current</span> shell</span><br><span class="line">  nvm <span class="keyword">alias</span> [&lt;pattern&gt;]                 <span class="keyword">Show</span> all aliases <span class="keyword">beginning</span> <span class="keyword">with</span> &lt;pattern&gt;</span><br><span class="line">  nvm <span class="keyword">alias</span> &lt;<span class="keyword">name</span>&gt; &lt;<span class="keyword">version</span>&gt;            <span class="keyword">Set</span> an <span class="keyword">alias</span> named &lt;<span class="keyword">name</span>&gt; pointing <span class="keyword">to</span> &lt;<span class="keyword">version</span>&gt;</span><br><span class="line">  nvm unalias &lt;<span class="keyword">name</span>&gt;                    Deletes the <span class="keyword">alias</span> named &lt;<span class="keyword">name</span>&gt;</span><br><span class="line">  nvm reinstall-packages &lt;<span class="keyword">version</span>&gt;      Reinstall <span class="keyword">global</span> <span class="string">`npm`</span> packages contained <span class="keyword">in</span> &lt;<span class="keyword">version</span>&gt; <span class="keyword">to</span> <span class="keyword">current</span> <span class="keyword">version</span></span><br><span class="line">  nvm unload                            Unload <span class="string">`nvm`</span> <span class="keyword">from</span> shell</span><br><span class="line">  nvm which [&lt;<span class="keyword">version</span>&gt;]                 Display <span class="keyword">path</span> <span class="keyword">to</span> installed node version. Uses .nvmrc <span class="keyword">if</span> available</span><br><span class="line"></span><br><span class="line">Example:</span><br><span class="line">  nvm <span class="keyword">install</span> v0<span class="number">.10</span><span class="number">.32</span>                  <span class="keyword">Install</span> a specific <span class="keyword">version</span> <span class="built_in">number</span></span><br><span class="line">  nvm <span class="keyword">use</span> <span class="number">0.10</span>                          <span class="keyword">Use</span> the latest available <span class="number">0.10</span>.x <span class="keyword">release</span></span><br><span class="line">  nvm run <span class="number">0.10</span><span class="number">.32</span> app.js                Run app.js <span class="keyword">using</span> node v0<span class="number">.10</span><span class="number">.32</span></span><br><span class="line">  nvm exec <span class="number">0.10</span><span class="number">.32</span> node app.js          Run <span class="string">`node app.js`</span> <span class="keyword">with</span> the <span class="keyword">PATH</span> pointing <span class="keyword">to</span> node v0<span class="number">.10</span><span class="number">.32</span></span><br><span class="line">  nvm <span class="keyword">alias</span> <span class="keyword">default</span> <span class="number">0.10</span><span class="number">.32</span>             <span class="keyword">Set</span> <span class="keyword">default</span> node <span class="keyword">version</span> <span class="keyword">on</span> a shell</span><br><span class="line"></span><br><span class="line">Note:</span><br><span class="line">  <span class="keyword">to</span> remove, <span class="keyword">delete</span>, <span class="keyword">or</span> <span class="keyword">uninstall</span> nvm - just remove ~/.nvm, ~/.npm, <span class="keyword">and</span> ~/.bower folders</span><br></pre></td></tr></table></figure></p>
+<p>安装 nodejs<br><figure class="highlight lsl"><table><tr><td class="code"><pre><span class="line">$ nvm install <span class="number">0.11</span><span class="number">.16</span></span><br><span class="line">nvm ls</span><br><span class="line">       v0<span class="number">.10</span><span class="number">.33</span></span><br><span class="line">        v0<span class="number">.11</span><span class="number">.0</span></span><br><span class="line">       v0<span class="number">.11</span><span class="number">.11</span></span><br><span class="line">-&gt;     v0<span class="number">.11</span><span class="number">.16</span></span><br><span class="line">         system</span><br><span class="line"><span class="section">default</span> -&gt; v0<span class="number">.11</span><span class="number">.0</span></span><br><span class="line">stable -&gt; <span class="number">0.10</span> (-&gt; v0<span class="number">.10</span><span class="number">.33</span>) (<span class="section">default</span>)</span><br><span class="line">unstable -&gt; <span class="number">0.11</span> (-&gt; v0<span class="number">.11</span><span class="number">.16</span>) (<span class="section">default</span>)</span><br></pre></td></tr></table></figure></p>
+<p>2、安装 hexo</p>
+<blockquote>
+<p>安装完了 nvm，node ，下面用的就是 npm 来安装包，推荐把 npm 的源换成国内的淘宝源吧，具体原因你们懂的</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> npm install hexo-cli -g	<span class="comment">#如果这里用的官方源，可能会经常失败</span></span></span><br></pre></td></tr></table></figure>
+<h2 id="二、开始写作"><a href="#二、开始写作" class="headerlink" title="二、开始写作"></a>二、开始写作</h2><blockquote>
+<p>完成了上面所有，那么现在博客框架所需的东西已完成，接下来就可以开始写作了</p>
+</blockquote>
+<p>1、生成本地博客<br><figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line">$ hexo init blog	<span class="comment"># 本地会生成一个目录</span></span><br><span class="line">$ cd blog</span><br><span class="line">$ ll</span><br><span class="line">.</span><br><span class="line">├── _config.yml		<span class="comment"># 站点配置文件</span></span><br><span class="line">├── package.json	<span class="comment"># 应用程序的信息</span></span><br><span class="line">├── scaffolds		<span class="comment"># 模版。新建文章时，Hexo 会根据 scaffold 来建立文件</span></span><br><span class="line">├── source			<span class="comment"># 资源文件夹是存放用户资源的地方</span></span><br><span class="line"><span class="params">|   ├── _drafts</span></span><br><span class="line"><span class="params">|</span>   └── _posts</span><br><span class="line">└── themes			<span class="comment"># 主题。Hexo 会根据主题来生成静态页面。</span></span><br><span class="line"></span><br><span class="line">$ npm install		<span class="comment"># 安装博客所需要的插件</span></span><br><span class="line">$ hexo server		<span class="comment"># 生成本地的端口和服务，用于查看博客</span></span><br></pre></td></tr></table></figure></p>
+<p>2、写文章<br><figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="string">$</span> <span class="string">cd</span> <span class="string">blog</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 新建文章</span></span><br><span class="line"><span class="string">$</span> <span class="string">hexo</span> <span class="string">new</span> <span class="string">[layout]</span> <span class="string">&lt;title&gt;</span></span><br><span class="line"><span class="string">$</span> <span class="string">vim</span> <span class="string">source/_posts/&lt;title&gt;.md</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 注意上面这几行，可能生成的会不同，这几个参数就是控制文章的分类，标题，创建时间，tags</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">title:</span> <span class="string">xxxx</span></span><br><span class="line"><span class="attr">tags:</span> <span class="string">[xxx,xxx]</span></span><br><span class="line"><span class="attr">date:</span> <span class="number">2017</span><span class="bullet">-03</span><span class="bullet">-01</span> <span class="number">16</span><span class="string">:05:39</span></span><br><span class="line"><span class="attr">category:</span> <span class="string">xxx</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>更加详细的可以在这里找到 <a href="https://hexo.io/zh-cn/docs/configuration.html" target="_blank" rel="noopener">https://hexo.io/zh-cn/docs/configuration.html</a></p>
+</blockquote>
+<p>3、这里文章如果写完了，接下来生成内容<br><figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 生成静态文件</span></span><br><span class="line">$ hexo generate</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动服务器。默认情况下，访问网址为： http://localhost:4000/。</span></span><br><span class="line">$ hexo server</span><br><span class="line"></span><br><span class="line">这里本地查看文章的状态，格式啊等等，如果确认无误了，表明文章本地生成完全没有问题了，如果有问题，可以接着修改再次本地查看，直到满意为止</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>更多命令请查看 <a href="https://hexo.io/zh-cn/docs/commands.html" target="_blank" rel="noopener">https://hexo.io/zh-cn/docs/commands.html</a></p>
+</blockquote>
+<p>4、将本地生成好的内容推送到远端仓库中，这里就是 github 中的那个 repo<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 编辑站点配置文件</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> vim blog/_config.yml</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 找到如下的部分</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Deployment</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># Docs: https://hexo.io/docs/deployment.html</span></span></span><br><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: git@github.com:&lt;username&gt;/&lt;username&gt;.github.io</span><br><span class="line">  branch: master</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 修改完保存执行以下命令</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> hexo deploy</span></span><br></pre></td></tr></table></figure></p>
+<p>如若推送成功，稍等片刻，再次访问 pages 服务的域名，就可以看到刚才本地生成的内容了，以后写作-生成内容-推送 就是这么个流程…</p>
+<p>&emsp;&emsp;剩下的就是自定义域名啊，切换主题啊，优化等等，每个人口味不同，这里大家都去 google 上找找相关的文章，很多很多，后续的部分都不会影响写作，以后有机会在写吧…</p>
+<p>&emsp;&emsp;</p>
+<blockquote>
+<p>参考阅读</p>
+<ul>
+<li><a href="https://help.github.com/articles/user-organization-and-project-pages/" target="_blank" rel="noopener">User, Organization, and Project Pages</a></li>
+<li><a href="http://www.worldhello.net/gotgithub/04-work-with-others/030-organization.html" target="_blank" rel="noopener">word hello - 组织和团队</a></li>
+<li><a href="https://pages.github.com/" target="_blank" rel="noopener">GitHub Pages</a></li>
+</ul>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/note/tags/github-page/" rel="tag"># github page</a>
+          
+            <a href="/note/tags/user-page/" rel="tag"># user page</a>
+          
+            <a href="/note/tags/organization-page/" rel="tag"># organization page</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/note/travel-深圳南山.html" rel="next" title="深圳南山">
+                <i class="fa fa-chevron-left"></i> 深圳南山
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/note/git_多说评论增加-UA.html" rel="prev" title="hexo 博客的第三方功能">
+                hexo 博客的第三方功能 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">宋大明明</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/note/archives/">
+              
+                  <span class="site-state-item-count">78</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、准备部分"><span class="nav-number">1.</span> <span class="nav-text">一、准备部分</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-准备-organizations-账号"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 准备 organizations 账号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-使用-pages-服务"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 使用 pages 服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-使用静态博客框架"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 使用静态博客框架</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、开始写作"><span class="nav-number">2.</span> <span class="nav-text">二、开始写作</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2014 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">宋大明明</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/note/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/note/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/note/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

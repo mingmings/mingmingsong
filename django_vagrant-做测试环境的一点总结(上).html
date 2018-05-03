@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/note/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/note/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/note/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/note/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/note/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/note/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/note/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="vagrant,vagrant 多虚拟机," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="既然还在幸运的活着，当然要全力以赴的快乐。">
+<meta name="keywords" content="vagrant,vagrant 多虚拟机">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vagrant 做测试环境的一点总结(上)">
+<meta property="og:url" content="http://mingmings.org/note/django_vagrant-做测试环境的一点总结(上).html">
+<meta property="og:site_name" content="异类深呼吸">
+<meta property="og:description" content="既然还在幸运的活着，当然要全力以赴的快乐。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-04-30T09:23:29.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="vagrant 做测试环境的一点总结(上)">
+<meta name="twitter:description" content="既然还在幸运的活着，当然要全力以赴的快乐。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/note/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://mingmings.org/note/django_vagrant-做测试环境的一点总结(上).html"/>
+
+
+
+
+
+  <title>vagrant 做测试环境的一点总结(上) | 异类深呼吸</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-55424732-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?fe4164c60a9dd0e73810fa0243796a5d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/note/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">异类深呼吸</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/note/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/note/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/note/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/note/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://mingmings.org/note/note/django_vagrant-做测试环境的一点总结(上).html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="宋大明明">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/note/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="异类深呼吸">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">vagrant 做测试环境的一点总结(上)</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-26T11:56:44+08:00">
+                2017-04-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/note/categories/django/" itemprop="url" rel="index">
+                    <span itemprop="name">django</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote class="blockquote-center">既然还在幸运的活着，当然要全力以赴的快乐。</blockquote>
+
+<a id="more"></a>
+<p>“Vagrant uses Oracle’s VirtualBox to build configurable, lightweight, and portable virtual machines dynamically.”</p>
+<p>Vagrant 是 Mitchell Hashimoto 用 ruby 写的，去年11月份，Mitchell 专门成立了一个公司 HashiCorp 来更好的开发 Vagrant, 并且申明，Vagrant会一直开源。Announcing HashiCorp<br>感兴趣的还可以看下作者在就HashiCorp成立在Hacker News上发的一个 <a href="http://news.ycombinator.com/item?id=4843508" target="_blank" rel="noopener">topic</a></p>
+<h2 id="vagrant-是什么"><a href="#vagrant-是什么" class="headerlink" title="vagrant 是什么"></a>vagrant 是什么</h2><p>Vagrant 提供了基于企业级标准技术的易配置、可重复、可移植的工作环境，从而最大化团队的生产力和灵活性。</p>
+<p>Vagrant 可构建在由 VirtualBox，VMware，AWS 以及其他提供商提供的机器上，并且可以使用 shell 脚本，Chef，Puppet 等配置管理工具。</p>
+<p>vagrant 的特点:</p>
+<ul>
+<li>将配置和依赖隔离在一次性和一致性的环境中</li>
+<li>使用简单，只需 Vagrantfile 和 vagrant up，适用人群广(开发者，运维人员，设计师)</li>
+</ul>
+<p>vagrant 其实就是封装了的 Virtualbox 的 API 的 ruby DSL，抽象和简化了某些操作，用一个命令以及配置文件，而不是一堆命令去管理和使用 vm。</p>
+<p>更多关于 vagrant 的介绍，网上比较多，这里就不在阐述，有兴趣的可以读一下 <a href="https://github.com/astaxie/go-best-practice/blob/master/ebook/zh/preface.md" target="_blank" rel="noopener">Go实战开发</a> 这本书里关于 vagrant 的介绍，已经很详细了，我就简单的介绍点常用的即可</p>
+<h2 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h2><p>1、基本命令<br><figure class="highlight livecodeserver"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 查看帮助</span></span><br><span class="line">$ vagrant list-commands</span><br><span class="line">    -v, <span class="comment">--version                    </span></span><br><span class="line">    -h, <span class="comment">--help</span></span><br><span class="line">    </span><br><span class="line"><span class="comment"># 把镜像加入到 vagrant 中</span></span><br><span class="line">$ vagrant box <span class="built_in">add</span> <span class="string">"centos-6.6-x86_64 py27"</span>  vagrantbox/centos<span class="number">-6.6</span>-x86_64.box</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看 vagrant 环境</span></span><br><span class="line">$ vagrant box list</span><br><span class="line">centos<span class="number">-6.6</span>-x86_64 py27 (virtualbox, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化一个新的仓库</span></span><br><span class="line">$ cd test_env</span><br><span class="line">$ vagrant init <span class="string">"centos-6.6-x86_64 py27"</span></span><br><span class="line">A `Vagrantfile` has been placed <span class="keyword">in</span> this <span class="built_in">directory</span>. You are now</span><br><span class="line">ready <span class="built_in">to</span> `vagrant up` your <span class="keyword">first</span> virtual environment! Please <span class="built_in">read</span></span><br><span class="line"><span class="keyword">the</span> comments <span class="keyword">in</span> <span class="keyword">the</span> Vagrantfile <span class="keyword">as</span> well <span class="keyword">as</span> documentation <span class="keyword">on</span></span><br><span class="line">`vagrantup.com` <span class="keyword">for</span> more information <span class="keyword">on</span> <span class="title">using</span> <span class="title">Vagrant</span>.</span><br><span class="line"></span><br><span class="line">会在当前目录下生成一个 Vagrantfile 这个配置文件</span><br></pre></td></tr></table></figure></p>
+<p>2、下面贴个常见配置,修改 Vagrantfile 文件<br><figure class="highlight mipsasm"><table><tr><td class="code"><pre><span class="line"><span class="built_in">config</span>.vm.<span class="keyword">box </span>= <span class="string">"centos-6.6-x86_64 py27"</span></span><br><span class="line"><span class="built_in">config</span>.vm.network <span class="string">"forwarded_port"</span>, guest: <span class="number">8000</span>, host: <span class="number">8000</span></span><br><span class="line"><span class="built_in">config</span>.vm.network <span class="string">"forwarded_port"</span>, guest: <span class="number">3306</span>, host: <span class="number">9999</span></span><br><span class="line"><span class="built_in">config</span>.vm.<span class="keyword">synced_folder </span><span class="string">"."</span>, <span class="string">"/vagrant"</span>  <span class="comment"># 将当前目录映射到虚拟机上的/vagrant 目录</span></span><br><span class="line"><span class="built_in">config</span>.vm.hostname = <span class="string">"devops-node1"</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">config</span>.vm.provider <span class="string">"virtualbox"</span> do <span class="title">|vb|</span></span><br><span class="line"> <span class="comment"># Display the VirtualBox GUI when booting the machine</span></span><br><span class="line"> <span class="comment"># vb.gui = true</span></span><br><span class="line"></span><br><span class="line"> <span class="comment"># Customize the amount of memory on the VM:</span></span><br><span class="line"> vb.memory = <span class="string">"1024"</span></span><br><span class="line"> vb.cpus = <span class="number">1</span></span><br><span class="line">end</span><br></pre></td></tr></table></figure></p>
+<p>3、服务管理<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 启动，重载，关机</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> vagrant up</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> vagrant reload</span></span><br><span class="line">重新读取配置</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> vagrant halt</span></span><br><span class="line">将虚拟机关闭，虚拟机内存释放，下次启动要慢一点。</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> vagrant <span class="built_in">suspend</span></span></span><br><span class="line">将虚拟机挂起，虚拟机内存都保存到硬盘上，下次可以快速恢复</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> vagrant destroy</span></span><br><span class="line">将虚拟机删除，所有变更都丢失，下次启动要重新克隆一个 Vagrant box。</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> vagrant status</span></span><br><span class="line">查看虚拟机的状态</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>更多命令行：<a href="https://www.vagrantup.com/docs/cli/index.html" target="_blank" rel="noopener">https://www.vagrantup.com/docs/cli/index.html</a></p>
+</blockquote>
+<h2 id="制作模板"><a href="#制作模板" class="headerlink" title="制作模板"></a>制作模板</h2><blockquote>
+<p>当做好基础的环境后，方便打包发送给其他人和方便以此为模板衍生其他环境，所以需要对这个环境进行打包，形成模板</p>
+</blockquote>
+<figure class="highlight lsl"><table><tr><td class="code"><pre><span class="line">$ VBoxManage <span class="type">list</span> vms</span><br><span class="line"><span class="string">"win10"</span> &#123;f0fa02e2<span class="number">-48</span>ca<span class="number">-439</span>f-bfca<span class="number">-0e4</span>ddb138485&#125;</span><br><span class="line"><span class="string">"centos6.5-node1"</span> &#123;<span class="number">57e5500</span>f-e91b<span class="number">-469e-86</span>c9-f0b90b2a01a8&#125;</span><br><span class="line"><span class="string">"env_default_1488966927566_38686"</span> &#123;<span class="number">16817773</span>-c844<span class="number">-4412</span>-af8d-df89bae489ca&#125;</span><br></pre></td></tr></table></figure>
+<p>1、打包基础环境<br><figure class="highlight groovy"><table><tr><td class="code"><pre><span class="line">$ vagrant <span class="keyword">package</span> --base env_default_1488966927566_38686 --output centos66-base.box</span><br><span class="line"><span class="regexp">/opt/</span>vagrant<span class="regexp">/embedded/</span>gems<span class="regexp">/gems/</span>vagrant<span class="number">-1.9</span><span class="number">.2</span><span class="regexp">/lib/</span>vagrant<span class="regexp">/util/</span>platform.<span class="string">rb:</span><span class="number">24</span>: <span class="string">warning:</span> Insecure world writable dir <span class="regexp">/usr/</span>local <span class="keyword">in</span> PATH, mode <span class="number">040777</span></span><br><span class="line">==&gt; <span class="string">env_default_1488966927566_38686:</span> Attempting graceful shutdown of VM...</span><br><span class="line"><span class="symbol">    env_default_1488966927566_38686:</span> Guest communication could not be established! This is usually because</span><br><span class="line"><span class="symbol">    env_default_1488966927566_38686:</span> SSH is not running, the authentication information was changed,</span><br><span class="line"><span class="symbol">    env_default_1488966927566_38686:</span> or some other networking issue. Vagrant will force halt, <span class="keyword">if</span></span><br><span class="line"><span class="symbol">    env_default_1488966927566_38686:</span> capable.</span><br><span class="line">==&gt; <span class="string">env_default_1488966927566_38686:</span> Forcing shutdown of VM...</span><br><span class="line">==&gt; <span class="string">env_default_1488966927566_38686:</span> Clearing any previously set forwarded ports...</span><br><span class="line">==&gt; <span class="string">env_default_1488966927566_38686:</span> Exporting VM...</span><br><span class="line">==&gt; <span class="string">env_default_1488966927566_38686:</span> Compressing <span class="keyword">package</span> <span class="string">to:</span> <span class="regexp">/Users/</span>song<span class="regexp">/Downloads/</span>vagrant<span class="regexp">/env/</span>centos66-base.box</span><br></pre></td></tr></table></figure></p>
+<p>2、还原基础环境</p>
+<blockquote>
+<p>到此打包到封装好的环境就在当前目录下生成了，下次用这个模板重新开始初始化新环境就非常容易了</p>
+</blockquote>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line"># 拷贝打包好的镜像到其他小伙伴的机器，或者共享目录</span><br><span class="line"># 在本地导入并重新启动一个环境</span><br><span class="line">$ vagrant box <span class="built_in">add</span> <span class="string">"template_centos66"</span> centos66-base.box</span><br><span class="line">/<span class="keyword">opt</span>/vagrant/embedded/gems/gems/vagrant-<span class="number">1.9</span>.<span class="number">2</span>/lib/vagrant/util/platform.r<span class="variable">b:24</span>: warnin<span class="variable">g:</span> Insecure world writable dir /usr/local in PATH, <span class="keyword">mode</span> <span class="number">040777</span></span><br><span class="line">==&gt; box: Box <span class="keyword">file</span> was not detected <span class="keyword">as</span> metadata. Adding it directly...</span><br><span class="line">==&gt; box: Adding box <span class="string">'template_centos66'</span> (v0) <span class="keyword">for</span> provider:</span><br><span class="line">    box: Unpacking necessary <span class="keyword">files</span> from: <span class="keyword">file</span>:///Users/song/Downloads/vagrant/centos66-base.box</span><br><span class="line">==&gt; box: Successfully added box <span class="string">'template_centos66'</span> (v0) <span class="keyword">for</span> <span class="string">'virtualbox'</span>!</span><br><span class="line"></span><br><span class="line">$ vagrant box <span class="keyword">list</span></span><br><span class="line">centos-<span class="number">6.6</span>-x86_64 py27 (virtualbox, <span class="number">0</span>)</span><br><span class="line">template_centos66      (virtualbox, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">$ <span class="built_in">mkdir</span> test_env</span><br><span class="line">$ <span class="keyword">cd</span> test_env</span><br><span class="line">$ rm -rf Vagrantfile</span><br><span class="line">$ vagrant init template_centos66</span><br><span class="line">A `Vagrantfile` <span class="built_in">has</span> been placed in this directory. You are now</span><br><span class="line">ready <span class="keyword">to</span> `vagrant <span class="keyword">up</span>` your <span class="keyword">first</span> virtual environment! Please <span class="keyword">read</span></span><br><span class="line">the comments in the Vagrantfile <span class="keyword">as</span> well <span class="keyword">as</span> documentation <span class="keyword">on</span></span><br><span class="line">`vagrantup.<span class="keyword">com</span>` <span class="keyword">for</span> more information <span class="keyword">on</span> using Vagrant.</span><br><span class="line"></span><br><span class="line">$ vagrant <span class="keyword">up</span></span><br><span class="line">/<span class="keyword">opt</span>/vagrant/embedded/gems/gems/vagrant-<span class="number">1.9</span>.<span class="number">2</span>/lib/vagrant/util/platform.r<span class="variable">b:24</span>: warnin<span class="variable">g:</span> Insecure world writable dir /usr/local in PATH, <span class="keyword">mode</span> <span class="number">040777</span></span><br><span class="line">Bringing machine <span class="string">'default'</span> <span class="keyword">up</span> with <span class="string">'virtualbox'</span> provider...</span><br><span class="line">==&gt; defaul<span class="variable">t:</span> Importing base box <span class="string">'template_centos66'</span>...</span><br><span class="line">==&gt; defaul<span class="variable">t:</span> Matching MAC address <span class="keyword">for</span> NAT networking...</span><br><span class="line">==&gt; defaul<span class="variable">t:</span> Setting the name of the VM: test_env_default_1489043027159_6542</span><br><span class="line">==&gt; defaul<span class="variable">t:</span> Clearing any previously <span class="keyword">set</span> network interfaces...</span><br><span class="line">==&gt; defaul<span class="variable">t:</span> Preparing network interfaces based <span class="keyword">on</span> configuration...</span><br><span class="line">    defaul<span class="variable">t:</span> Adapter <span class="number">1</span>: nat</span><br><span class="line">==&gt; defaul<span class="variable">t:</span> Forwarding ports...</span><br><span class="line">    defaul<span class="variable">t:</span> <span class="number">22</span> (guest) =&gt; <span class="number">2222</span> (host) (adapter <span class="number">1</span>)</span><br><span class="line">==&gt; defaul<span class="variable">t:</span> Booting VM...</span><br><span class="line">==&gt; defaul<span class="variable">t:</span> Waiting <span class="keyword">for</span> machine <span class="keyword">to</span> boot. This may take <span class="keyword">a</span> few minutes...</span><br></pre></td></tr></table></figure>
+<p>3、测试完毕，销毁测试环境<br><figure class="highlight crystal"><table><tr><td class="code"><pre><span class="line">$ vagrant destroy</span><br><span class="line">/opt/vagrant/embedded/gems/gems/vagrant-<span class="number">1.9</span>.<span class="number">2</span>/<span class="class"><span class="keyword">lib</span>/<span class="title">vagrant</span>/<span class="title">util</span>/<span class="title">platform</span>.<span class="title">rb</span>:24: <span class="title">warning</span>: <span class="title">Insecure</span> <span class="title">world</span> <span class="title">writable</span> <span class="title">dir</span> /<span class="title">usr</span>/<span class="title">local</span> <span class="title">in</span> <span class="title">PATH</span>, <span class="title">mode</span> 040777</span></span><br><span class="line">    <span class="symbol">default:</span> Are you sure you want to destroy the <span class="string">'default'</span> VM? [y/N] y</span><br><span class="line">==&gt; <span class="symbol">default:</span> Destroying VM and associated drives...</span><br></pre></td></tr></table></figure></p>
+<h2 id="出现的错误"><a href="#出现的错误" class="headerlink" title="出现的错误"></a>出现的错误</h2><blockquote>
+<p>这里出现的错误主要在迁移的过程中，如果只是安装部署中出现错误，多数应该是配置文件<code>Vagrantfile</code>的语法错误，我这里先描述下错误出现的背景</p>
+</blockquote>
+<h3 id="–-default-Warning-Authentication-failure-Retrying…"><a href="#–-default-Warning-Authentication-failure-Retrying…" class="headerlink" title="– default: Warning: Authentication failure. Retrying…"></a>– default: Warning: Authentication failure. Retrying…</h3><p>1、当我打包一个系统镜像为模板的时候，想根据这个模板生成新的 vagrant 系统，所以有如下操作<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> vagrant package --base env_default_1488966927566_38686 --output centos66-base.box</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> vagrant box add <span class="string">"template_centos66"</span> centos66-base.box</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> mkdir test_env</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> test_env</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> vagrant init template_centos66</span></span><br><span class="line"></span><br><span class="line">适当修改 Vagrantfile，然后启动</span><br><span class="line"><span class="meta">$</span><span class="bash"> vagrant up</span></span><br></pre></td></tr></table></figure></p>
+<p>如果一切正常，则会产生一个新的  vagrant 虚拟环境，但这里会报错<br><figure class="highlight haskell"><table><tr><td class="code"><pre><span class="line">$ vagrant up</span><br><span class="line">/opt/vagrant/embedded/gems/gems/vagrant<span class="number">-1.9</span><span class="number">.2</span>/lib/vagrant/util/platform.rb:<span class="number">24</span>: warning: <span class="type">Insecure</span> world writable dir /usr/local <span class="keyword">in</span> <span class="type">PATH</span>, mode <span class="number">040777</span></span><br><span class="line"><span class="type">Bringing</span> machine '<span class="keyword">default</span>' up with 'virtualbox' provider...</span><br><span class="line">==&gt; <span class="keyword">default</span>: <span class="type">Clearing</span> any previously set forwarded ports...</span><br><span class="line">==&gt; <span class="keyword">default</span>: <span class="type">Fixed</span> port collision for 22 =&gt; 2222. <span class="type">Now</span> on port 2200.</span><br><span class="line">==&gt; <span class="keyword">default</span>: <span class="type">Clearing</span> any previously set network interfaces...</span><br><span class="line">==&gt; <span class="keyword">default</span>: <span class="type">Preparing</span> network interfaces based on configuration...</span><br><span class="line">    <span class="keyword">default</span>: <span class="type">Adapter</span> 1: nat</span><br><span class="line">==&gt; <span class="keyword">default</span>: <span class="type">Forwarding</span> ports...</span><br><span class="line">    <span class="keyword">default</span>: 22 (<span class="title">guest</span>) =&gt; 2200 (<span class="title">host</span>) (<span class="title">adapter</span> 1)</span><br><span class="line">==&gt; <span class="keyword">default</span>: <span class="type">Running</span> 'pre-boot' <span class="type">VM</span> customizations...</span><br><span class="line">==&gt; <span class="keyword">default</span>: <span class="type">Booting</span> <span class="type">VM</span>...</span><br><span class="line">==&gt; <span class="keyword">default</span>: <span class="type">Waiting</span> for machine to boot. <span class="type">This</span> may take a few minutes...</span><br><span class="line">    <span class="keyword">default</span>: <span class="type">SSH</span> address: 127.0.0.1:2200</span><br><span class="line">    <span class="keyword">default</span>: <span class="type">SSH</span> username: vagrant</span><br><span class="line">    <span class="keyword">default</span>: <span class="type">SSH</span> auth method: private key</span><br><span class="line">    <span class="keyword">default</span>: <span class="type">Warning</span>: <span class="type">Authentication</span> failure. <span class="type">Retrying</span>...</span><br><span class="line">    <span class="keyword">default</span>: <span class="type">Warning</span>: <span class="type">Connection</span> refused. <span class="type">Retrying</span>...</span><br><span class="line">    <span class="keyword">default</span>: <span class="type">Warning</span>: <span class="type">Authentication</span> failure. <span class="type">Retrying</span>...</span><br><span class="line">	...</span><br></pre></td></tr></table></figure></p>
+<p>一直卡在这里无法过去，然后根据错误 google 找了下，在 vagrant 的 github 的 issue 里找到了有人提出了这个问题，根据里面的回答，我做了如下尝试</p>
+<p>1、升级 vagrant 和 vbox ，确保都是最新版，怕有人提到的因为版本不匹配导致的原因，报错依旧</p>
+<p>2、根据 <code>@kikitux</code> 这个哥们在 5 Mar 2015 的回答</p>
+<blockquote>
+<p>Adding here my impressions for people that find this issue from google/internet:</p>
+<p>This is my point of view here.</p>
+<p>The source box use the insecure key<br>by default the actual version of vagrant will remove it, to make it secure<br>the new box, use a generated pair key.. that is not being used anymore<br>vagrant can’t connect to the new box.</p>
+<p>You have 3 options here.</p>
+<p>A. Tell vagrant in the middle box to NOT create a new safe/secure pair.<br>B. Run an Script before packaging to delete 70-persistent-net.rules<br>and put back the insecure pair key<br>C. Copy the new now secure pair to /vagrant and include it in the<br>package box plus Vagrantifle conf to use it</p>
+<p>I will say, if this is for prototyping, just use A, just remember<br>delete 70-persistent-net.rules</p>
+<p>On the first box, add:<br>config.ssh.insert_key = false</p>
+</blockquote>
+<p>我在 Vagrantfile 里新增了<code>config.ssh.insert_key = false</code>这个配置，发觉无果，报错依旧</p>
+<p>3、issue 上 <code>@mtchavez</code> 的回答得到了多数人的支持，很多人用了他的方法解决了问题</p>
+<blockquote>
+<p>I had found a solution to this and haven’t had time to update this issue. I did something similar to what @dylanschoenmakers described.</p>
+<p>The main thing which fixed it for me was adding the vagrant.pub to the authorized_keys with</p>
+<blockquote>
+<p>wget <a href="https://raw.githubusercontent.com/mitchellh/vagrant/master/keys/vagrant.pub" target="_blank" rel="noopener">https://raw.githubusercontent.com/mitchellh/vagrant/master/keys/vagrant.pub</a> -O .ssh/authorized_keys<br>chmod 700 .ssh<br>chmod 600 .ssh/authorized_keys<br>chown -R vagrant:vagrant .ssh</p>
+</blockquote>
+<p>Then when building the base box I think you need to add the config.ssh.insert_key = false to your Vagrantfile. If you built a new version of the box you can simply do a vagrant box update otherwise you can do what @dylanschoenmakers already mentioned to remove and re-add the box to get the newest box.</p>
+<p>This all makes sense, but I am not clear on if this is something that needs to be documented or if there was indeed a change in Vagrant that used to do this transparently for previous versions which is broken now.</p>
+</blockquote>
+<p>他其实做的方法和 <code>@dylanschoenmakers</code> 类似<br><figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">a、首先在 Vagrantfile 中增加了这段</span><br><span class="line">config.ssh.insert_key = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">b、其次在连接 vagrant 的 ssh-config 配置</span><br><span class="line">$ vagrant ssh-config</span><br><span class="line">/opt/vagrant/embedded/gems/gems/vagrant-1.9.2/lib/vagrant/util/platform.rb:24: warning: Insecure world writable dir /usr/local <span class="keyword">in</span> PATH, mode 040777</span><br><span class="line">Host default</span><br><span class="line">  HostName 127.0.0.1</span><br><span class="line"> <span class="built_in"> User </span>vagrant</span><br><span class="line"> <span class="built_in"> Port </span>2200</span><br><span class="line">  UserKnownHostsFile /dev/<span class="literal">null</span></span><br><span class="line">  StrictHostKeyChecking <span class="literal">no</span></span><br><span class="line">  PasswordAuthentication <span class="literal">no</span></span><br><span class="line">  IdentityFile /Users/song/.vagrant.d/insecure_private_key</span><br><span class="line">  IdentitiesOnly <span class="literal">yes</span></span><br><span class="line">  LogLevel FATAL</span><br><span class="line"></span><br><span class="line">这里的 IdentityFile 在基于模板创建新的 vagrant 虚机环境的时候 ssh 连接使用的 key，所以 @dylanschoenmakers 用了一个新的内容替换原有的内容</span><br><span class="line"></span><br><span class="line">ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+<span class="attribute">FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ</span>== vagrant insecure public key</span><br><span class="line"></span><br><span class="line">c、再次重新打包环境</span><br></pre></td></tr></table></figure></p>
+<p>而我的解决方案并不和上述一样，我查看了下 ssh-config 配置<br><figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 第一个正常连接的 vagrant 环境的配置</span></span><br><span class="line">$ vagrant ssh-config</span><br><span class="line"></span><br><span class="line">Host default</span><br><span class="line">  <span class="built_in">..</span><span class="built_in">..</span><span class="built_in">..</span></span><br><span class="line">  IdentityFile /Users/song/Downloads/vagrant/env_django/.vagrant/machines/default/virtualbox/private_key</span><br><span class="line">  <span class="built_in">..</span><span class="built_in">..</span><span class="built_in">..</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 登录异常的基于模板产生的 vagrant 环境</span></span><br><span class="line">$ vagrant ssh-config</span><br><span class="line"></span><br><span class="line">Host default</span><br><span class="line">  <span class="built_in">..</span><span class="built_in">..</span><span class="built_in">..</span></span><br><span class="line">  IdentityFile /Users/song/.vagrant.d/insecure_private_key</span><br><span class="line">  <span class="built_in">..</span><span class="built_in">..</span><span class="built_in">..</span></span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>这里只贴出了不同的部分，所以我的想法就是把这个连接秘钥用正常环境的那个秘钥是否可以解决，所以在问题环境的 <code>Vagrantfile</code> 里增加如下配置</p>
+<blockquote>
+<p>config.ssh.private_key_path = “/Users/song/Downloads/vagrant/env_django/.vagrant/machines/default/virtualbox/private_key”</p>
+</blockquote>
+<p>再次启动虚拟环境，发觉再无报错，至此问题解决</p>
+</blockquote>
+<p>另外好像还有个解决办法， 就是不指定用 key 连接，而是直接使用密码连接，虽然暴力，但是的确提供了一种思路<br><figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">config<span class="selector-class">.ssh</span><span class="selector-class">.username</span> = <span class="string">"vagrant"</span></span><br><span class="line">config<span class="selector-class">.ssh</span><span class="selector-class">.password</span> = <span class="string">"vagrant"</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="–warning-Insecure-world-writable-dir-usr-local-in-PATH-mode-040777"><a href="#–warning-Insecure-world-writable-dir-usr-local-in-PATH-mode-040777" class="headerlink" title="–warning: Insecure world writable dir /usr/local in PATH, mode 040777"></a>–warning: Insecure world writable dir /usr/local in PATH, mode 040777</h3><blockquote>
+<p>曾经为了方便，改过 osx 下这个目录权限，现在操作 vagrant 都会报这个警告，修改权限如下即可</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo chmod go-w /usr/<span class="built_in">local</span>/</span></span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;</p>
+<blockquote>
+<p>参考阅读</p>
+<ul>
+<li><a href="http://www.vagrantbox.es/" target="_blank" rel="noopener">官网</a></li>
+<li><a href="https://github.com/mitchellh/vagrant/issues/5186" target="_blank" rel="noopener">“Warning: Authentication failure. Retrying… “ after packaging box #5186</a></li>
+<li><a href="https://ruby-china.org/topics/25650" target="_blank" rel="noopener">部署 学习 Vagrant</a></li>
+</ul>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/note/tags/vagrant/" rel="tag"># vagrant</a>
+          
+            <a href="/note/tags/vagrant-多虚拟机/" rel="tag"># vagrant 多虚拟机</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/note/django-reverse-vs-reverse-lazy.html" rel="next" title="django reverse vs reverse_lazy">
+                <i class="fa fa-chevron-left"></i> django reverse vs reverse_lazy
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/note/django_vagrant-做测试环境的一点总结(下).html" rel="prev" title="vagrant 做测试环境的一点总结(下)">
+                vagrant 做测试环境的一点总结(下) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">宋大明明</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/note/archives/">
+              
+                  <span class="site-state-item-count">78</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#vagrant-是什么"><span class="nav-number">1.</span> <span class="nav-text">vagrant 是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基础"><span class="nav-number">2.</span> <span class="nav-text">基础</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#制作模板"><span class="nav-number">3.</span> <span class="nav-text">制作模板</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#出现的错误"><span class="nav-number">4.</span> <span class="nav-text">出现的错误</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#–-default-Warning-Authentication-failure-Retrying…"><span class="nav-number">4.1.</span> <span class="nav-text">– default: Warning: Authentication failure. Retrying…</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#–warning-Insecure-world-writable-dir-usr-local-in-PATH-mode-040777"><span class="nav-number">4.2.</span> <span class="nav-text">–warning: Insecure world writable dir /usr/local in PATH, mode 040777</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2014 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">宋大明明</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/note/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/note/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/note/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

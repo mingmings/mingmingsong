@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/note/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/note/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/note/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/note/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/note/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/note/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/note/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="多说,UA,站长信息,美化," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="趁阳光正好。趁微风不噪。趁繁花还未开至靡。趁现在还年轻，还可以走很长的路。">
+<meta name="keywords" content="多说,UA,站长信息,美化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hexo 博客的第三方功能">
+<meta property="og:url" content="http://mingmings.org/note/git_多说评论增加-UA.html">
+<meta property="og:site_name" content="异类深呼吸">
+<meta property="og:description" content="趁阳光正好。趁微风不噪。趁繁花还未开至靡。趁现在还年轻，还可以走很长的路。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://mingmings.qiniudn.com/git_%E5%A4%9A%E8%AF%B4%E6%95%88%E6%9E%9C%E5%9B%BE.png">
+<meta property="og:image" content="http://mingmings.qiniudn.com/git_duoshuo-1.png">
+<meta property="og:image" content="http://mingmings.qiniudn.com/git_duoshuo-2.png">
+<meta property="og:image" content="http://mingmings.qiniudn.com/git_busuanzi.png">
+<meta property="og:updated_time" content="2017-03-03T02:47:22.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="hexo 博客的第三方功能">
+<meta name="twitter:description" content="趁阳光正好。趁微风不噪。趁繁花还未开至靡。趁现在还年轻，还可以走很长的路。">
+<meta name="twitter:image" content="http://mingmings.qiniudn.com/git_%E5%A4%9A%E8%AF%B4%E6%95%88%E6%9E%9C%E5%9B%BE.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/note/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://mingmings.org/note/git_多说评论增加-UA.html"/>
+
+
+
+
+
+  <title>hexo 博客的第三方功能 | 异类深呼吸</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-55424732-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?fe4164c60a9dd0e73810fa0243796a5d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/note/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">异类深呼吸</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/note/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/note/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/note/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/note/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://mingmings.org/note/note/git_多说评论增加-UA.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="宋大明明">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/note/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="异类深呼吸">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">hexo 博客的第三方功能</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-02T14:35:06+08:00">
+                2017-03-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/note/categories/github/" itemprop="url" rel="index">
+                    <span itemprop="name">github</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><blockquote class="blockquote-center">趁阳光正好。趁微风不噪。趁繁花还未开至靡。趁现在还年轻，还可以走很长的路。</blockquote><br><a id="more"></a><br>&emsp;&emsp;多说评论是静态博客常用的评论，而且还提供了丰富的样式。下图就是其中一种效果图，摘自网络<br><img src="http://mingmings.qiniudn.com/git_%E5%A4%9A%E8%AF%B4%E6%95%88%E6%9E%9C%E5%9B%BE.png" width="300" height="325"></p>
+<p>多说的自定义样式可以显示访问者的浏览器和系统信息的显示，可以增加评论的积极性和趣味性，之前迷糊了很久，今天详细完整的把这个记录下来，大致流程有以下几步</p>
+<h2 id="一、多说系统"><a href="#一、多说系统" class="headerlink" title="一、多说系统"></a>一、多说系统</h2><blockquote>
+<p>国内普遍使用的评论系统，这里为了增加多说的 UA 等信息</p>
+</blockquote>
+<h3 id="1-1-本地化多说的-embed-js"><a href="#1-1-本地化多说的-embed-js" class="headerlink" title="1.1 本地化多说的 embed.js"></a>1.1 本地化多说的 embed.js</h3><blockquote>
+<p>先说说这个 embed.js 是个啥，多说社会化评论框核心脚本 <code>embed.js</code> 文件是个多说官方提供的公用文件，如果官方渠道过于拥挤，或者服务器故障（这个已经有过了~~），就会导致页面加载过慢或者完全无法加载，如果我们将其下载下来放到自己的空间上，就会提高加载速度，同时也可以对多说评论框做一些个性化调整</p>
+</blockquote>
+<p>1、下载 <code>embed.js</code></p>
+<ul>
+<li>多说官方：<a href="http://static.duoshuo.com/embed.js" target="_blank" rel="noopener">http://static.duoshuo.com/embed.js</a></li>
+<li>然后保存下来，上传到自己的的空间里，你可以上传到 github 上，也可以上传到第三方的云存储上。</li>
+</ul>
+<p>2、修改多说的调用地址<br><figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"><span class="meta"># 修改下载下来的 embed.js 中的调用地址</span></span><br><span class="line">ds.src = <span class="string">'你的存放路径/embed.js'</span>;</span><br></pre></td></tr></table></figure></p>
+<p>3、验证<br>再次访问刷新页面，如果多说评论是正常可用的，那么就证明 <code>embed.js</code> 本地化成功</p>
+<h3 id="1-2、自定义多说后台自定义CSS样式"><a href="#1-2、自定义多说后台自定义CSS样式" class="headerlink" title="1.2、自定义多说后台自定义CSS样式"></a>1.2、自定义多说后台自定义CSS样式</h3><blockquote>
+<p>同样的，多说允许自定义评论框的样式，效果图中很明显的样式可以自定义</p>
+</blockquote>
+<p>打开多说后台的【设置-基本设置-自定义 css】即可<br><img src="http://mingmings.qiniudn.com/git_duoshuo-1.png" width="300" height="325"></p>
+<p>我目前用的样式<br><figure class="highlight scss"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*Head Start*/</span></span><br><span class="line"><span class="selector-id">#ds-thread</span> <span class="selector-id">#ds-reset</span> <span class="selector-tag">ul</span><span class="selector-class">.ds-comments-tabs</span> <span class="selector-tag">li</span><span class="selector-class">.ds-tab</span> <span class="selector-tag">a</span><span class="selector-class">.ds-current</span> &#123;</span><br><span class="line">    <span class="attribute">border</span>: <span class="number">0px</span>;</span><br><span class="line">    <span class="attribute">color</span>: <span class="number">#6D6D6B</span>;</span><br><span class="line">    <span class="attribute">text-shadow</span>: none;</span><br><span class="line">    <span class="attribute">background</span>: <span class="number">#F3F3F3</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#ds-thread</span> <span class="selector-id">#ds-reset</span> <span class="selector-class">.ds-highlight</span> &#123;</span><br><span class="line">    <span class="attribute">font-family</span>: Microsoft YaHei, <span class="string">"Helvetica Neue"</span>, Helvetica, Arial, Sans-serif;</span><br><span class="line">    ;<span class="attribute">font-size</span>: <span class="number">100%</span>;</span><br><span class="line">    <span class="attribute">color</span>: <span class="number">#6D6D6B</span> <span class="meta">!important</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#ds-thread</span> <span class="selector-id">#ds-reset</span> <span class="selector-tag">ul</span><span class="selector-class">.ds-comments-tabs</span> <span class="selector-tag">li</span><span class="selector-class">.ds-tab</span> <span class="selector-tag">a</span><span class="selector-class">.ds-current</span>:hover &#123;</span><br><span class="line">    <span class="attribute">color</span>: <span class="number">#696a52</span>;</span><br><span class="line">    <span class="attribute">background</span>: <span class="number">#F2F2F2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#ds-thread</span> <span class="selector-id">#ds-reset</span> <span class="selector-tag">a</span><span class="selector-class">.ds-highlight</span>:hover &#123;</span><br><span class="line">    <span class="attribute">color</span>: <span class="number">#696a52</span> <span class="meta">!important</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#ds-thread</span> &#123;</span><br><span class="line">    <span class="attribute">padding-left</span>: <span class="number">15px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#ds-thread</span> <span class="selector-id">#ds-reset</span> <span class="selector-tag">li</span><span class="selector-class">.ds-post</span>,<span class="selector-id">#ds-thread</span> <span class="selector-id">#ds-reset</span> <span class="selector-id">#ds-hot-posts</span> &#123;</span><br><span class="line">    <span class="attribute">overflow</span>: visible;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#ds-thread</span> <span class="selector-id">#ds-reset</span> <span class="selector-class">.ds-post-self</span> &#123;</span><br><span class="line">    <span class="attribute">padding</span>: <span class="number">10px</span> <span class="number">0</span> <span class="number">10px</span> <span class="number">10px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#ds-thread</span> <span class="selector-id">#ds-reset</span> <span class="selector-tag">li</span><span class="selector-class">.ds-post</span>,<span class="selector-id">#ds-thread</span> <span class="selector-id">#ds-reset</span> <span class="selector-class">.ds-post-self</span> &#123;</span><br><span class="line">    <span class="attribute">border</span>: <span class="number">0</span> <span class="meta">!important</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#ds-reset</span> <span class="selector-class">.ds-avatar</span>, <span class="selector-id">#ds-thread</span> <span class="selector-id">#ds-reset</span> <span class="selector-tag">ul</span><span class="selector-class">.ds-children</span> <span class="selector-class">.ds-avatar</span> &#123;</span><br><span class="line">    <span class="attribute">top</span>: <span class="number">15px</span>;</span><br><span class="line">    <span class="attribute">left</span>: -<span class="number">20px</span>;</span><br><span class="line">    <span class="attribute">padding</span>: <span class="number">5px</span>;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">36px</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">36px</span>;</span><br><span class="line">    <span class="attribute">box-shadow</span>: -<span class="number">1px</span> <span class="number">0</span> <span class="number">1px</span> rgba(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,.<span class="number">15</span>) inset;</span><br><span class="line">    <span class="attribute">border-radius</span>: <span class="number">46px</span>;</span><br><span class="line">    <span class="attribute">background</span>: <span class="number">#FAFAFA</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#ds-thread</span> <span class="selector-class">.ds-avatar</span> <span class="selector-tag">a</span> &#123;</span><br><span class="line">    <span class="attribute">display</span>: inline-block;</span><br><span class="line">    <span class="attribute">padding</span>: <span class="number">1px</span>;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">32px</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">32px</span>;</span><br><span class="line">    <span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#b9baa6</span>;</span><br><span class="line">    <span class="attribute">border-radius</span>: <span class="number">50%</span>;</span><br><span class="line">    <span class="attribute">background-color</span>: <span class="number">#fff</span> <span class="meta">!important</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#ds-thread</span> <span class="selector-class">.ds-avatar</span> <span class="selector-tag">a</span>:hover &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#ds-thread</span> <span class="selector-class">.ds-avatar</span> &gt; <span class="selector-tag">img</span> &#123;</span><br><span class="line">    <span class="attribute">margin</span>: <span class="number">2px</span> <span class="number">0</span> <span class="number">0</span> <span class="number">2px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#ds-thread</span> <span class="selector-id">#ds-reset</span> <span class="selector-class">.ds-replybox</span> &#123;</span><br><span class="line">    <span class="attribute">box-shadow</span>: none;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#ds-thread</span> <span class="selector-id">#ds-reset</span> <span class="selector-tag">ul</span><span class="selector-class">.ds-children</span> <span class="selector-class">.ds-replybox</span><span class="selector-class">.ds-inline-replybox</span> <span class="selector-tag">a</span><span class="selector-class">.ds-avatar</span>,</span><br><span class="line"><span class="selector-id">#ds-reset</span> <span class="selector-class">.ds-replybox</span><span class="selector-class">.ds-inline-replybox</span> <span class="selector-tag">a</span><span class="selector-class">.ds-avatar</span> &#123;</span><br><span class="line">    <span class="attribute">left</span>: <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">padding</span>: <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">32px</span> <span class="meta">!important</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">32px</span> <span class="meta">!important</span>;</span><br><span class="line">    <span class="attribute">background</span>: none;</span><br><span class="line">    <span class="attribute">box-shadow</span>: none;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#ds-reset</span> <span class="selector-class">.ds-replybox</span><span class="selector-class">.ds-inline-replybox</span> <span class="selector-tag">a</span><span class="selector-class">.ds-avatar</span> <span class="selector-tag">img</span> &#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">32px</span> <span class="meta">!important</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">32px</span> <span class="meta">!important</span>;</span><br><span class="line">    <span class="attribute">border-radius</span>: <span class="number">50%</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#ds-reset</span> <span class="selector-class">.ds-replybox</span> <span class="selector-tag">a</span><span class="selector-class">.ds-avatar</span>,</span><br><span class="line"><span class="selector-id">#ds-reset</span> <span class="selector-class">.ds-replybox</span> <span class="selector-class">.ds-avatar</span> <span class="selector-tag">img</span> &#123;</span><br><span class="line">    <span class="attribute">padding</span>: <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">32px</span> <span class="meta">!important</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">32px</span> <span class="meta">!important</span>;</span><br><span class="line">    <span class="attribute">border-radius</span>: <span class="number">5px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#ds-reset</span> <span class="selector-class">.ds-avatar</span> <span class="selector-tag">img</span> &#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">32px</span> <span class="meta">!important</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">32px</span> <span class="meta">!important</span>;</span><br><span class="line">    <span class="attribute">border-radius</span>: <span class="number">32px</span>;</span><br><span class="line">    <span class="attribute">box-shadow</span>: <span class="number">0</span> <span class="number">1px</span> <span class="number">3px</span> rgba(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0.22</span>);</span><br><span class="line">    -webkit-<span class="attribute">transition</span>: .<span class="number">8s</span> all ease-in-out;</span><br><span class="line">    -moz-<span class="attribute">transition</span>: .<span class="number">4s</span> all ease-in-out;</span><br><span class="line">    -o-<span class="attribute">transition</span>: .<span class="number">4s</span> all ease-in-out;</span><br><span class="line">    -ms-<span class="attribute">transition</span>: .<span class="number">4s</span> all ease-in-out;</span><br><span class="line">    <span class="attribute">transition</span>: .<span class="number">4s</span> all ease-in-out;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.ds-post-self</span>:hover <span class="selector-class">.ds-avatar</span> <span class="selector-tag">img</span> &#123;</span><br><span class="line">    -webkit-<span class="attribute">transform</span>: rotateX(<span class="number">360deg</span>);</span><br><span class="line">    -moz-<span class="attribute">transform</span>: rotate(<span class="number">360deg</span>);</span><br><span class="line">    -o-<span class="attribute">transform</span>: rotate(<span class="number">360deg</span>);</span><br><span class="line">    -ms-<span class="attribute">transform</span>: rotate(<span class="number">360deg</span>);</span><br><span class="line">    <span class="attribute">transform</span>: rotate(<span class="number">360deg</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#ds-thread</span> <span class="selector-id">#ds-reset</span> <span class="selector-class">.ds-comment-body</span> &#123;</span><br><span class="line">    -webkit-<span class="attribute">transition-delay</span>: initial;</span><br><span class="line">    -webkit-<span class="attribute">transition-duration</span>: <span class="number">0.4s</span>;</span><br><span class="line">    -webkit-<span class="attribute">transition-property</span>: all;</span><br><span class="line">    -webkit-<span class="attribute">transition-timing-function</span>: initial;</span><br><span class="line">    <span class="attribute">background</span>: <span class="number">#F7F7F7</span>;</span><br><span class="line">    <span class="attribute">padding</span>: <span class="number">15px</span> <span class="number">15px</span> <span class="number">15px</span> <span class="number">47px</span>;</span><br><span class="line">    <span class="attribute">border-radius</span>: <span class="number">5px</span>;</span><br><span class="line">    <span class="attribute">box-shadow</span>: <span class="number">#B8B9B9</span> <span class="number">0</span> <span class="number">1px</span> <span class="number">3px</span>;</span><br><span class="line">    <span class="attribute">border</span>: white <span class="number">1px</span> solid;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#ds-thread</span> <span class="selector-id">#ds-reset</span> <span class="selector-tag">ul</span><span class="selector-class">.ds-children</span> <span class="selector-class">.ds-comment-body</span> &#123;</span><br><span class="line">    <span class="attribute">padding-left</span>: <span class="number">15px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#ds-thread</span> <span class="selector-id">#ds-reset</span> <span class="selector-class">.ds-comment-body</span> <span class="selector-tag">p</span> &#123;</span><br><span class="line">    <span class="attribute">color</span>: <span class="number">#787968</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#ds-thread</span> <span class="selector-id">#ds-reset</span> <span class="selector-class">.ds-comments</span> &#123;</span><br><span class="line">    <span class="attribute">border-bottom</span>: <span class="number">0px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#ds-thread</span> <span class="selector-id">#ds-reset</span> <span class="selector-class">.ds-powered-by</span> &#123;</span><br><span class="line">    <span class="attribute">display</span>: none;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#ds-thread</span> <span class="selector-id">#ds-reset</span> <span class="selector-class">.ds-comments</span> <span class="selector-tag">a</span><span class="selector-class">.ds-user-name</span> &#123;</span><br><span class="line">    <span class="attribute">font-weight</span>: normal;</span><br><span class="line">    <span class="attribute">color</span>: <span class="number">#3D3D3D</span> <span class="meta">!important</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#ds-thread</span> <span class="selector-id">#ds-reset</span> <span class="selector-class">.ds-comments</span> <span class="selector-tag">a</span><span class="selector-class">.ds-user-name</span>:hover &#123;</span><br><span class="line">    <span class="attribute">color</span>: <span class="number">#D32</span> <span class="meta">!important</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#ds-thread</span> <span class="selector-id">#ds-reset</span> <span class="selector-id">#ds-bubble</span> &#123;</span><br><span class="line">    <span class="attribute">display</span>: none <span class="meta">!important</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#ds-thread</span> <span class="selector-id">#ds-reset</span> <span class="selector-id">#ds-hot-posts</span> &#123;</span><br><span class="line">    <span class="attribute">border</span>: <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#ds-reset</span> <span class="selector-id">#ds-hot-posts</span> <span class="selector-class">.ds-gradient-bg</span> &#123;</span><br><span class="line">    <span class="attribute">background</span>: none;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#ds-thread</span> <span class="selector-id">#ds-reset</span> <span class="selector-class">.ds-comment-body</span>:hover &#123;</span><br><span class="line">    <span class="attribute">background-color</span>: <span class="number">#F1F1F1</span>;</span><br><span class="line">    -webkit-<span class="attribute">transition-delay</span>: initial;</span><br><span class="line">    -webkit-<span class="attribute">transition-duration</span>: <span class="number">0.4s</span>;</span><br><span class="line">    -webkit-<span class="attribute">transition-property</span>: all;</span><br><span class="line">    -webkit-<span class="attribute">transition-timing-function</span>: initial;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*Head End*/</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="1-3、多说显示-UA"><a href="#1-3、多说显示-UA" class="headerlink" title="1.3、多说显示 UA"></a>1.3、多说显示 UA</h3><blockquote>
+<p>UA，即显示评论者所使用的代理信息（如 操作系统、浏览器）等，效果如上图</p>
+</blockquote>
+<p>这里 Next 主题的作者已经帮我们集成好了，只需要编辑<code>主题配置</code>文件<code>_congig.yml</code> 如下：<br><figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Make duoshuo show UA</span></span><br><span class="line"><span class="comment"># user_id must NOT be null when admin_enable is true!</span></span><br><span class="line"><span class="comment"># you can visit http://dev.duoshuo.com get duoshuo user id.</span></span><br><span class="line"><span class="attr">duoshuo_info:</span></span><br><span class="line"><span class="attr">  ua_enable:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">  admin_enable:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">  user_id:</span> <span class="string">xxxxxx</span></span><br><span class="line"><span class="attr">  admin_nickname:</span> <span class="string">Root</span></span><br></pre></td></tr></table></figure></p>
+<p>只要设置 <code>ua_enable</code> 为 <code>true</code> 即可显示 UA 信息。 <code>admin_enable</code> 是用于显示 <code>Root</code> 文字，表明评论者是博主【默认显示的是博主，我给改成 Root 了】，此字段需要同时配置 <code>user_id</code>。 请访问 多说开发者中心，登录并访问 我的主页 获取 <code>user_id</code> ， 此 ID 是网址最后那串数字。</p>
+<p>最后上一张我的多说评论<br><img src="http://mingmings.qiniudn.com/git_duoshuo-2.png" width="300" height="325"></p>
+<h2 id="二、不蒜子统计"><a href="#二、不蒜子统计" class="headerlink" title="二、不蒜子统计"></a>二、不蒜子统计</h2><blockquote>
+<p>根据不蒜子的介绍，使用起来非常简单。只需要两行代码（一行脚本、一行HTML显示）搞定计数。</p>
+</blockquote>
+<h3 id="2-1-增加代码"><a href="#2-1-增加代码" class="headerlink" title="2.1 增加代码"></a>2.1 增加代码</h3><p>在引入 JS 的地方添加下列脚本即可，以我的 hexo 博客为例：<code>themes/next/layout/_partials/footer.swig</code></p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"># 在文件顶部引用</span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">async</span> <span class="attr">src</span>=<span class="string">"https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"copyright"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">"busuanzi_container_page_pv"</span>&gt;</span></span><br><span class="line">  本文阅读量：<span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">"busuanzi_value_page_pv"</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">&amp;nbsp; | &amp;nbsp;</span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">"busuanzi_container_site_pv"</span>&gt;</span></span><br><span class="line">    本站访问量:</span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">"busuanzi_value_site_pv"</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>效果如下<br><img src="http://mingmings.qiniudn.com/git_busuanzi.png" width="300" height="325"></p>
+<p>&emsp;&emsp;</p>
+<blockquote>
+<p>参考阅读</p>
+<ul>
+<li><a href="https://wsgzao.github.io/post/duoshuo/" target="_blank" rel="noopener">多说自定义CSS头像和多说评论显示UA</a></li>
+<li><a href="http://dev.duoshuo.com/docs/4ff1cfd0397309552c000017" target="_blank" rel="noopener">多说CSS修改</a></li>
+<li><a href="http://ssk.91txh.com/209" target="_blank" rel="noopener">多说回复后显示浏览器及操作系统信息（Useragent）</a></li>
+<li><a href="http://ssk.91txh.com/205" target="_blank" rel="noopener">多说社会化评论框核心脚本embed.js本地化方法</a></li>
+<li><a href="http://ssk.91txh.com/207" target="_blank" rel="noopener">多说社会化评论框添加 站长回复 标记</a></li>
+<li><a href="http://www.cylong.com/blog/2016/04/25/hexo-next-duoshuo/" target="_blank" rel="noopener">Hexo 集成多说评论 + 多说分享 + 美化多说</a></li>
+<li><a href="http://busuanzi.ibruce.info/" target="_blank" rel="noopener">不蒜子统计</a></li>
+</ul>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/note/tags/多说/" rel="tag"># 多说</a>
+          
+            <a href="/note/tags/UA/" rel="tag"># UA</a>
+          
+            <a href="/note/tags/站长信息/" rel="tag"># 站长信息</a>
+          
+            <a href="/note/tags/美化/" rel="tag"># 美化</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/note/git_github-pages.html" rel="next" title="github pages">
+                <i class="fa fa-chevron-left"></i> github pages
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/note/git_hexo-部署小议.html" rel="prev" title="hexo 部署小议">
+                hexo 部署小议 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">宋大明明</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/note/archives/">
+              
+                  <span class="site-state-item-count">78</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、多说系统"><span class="nav-number">1.</span> <span class="nav-text">一、多说系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-本地化多说的-embed-js"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 本地化多说的 embed.js</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2、自定义多说后台自定义CSS样式"><span class="nav-number">1.2.</span> <span class="nav-text">1.2、自定义多说后台自定义CSS样式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3、多说显示-UA"><span class="nav-number">1.3.</span> <span class="nav-text">1.3、多说显示 UA</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、不蒜子统计"><span class="nav-number">2.</span> <span class="nav-text">二、不蒜子统计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-增加代码"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 增加代码</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2014 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">宋大明明</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/note/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/note/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/note/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

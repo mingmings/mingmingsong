@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/note/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/note/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/note/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/note/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/note/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/note/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/note/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="zabbix_server.conf," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="zabbix 配置文件不算特别长，但是很多选项还是很有必要去了解的，所以这里参考官方文档和 ttlsa 上的内容，整理如下">
+<meta name="keywords" content="zabbix_server.conf">
+<meta property="og:type" content="article">
+<meta property="og:title" content="zabbix 配置文件详解">
+<meta property="og:url" content="http://mingmings.org/note/zabbix-配置文件详解-转.html">
+<meta property="og:site_name" content="异类深呼吸">
+<meta property="og:description" content="zabbix 配置文件不算特别长，但是很多选项还是很有必要去了解的，所以这里参考官方文档和 ttlsa 上的内容，整理如下">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2015-05-02T02:48:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="zabbix 配置文件详解">
+<meta name="twitter:description" content="zabbix 配置文件不算特别长，但是很多选项还是很有必要去了解的，所以这里参考官方文档和 ttlsa 上的内容，整理如下">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/note/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://mingmings.org/note/zabbix-配置文件详解-转.html"/>
+
+
+
+
+
+  <title>zabbix 配置文件详解 | 异类深呼吸</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-55424732-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?fe4164c60a9dd0e73810fa0243796a5d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/note/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">异类深呼吸</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/note/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/note/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/note/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/note/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://mingmings.org/note/note/zabbix-配置文件详解-转.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="宋大明明">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/note/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="异类深呼吸">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">zabbix 配置文件详解</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-04-27T12:49:59+08:00">
+                2015-04-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/note/categories/zabbix/" itemprop="url" rel="index">
+                    <span itemprop="name">zabbix</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>zabbix 配置文件不算特别长，但是很多选项还是很有必要去了解的，所以这里参考官方文档和 ttlsa 上的内容，整理如下<br><a id="more"></a></p>
+<ul>
+<li>AlertScriptsPath<br>默认值：/usr/local/share/zabbix/alertscripts<br>说明：告警脚本目录</li>
+</ul>
+<ul>
+<li>AllowRoot<br>默认值：0 说明：是否允许使用root启动，0:不允许，1:允许，默认情况下她会使用zabbix用户来启动zabbix进程，不推荐使用root</li>
+</ul>
+<ul>
+<li>CacheSize<br>取值范围： 128K-8G<br>默认值：8M<br>说明：配置缓存，用于存储host，item，trigger数据，2.2.3版本之前最大支持2G，目前最大支持8G，一般用不了多少的。</li>
+</ul>
+<ul>
+<li>CacheUpdateFrequency<br>取值范围：1-3600<br>默认值：60<br>说明：多少秒更新一次配置缓存</li>
+</ul>
+<ul>
+<li>DBHost<br>默认值：localhost<br>说明：数据库主机地址</li>
+</ul>
+<ul>
+<li>DBName<br>默认值：无<br>必填：是</li>
+</ul>
+<ul>
+<li>DBPassword：<br>默认值：孔<br>说明：数据库密码</li>
+</ul>
+<ul>
+<li>DBPort<br>取值范围：1024-65535<br>默认值:3306<br>说明：SQLite作为DB，这个选项请忽略，如果使用socket链接，也请忽略。</li>
+</ul>
+<ul>
+<li>DBSchema<br>说明：Schema名称. 用于 IBM DB2 、 PostgreSQL.</li>
+</ul>
+<ul>
+<li>DBSocket<br>默认值：/tmp/mysql.sock<br>说明：mysql sock文件路径</li>
+</ul>
+<ul>
+<li><p>DebugLevel<br>取值范围：0-5<br>默认值：3<br>说明: 指定debug级别</p>
+<p>  0 – 基本信息<br>  1 – critical信息<br>  2 – error信息<br>  3 – warnings信息<br>  4 – 调试日志，日志内容很多，慎重使用<br>  5 – 用于调试web和vmware监控</p>
+</li>
+</ul>
+<ul>
+<li>ExternalScripts<br>默认值： /usr/local/share/zabbix/externalscripts<br>说明： 外部脚本目录</li>
+</ul>
+<ul>
+<li>Fping6Location<br>默认值：/usr/sbin/fping6<br>说明：fping6路径，不懂fping的人可以百度一下，如果zabbix非root启动，请给fping6 SUID</li>
+</ul>
+<ul>
+<li>FpingLocation<br>默认值：/usr/sbin/fping<br>说明:和上面的一样</li>
+</ul>
+<ul>
+<li>HistoryCacheSize<br>取值范围：128K-2G<br>默认值：8M<br>说明：<br>历史记录缓存大小，用于存储历史记录</li>
+</ul>
+<ul>
+<li>HistoryTextCacheSize<br>取值范围：128K-2G<br>默认值：16M<br>说明：文本类型历史记录的缓存大小，存储character, text 、log历史记录.</li>
+</ul>
+<ul>
+<li>HousekeepingFrequency<br>取值范围：0-24<br>默认值：1<br>说明：housekeep执行频率，默认每小时回去删除一些过期数据。如果server重启，那么30分钟之后才执行一次，接下来，每隔一小时在执行一次。</li>
+</ul>
+<ul>
+<li>Include<br>说明：include配置文件，可以使用正则表达式，例如：/usr/local/zabbix-2.4.4/conf/ttlsa.com/*.conf</li>
+</ul>
+<ul>
+<li>JavaGateway<br>说明：Zabbix Java gateway的主机名，需要启动Java pollers</li>
+</ul>
+<ul>
+<li>JavaGatewayPort<br>取值范围：1024-32767<br>默认值：10052<br>Zabbix Java gateway监听端口</li>
+</ul>
+<ul>
+<li>ListenIP<br>默认值：0.0.0.0<br>说明：监听地址，留空则会在所有的地址上监听，可以监听多个IP地址，ip之间使用逗号分隔，例如：127.0.0.1,10.10.0.2</li>
+</ul>
+<ul>
+<li>ListenPort<br>取值范围：1024-32767<br>默认值：10051<br>说明：监听端口</li>
+</ul>
+<ul>
+<li>LoadModule<br>说明：加载模块，格式: LoadModule=，文件必须在指定的LoadModulePath目录下，如果需要加载多个模块，那么写多个即可。</li>
+</ul>
+<ul>
+<li>LoadModulePath<br>模块目录，参考上面</li>
+</ul>
+<ul>
+<li>LogFile<br>日志文件，例如：/data/logs/zabbix/zabbix-server.log</li>
+</ul>
+<ul>
+<li>LogFileSize<br>取值范围：0-1024<br>默认值：1<br>0表示禁用日志自动rotation，如果日志达到了限制，并且rotation失败，老日志文件将会被清空掉，重新生成一个新日志。</li>
+</ul>
+<ul>
+<li>LogSlowQueries<br>取值范围：0-3600000<br>默认值：0<br>多慢的数据库查询将会被记录，单位：毫秒，0表示不记录慢查询。只有在DebugLevel=3时，这个配置才有效。</li>
+</ul>
+<ul>
+<li>MaxHousekeeperDelete<br>取值范围： 0-1000000<br>默认值：5000<br>housekeeping一次删除的数据不能大于MaxHousekeeperDelete</li>
+</ul>
+<ul>
+<li>PidFile<br>默认值：/tmp/zabbix_server.pid<br>PID文件</li>
+</ul>
+<ul>
+<li>ProxyConfigFrequency<br>取值范围：1-604800<br>默认值：3600<br>proxy被动模式下，server多少秒同步配置文件至proxy。</li>
+</ul>
+<ul>
+<li>ProxyDataFrequency<br>取值范围：1-3600<br>默认值:1<br>被动模式下，zabbix server间隔多少秒向proxy请求历史数据</li>
+</ul>
+<ul>
+<li>SenderFrequency<br>取值范围：5-3600<br>默认值：30<br>间隔多少秒，再尝试发送为发送的报警</li>
+</ul>
+<ul>
+<li>SNMPTrapperFile<br>默认值：/tmp/zabbix_traps.tmp<br>SNMP trap发送到server的数据临时存放文件。</li>
+</ul>
+<ul>
+<li>SourceIP<br>出口IP地址</li>
+</ul>
+<ul>
+<li>SSHKeyLocation<br>SSH公钥私钥路径</li>
+</ul>
+<ul>
+<li>SSLCertLocation<br>SSL证书目录，用于web监控</li>
+</ul>
+<ul>
+<li>SSLKeyLocation<br>SSL认证私钥路径、用于web监控</li>
+</ul>
+<ul>
+<li>SSLCALocation<br>SSL认证,CA路径，如果为空，将会使用系统默认的CA</li>
+</ul>
+<ul>
+<li>StartDBSyncers<br>取值范围：1-100<br>默认值：4<br>预先foke DB Syncers的数量，1.8.5以前最大值为64</li>
+</ul>
+<ul>
+<li><p>StartDiscoverers<br>取值范围：0-250<br>默认值：1<br>pre-forked discoverers的数量，1.8.5版本以前最大可为255</p>
+</li>
+<li><p>StartHTTPPollers<br>取值范围：0-1000<br>默认值：1<br>pre-forked HTTP pollers的数量，1.8.5以前最大255</p>
+</li>
+</ul>
+<ul>
+<li>StartIPMIPollers<br>取值范围：0-1000<br>默认值：0<br>pre-forked IPMI pollers的数量，1.8.5之前，最大为255</li>
+</ul>
+<ul>
+<li>Timeout<br>取值范围：1-30<br>默认值：3<br>agent，snmp，external check的超时时间，单位为秒</li>
+</ul>
+<ul>
+<li>TmpDir<br>默认值：/tmp</li>
+</ul>
+<ul>
+<li>TrapperTimeout<br>取值范围：1-300<br>默认值：300<br>处理trapper数据的超时时间</li>
+</ul>
+<ul>
+<li>TrendCacheSize<br>取值范围：128K-2G<br>默认值：4M<br>历史数据缓存大小</li>
+</ul>
+<ul>
+<li>UnavailableDelay<br>取值范围：1-3600<br>默认值：60<br>间隔多少秒再次检测主机是否可用</li>
+</ul>
+<ul>
+<li>UnreachableDelay<br>取值范围：1-3600<br>默认值：15<br>间隔多少秒再次检测主机是否可达。</li>
+</ul>
+<ul>
+<li>UnreachablePeriod<br>取值范围：1-3600<br>默认值：45<br>检测到主机不可用，多久将它置为不可达</li>
+</ul>
+<ul>
+<li>User<br>默认值：zabbix<br>启动 zabbix server 的用户，在配置禁止 root 启动，并且当前 shell 用户是 root 得情况下有效。如果当前用户是 ttlsa，那么 zabbix server 的运行用户是 ttlsa</li>
+</ul>
+<ul>
+<li>ValueCacheSize<br>取值范围：0,128K-64G<br>默认值：8M<br>0 表示禁用，history value 缓存大小，当缓存超标了，将会每隔 5 分钟往 server 日志里面记录。养成看日志的好习惯。</li>
+</ul>
+<h3 id="更多阅读"><a href="#更多阅读" class="headerlink" title="更多阅读"></a>更多阅读</h3><ul>
+<li><a href="https://www.zabbix.com/documentation/1.8/manual/processes/zabbix_agentd" target="_blank" rel="noopener">zabbix_agentd.conf</a></li>
+<li><a href="https://www.zabbix.com/documentation/2.4/manual/appendix/config/zabbix_server" target="_blank" rel="noopener">zabbix_server.conf</a></li>
+<li><a href="http://www.ttlsa.com/zabbix/zabbix_server-conf-detail/" target="_blank" rel="noopener">ttlsa</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/note/tags/zabbix-server-conf/" rel="tag"># zabbix_server.conf</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/note/健身_网球初学小记.html" rel="next" title="网球初学小记">
+                <i class="fa fa-chevron-left"></i> 网球初学小记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/note/python 实现并行化.html" rel="prev" title="python 并行化">
+                python 并行化 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">宋大明明</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/note/archives/">
+              
+                  <span class="site-state-item-count">78</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#更多阅读"><span class="nav-number">1.</span> <span class="nav-text">更多阅读</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2014 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">宋大明明</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/note/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/note/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/note/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/note/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/note/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/note/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/note/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/note/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/note/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/note/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="hexo 报错," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="我们一步一步走下去，踏踏实实的走去，用不抗拒生命交给我们的重负，才是第一个勇者。到了暮然回首的那一瞬间，生命必然给我们公平的答案额又一次乍喜的心情，那是的山和水，又恢复了是山是水，而人生已然走过，是多么美好的一个秋天。——三毛">
+<meta name="keywords" content="hexo 报错">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hexo 报错及解决">
+<meta property="og:url" content="http://mingmings.org/note/git_hexo-报错及解决.html">
+<meta property="og:site_name" content="异类深呼吸">
+<meta property="og:description" content="我们一步一步走下去，踏踏实实的走去，用不抗拒生命交给我们的重负，才是第一个勇者。到了暮然回首的那一瞬间，生命必然给我们公平的答案额又一次乍喜的心情，那是的山和水，又恢复了是山是水，而人生已然走过，是多么美好的一个秋天。——三毛">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-04-26T04:19:06.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="hexo 报错及解决">
+<meta name="twitter:description" content="我们一步一步走下去，踏踏实实的走去，用不抗拒生命交给我们的重负，才是第一个勇者。到了暮然回首的那一瞬间，生命必然给我们公平的答案额又一次乍喜的心情，那是的山和水，又恢复了是山是水，而人生已然走过，是多么美好的一个秋天。——三毛">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/note/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://mingmings.org/note/git_hexo-报错及解决.html"/>
+
+
+
+
+
+  <title>hexo 报错及解决 | 异类深呼吸</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-55424732-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?fe4164c60a9dd0e73810fa0243796a5d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/note/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">异类深呼吸</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/note/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/note/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/note/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/note/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://mingmings.org/note/note/git_hexo-报错及解决.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="宋大明明">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/note/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="异类深呼吸">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">hexo 报错及解决</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-10-30T14:29:14+08:00">
+                2015-10-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/note/categories/github/" itemprop="url" rel="index">
+                    <span itemprop="name">github</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><blockquote class="blockquote-center">我们一步一步走下去，踏踏实实的走去，用不抗拒生命交给我们的重负，才是第一个勇者。到了暮然回首的那一瞬间，生命必然给我们公平的答案额又一次乍喜的心情，那是的山和水，又恢复了是山是水，而人生已然走过，是多么美好的一个秋天。——三毛</blockquote><br><a id="more"></a></p>
+<p>之前的笔记本环境崩溃过一次，发觉好多之前整理的笔记弄丢了，没办法只得重新开始折腾，遂把这次在弄的东西整理一下，这篇主要是再次折腾 hexo 时候出现的一些问题和报错</p>
+<h2 id="一、安装部署报错"><a href="#一、安装部署报错" class="headerlink" title="一、安装部署报错"></a>一、安装部署报错</h2><h3 id="1-1-本地调试报错"><a href="#1-1-本地调试报错" class="headerlink" title="1.1 本地调试报错"></a>1.1 本地调试报错</h3><blockquote>
+<p>原文来自这里，<a href="http://blog.csdn.net/u012246342/article/details/51543370，其他软件占用了" target="_blank" rel="noopener">http://blog.csdn.net/u012246342/article/details/51543370，其他软件占用了</a> 4000 端口，导致 <code>hexo -s</code> 无法启动</p>
+</blockquote>
+<p><strong>解决办法</strong><br>启动 <code>hexo s</code> 的时候，用这个命令，换一个端口即可<br><figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">hexo s -<span class="selector-tag">p</span> <span class="number">5000</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="1-2-deploy-出错"><a href="#1-2-deploy-出错" class="headerlink" title="1.2 deploy 出错"></a>1.2 deploy 出错</h3><blockquote>
+<p>升级到 hexo 的 3.x 版本，发觉按照正常的安装 deploy 后报错，根据提示，google 了下，发觉很多人给出了这个问题答案，<a href="https://github.com/hexojs/hexo/issues/1154" target="_blank" rel="noopener">https://github.com/hexojs/hexo/issues/1154</a></p>
+</blockquote>
+<p>首先要确定 <code>_config.yml</code> 的 <code>deploy:</code> 后面有一个空格<br><figure class="highlight dts"><table><tr><td class="code"><pre><span class="line"><span class="symbol">deploy:</span> </span><br><span class="line"><span class="symbol">  type:</span> git</span><br><span class="line"><span class="symbol">  repo:</span> git@github.com:<span class="params">&lt;your github username&gt;</span>/<span class="params">&lt;your github username&gt;</span>.github.io.git</span><br><span class="line"><span class="symbol">  branch:</span> gh-pages</span><br></pre></td></tr></table></figure></p>
+<p>如果还报错，应该就是没有装 <code>hexo-deployer-git</code></p>
+<p>怎么安装：<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> npm install hexo-deployer-git --save</span></span><br></pre></td></tr></table></figure></p>
+<p>然后再：<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> hexo deploy</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="二、其他问题"><a href="#二、其他问题" class="headerlink" title="二、其他问题"></a>二、其他问题</h2><h3 id="2-1-Cannot-find-module"><a href="#2-1-Cannot-find-module" class="headerlink" title="2.1 Cannot find module"></a>2.1 Cannot find module</h3><blockquote>
+<p>deploy 时候报错如下，但是不影响使用，参见 <a href="https://github.com/hexojs/hexo/issues/1326" target="_blank" rel="noopener">https://github.com/hexojs/hexo/issues/1326</a></p>
+</blockquote>
+<figure class="highlight arduino"><table><tr><td class="code"><pre><span class="line">&#123; [Error: Cannot <span class="built_in">find</span> <span class="keyword">module</span> <span class="string">'./build/Release/DTraceProviderBindings'</span>] code: <span class="string">'MODULE_NOT_FOUND'</span> &#125;</span><br><span class="line">&#123; [Error: Cannot <span class="built_in">find</span> <span class="keyword">module</span> <span class="string">'./build/default/DTraceProviderBindings'</span>] code: <span class="string">'MODULE_NOT_FOUND'</span> &#125;</span><br><span class="line">&#123; [Error: Cannot <span class="built_in">find</span> <span class="keyword">module</span> <span class="string">'./build/Debug/DTraceProviderBindings'</span>] code: <span class="string">'MODULE_NOT_FOUND'</span> &#125;</span><br></pre></td></tr></table></figure>
+<p><strong>解决办法</strong><br>安装 hexo 的时候使用<br><figure class="highlight coffeescript"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">npm</span> install hexo --<span class="literal">no</span>-optional</span><br></pre></td></tr></table></figure></p>
+<p>不过这个点在我本地没生效，issue 里多数都可以解决，目前还未找到原因</p>
+<p>更多错误的解决办法详见参考阅读的 <code>Xuanwo&#39;s Blog</code></p>
+<blockquote>
+<p>2017-04-26 更新</p>
+<p>上述错误在我新换的机器上仍旧出现，再次 google 查询，发觉这个错误已经有人总结了下，这里列举官网和网友的解答，本地测试完成后真的完美解决了</p>
+<p>根据官方文档的描述，解决办法就是上述贴的<code>$ npm install hexo --no-optional</code>，但是不生效的话，issue 里有个哥们指出了这个办法，按照这个办法可以解决掉</p>
+<blockquote>
+<p>$ npm install hexo –no-optional<br>if it doesn’t work<br>try<br>$ npm uninstall hexo-cli -g<br>$ npm install hexo-cli -g</p>
+</blockquote>
+<p>我经过两次卸载再安装，发觉再次使用错误不在复现，完美解决<br>这里我在列举下我本地的环境</p>
+<blockquote>
+<p>$ npm install hexo-cli -g –no-optional</p>
+<p><a href="mailto:hexo-util@0.6.0" target="_blank" rel="noopener">hexo-util@0.6.0</a> postinstall /Users/song/.nvm/versions/node/v4.4.4/lib/node_modules/hexo-cli/node_modules/hexo-util<br>npm run build:highlight</p>
+<p>|<br><a href="mailto:hexo-util@0.6.0" target="_blank" rel="noopener">hexo-util@0.6.0</a> build:highlight  /Users/song/.nvm/versions/node/v4.4.4/lib/node_modules/hexo-cli/node_modules/hexo-util<br>node scripts/build_highlight_alias.js &gt; highlight_alias.json</p>
+<p>/Users/song/.nvm/versions/node/v4.4.4/bin/hexo -&gt; /Users/song/.nvm/versions/node/v4.4.4/lib/node_modules/hexo-cli/bin/hexo<br><a href="mailto:hexo-cli@1.0.2" target="_blank" rel="noopener">hexo-cli@1.0.2</a> /Users/song/.nvm/versions/node/v4.4.4/lib/node_modules/hexo-cli<br>├── <a href="mailto:abbrev@1.1.0" target="_blank" rel="noopener">abbrev@1.1.0</a><br>├── <a href="mailto:object-assign@4.1.1" target="_blank" rel="noopener">object-assign@4.1.1</a><br>├── <a href="mailto:minimist@1.2.0" target="_blank" rel="noopener">minimist@1.2.0</a><br>├── <a href="mailto:bluebird@3.5.0" target="_blank" rel="noopener">bluebird@3.5.0</a><br>├── <a href="mailto:tildify@1.2.0" target="_blank" rel="noopener">tildify@1.2.0</a> (<a href="mailto:os-homedir@1.0.2" target="_blank" rel="noopener">os-homedir@1.0.2</a>)<br>├── <a href="mailto:hexo-log@0.1.2" target="_blank" rel="noopener">hexo-log@0.1.2</a> (<a href="mailto:bunyan@1.8.10" target="_blank" rel="noopener">bunyan@1.8.10</a>)<br>├── <a href="mailto:chalk@1.1.3" target="_blank" rel="noopener">chalk@1.1.3</a> (<a href="mailto:escape-string-regexp@1.0.5" target="_blank" rel="noopener">escape-string-regexp@1.0.5</a>, <a href="mailto:ansi-styles@2.2.1" target="_blank" rel="noopener">ansi-styles@2.2.1</a>, <a href="mailto:supports-color@2.0.0" target="_blank" rel="noopener">supports-color@2.0.0</a>, <a href="mailto:strip-ansi@3.0.1" target="_blank" rel="noopener">strip-ansi@3.0.1</a>, <a href="mailto:has-ansi@2.0.0" target="_blank" rel="noopener">has-ansi@2.0.0</a>)<br>├── <a href="mailto:hexo-util@0.6.0" target="_blank" rel="noopener">hexo-util@0.6.0</a> (<a href="mailto:html-entities@1.2.1" target="_blank" rel="noopener">html-entities@1.2.1</a>, <a href="mailto:striptags@2.2.1" target="_blank" rel="noopener">striptags@2.2.1</a>, <a href="mailto:camel-case@3.0.0" target="_blank" rel="noopener">camel-case@3.0.0</a>, <a href="mailto:cross-spawn@4.0.2" target="_blank" rel="noopener">cross-spawn@4.0.2</a>, <a href="mailto:highlight.js@9.11.0" target="_blank" rel="noopener">highlight.js@9.11.0</a>)<br>└── <a href="mailto:hexo-fs@0.1.6" target="_blank" rel="noopener">hexo-fs@0.1.6</a> (<a href="mailto:escape-string-regexp@1.0.5" target="_blank" rel="noopener">escape-string-regexp@1.0.5</a>, <a href="mailto:graceful-fs@4.1.11" target="_blank" rel="noopener">graceful-fs@4.1.11</a>, <a href="mailto:chokidar@1.6.1" target="_blank" rel="noopener">chokidar@1.6.1</a>) </p>
+<p>$ hexo –version<br>hexo: 3.3.1<br>hexo-cli: 1.0.2<br>os: Darwin 15.6.0 darwin x64<br>http_parser: 2.5.2<br>node: 4.4.4<br>v8: 4.5.103.35<br>uv: 1.8.0<br>zlib: 1.2.8<br>ares: 1.10.1-DEV<br>icu: 56.1<br>modules: 46<br>openssl: 1.0.2h</p>
+</blockquote>
+</blockquote>
+<p>&emsp;&emsp;</p>
+<blockquote>
+<p>参考阅读</p>
+<ul>
+<li><a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="noopener">hexo 中文文档</a></li>
+<li><a href="https://xuanwo.org/2014/08/14/hexo-usual-problem/" target="_blank" rel="noopener">Xuanwo’s Blog</a></li>
+<li><a href="https://hexo.io/docs/troubleshooting.html#Error-with-DTrace-Mac-OS-X" target="_blank" rel="noopener">Error with DTrace (Mac OS X)</a></li>
+<li><a href="https://github.com/hexojs/hexo/issues/1922" target="_blank" rel="noopener">Hexo installed on Mac, throw error “Cannot find module ‘./build/Release/DTraceProviderBindings’” #1922</a></li>
+</ul>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/note/tags/hexo-报错/" rel="tag"># hexo 报错</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/note/健身_健身补剂百科.html" rel="next" title="健身补剂百科">
+                <i class="fa fa-chevron-left"></i> 健身补剂百科
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/note/工作_2016-开篇.html" rel="prev" title="2016 开篇">
+                2016 开篇 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">宋大明明</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/note/archives/">
+              
+                  <span class="site-state-item-count">78</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、安装部署报错"><span class="nav-number">1.</span> <span class="nav-text">一、安装部署报错</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-本地调试报错"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 本地调试报错</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-deploy-出错"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 deploy 出错</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、其他问题"><span class="nav-number">2.</span> <span class="nav-text">二、其他问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-Cannot-find-module"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 Cannot find module</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2014 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">宋大明明</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/note/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/note/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/note/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

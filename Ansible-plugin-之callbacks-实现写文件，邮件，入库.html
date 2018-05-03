@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/note/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/note/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/note/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/note/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/note/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/note/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/note/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="ansible callbacks," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="不管你有多么真诚，遇到怀疑你的人，你就是谎言；不管你有多么单纯，遇到复杂的人，你就是有心计；不管你有多么的天真，遇到现实的人，你就是笑话；不管你多么专业，遇到不懂的人，你就是空白。所以，不要太在乎别人对你的评价，你需要的只是，做最好的自己，独一无二的自己。">
+<meta name="keywords" content="ansible callbacks">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ansible plugin 之 callbacks 实现写文件，邮件，入库">
+<meta property="og:url" content="http://mingmings.org/note/Ansible-plugin-之callbacks-实现写文件，邮件，入库.html">
+<meta property="og:site_name" content="异类深呼吸">
+<meta property="og:description" content="不管你有多么真诚，遇到怀疑你的人，你就是谎言；不管你有多么单纯，遇到复杂的人，你就是有心计；不管你有多么的天真，遇到现实的人，你就是笑话；不管你多么专业，遇到不懂的人，你就是空白。所以，不要太在乎别人对你的评价，你需要的只是，做最好的自己，独一无二的自己。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-03-04T04:17:20.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Ansible plugin 之 callbacks 实现写文件，邮件，入库">
+<meta name="twitter:description" content="不管你有多么真诚，遇到怀疑你的人，你就是谎言；不管你有多么单纯，遇到复杂的人，你就是有心计；不管你有多么的天真，遇到现实的人，你就是笑话；不管你多么专业，遇到不懂的人，你就是空白。所以，不要太在乎别人对你的评价，你需要的只是，做最好的自己，独一无二的自己。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/note/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://mingmings.org/note/Ansible-plugin-之callbacks-实现写文件，邮件，入库.html"/>
+
+
+
+
+
+  <title>Ansible plugin 之 callbacks 实现写文件，邮件，入库 | 异类深呼吸</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-55424732-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?fe4164c60a9dd0e73810fa0243796a5d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/note/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">异类深呼吸</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/note/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/note/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/note/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/note/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://mingmings.org/note/note/Ansible-plugin-之callbacks-实现写文件，邮件，入库.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="宋大明明">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/note/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="异类深呼吸">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Ansible plugin 之 callbacks 实现写文件，邮件，入库</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-02-03T18:38:09+08:00">
+                2015-02-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/note/categories/ansible/" itemprop="url" rel="index">
+                    <span itemprop="name">ansible</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><blockquote class="blockquote-center">不管你有多么真诚，遇到怀疑你的人，你就是谎言；不管你有多么单纯，遇到复杂的人，你就是有心计；不管你有多么的天真，遇到现实的人，你就是笑话；不管你多么专业，遇到不懂的人，你就是空白。所以，不要太在乎别人对你的评价，你需要的只是，做最好的自己，独一无二的自己。</blockquote><br><a id="more"></a></p>
+<p>都知道 ansible 虽然执行完了可以写日志，但是是否可以做做其他事情，比如入库，发个邮件通告任务完成情况等，结果是有的，利用 plugin 的 callbacs 来完成，详情我也是看了灿哥和峰云两个大神的博客，顺带看看官方文档。允许 ansible 响应事件的时候调用额外的 callback 插件，完成一些额外的动作</p>
+<h3 id="1-1-写文件"><a href="#1-1-写文件" class="headerlink" title="1.1 写文件"></a>1.1 写文件</h3><blockquote>
+<p>所以这里模仿官方文档的形式，参照灿哥和风云的代码进行写文件，发送邮件，入库进行演示，首先是官方给出的 <code>log.py</code></p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">log</span><span class="params">(host, category, data)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> type(data) == dict:</span><br><span class="line">        <span class="comment"># 这段把一些无用的信息替换</span></span><br><span class="line">        <span class="keyword">if</span> <span class="string">'verbose_override'</span> <span class="keyword">in</span> data:</span><br><span class="line">            <span class="comment"># avoid logging extraneous data from facts</span></span><br><span class="line">            data = <span class="string">'omitted'</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># 真正写入文件的内容</span></span><br><span class="line">            data = data.copy()</span><br><span class="line">            invocation = data.pop(<span class="string">'invocation'</span>, <span class="keyword">None</span>)</span><br><span class="line">            data = json.dumps(data)</span><br><span class="line">            <span class="keyword">if</span> invocation <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</span><br><span class="line">                data = json.dumps(invocation) + <span class="string">" =&gt; %s "</span> % data</span><br><span class="line"></span><br><span class="line">    path = os.path.join(<span class="string">"/var/log/ansible/hosts"</span>, host)</span><br><span class="line">    now = time.strftime(TIME_FORMAT, time.localtime())</span><br><span class="line">    fd = open(path, <span class="string">"a"</span>)</span><br><span class="line">    fd.write(MSG_FORMAT % dict(now=now, category=category, data=data))</span><br><span class="line">    fd.close()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CallbackModule</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    下面针对每种不同的 callback 状态进行不同的操作</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">on_any</span><span class="params">(self, *args, **kwargs)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">runner_on_failed</span><span class="params">(self, host, res, ignore_errors=False)</span>:</span></span><br><span class="line">        log(host, <span class="string">'FAILED'</span>, res)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">runner_on_ok</span><span class="params">(self, host, res)</span>:</span></span><br><span class="line">        log(host, <span class="string">'OK'</span>, res)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">runner_on_skipped</span><span class="params">(self, host, item=None)</span>:</span></span><br><span class="line">        log(host, <span class="string">'SKIPPED'</span>, <span class="string">'...'</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">runner_on_unreachable</span><span class="params">(self, host, res)</span>:</span></span><br><span class="line">        log(host, <span class="string">'UNREACHABLE'</span>, res)</span><br></pre></td></tr></table></figure>
+<p>然后讲这个脚本扔到定义好的 callback plugin 目录里，给上可执行权限，具体设置参照 ansible.cfg</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="attr">callback_plugins</span>   = /path/ansible/callbacks</span><br></pre></td></tr></table></figure>
+<p>而后执行 playbook，之后查看之前定义好的写入文件的位置 <code>/var/log/ansible/hosts/</code> ,就可以看到之前定义好的文件了</p>
+<figure class="highlight actionscript"><table><tr><td class="code"><pre><span class="line">Feb <span class="number">03</span> <span class="number">2015</span> <span class="number">18</span>:<span class="number">34</span>:<span class="number">27</span> - OK - omitted</span><br><span class="line">Feb <span class="number">03</span> <span class="number">2015</span> <span class="number">18</span>:<span class="number">34</span>:<span class="number">30</span> - UNREACHABLE - &#123;<span class="string">"msg"</span>: <span class="string">"AnsibleError: unable to read /tmp/test.j2"</span>, <span class="string">"failed"</span>: <span class="literal">true</span>&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="1-2-发邮件"><a href="#1-2-发邮件" class="headerlink" title="1.2 发邮件"></a>1.2 发邮件</h3><blockquote>
+<p>了解上面之后，整体发送邮件和写文件都大同小异，主要讲上面的动作换乘发送邮件就可以了，这里直接参照灿哥代码来</p>
+</blockquote>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">import smtplib</span><br><span class="line">import os</span><br><span class="line">import socket</span><br><span class="line">import commands</span><br><span class="line">from email.mime.multipart import MIMEMultipart</span><br><span class="line">from email.mime.text import MIMEText</span><br><span class="line"></span><br><span class="line">msg = MIMEMultipart()</span><br><span class="line"></span><br><span class="line">def crab(subject, body):</span><br><span class="line">    <span class="string">""</span><span class="comment">"</span></span><br><span class="line">    补充相关发件人，收件人，登录账号密码，以及smtp信息等</span><br><span class="line">    <span class="string">""</span><span class="comment">"</span></span><br><span class="line">    sender = <span class="string">''</span></span><br><span class="line">    sender = sender</span><br><span class="line">    mailto = <span class="string">''</span></span><br><span class="line">    mailto = mailto</span><br><span class="line">    username = <span class="string">''</span></span><br><span class="line">    password = <span class="string">''</span></span><br><span class="line">    <span class="built_in">line</span> = body</span><br><span class="line">    TXT = MIMEText(<span class="built_in">line</span>)</span><br><span class="line">    msg.attach(TXT)</span><br><span class="line">    msg[<span class="string">'Subject'</span>] = subject</span><br><span class="line">    msg[<span class="string">'to'</span>] = mailto</span><br><span class="line">    msg[<span class="string">'From'</span>] = sender</span><br><span class="line">    smtp = smtplib.SMTP(<span class="string">'smtp.qq.com'</span>)</span><br><span class="line">    smtp.login(username, password)</span><br><span class="line">    smtp.sendmail(sender, mailto, msg.as_string())</span><br><span class="line"></span><br><span class="line">class CallbackModule(object):</span><br><span class="line">    <span class="string">""</span><span class="comment">"</span></span><br><span class="line">    这里和上述一样，依旧是根据 callback 返回状态调用发邮件函数来</span><br><span class="line">    <span class="string">""</span><span class="comment">"</span></span><br><span class="line"></span><br><span class="line">    def runner_on_failed(self, host, <span class="keyword">res</span>, ignore_errors=False):</span><br><span class="line">        <span class="keyword">if</span> ignore_error<span class="variable">s:</span></span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        sender = <span class="string">'"Ansible: %s" &lt;root&gt;'</span> % host</span><br><span class="line">        subject = <span class="string">'Failed: %(module_name)s %(module_args)s'</span> % <span class="keyword">res</span>[<span class="string">'invocation'</span>]</span><br><span class="line">        body = <span class="string">'The following task failed for host '</span> + host + <span class="string">':\n\n%(module_name)s %(module_args)s\n\n'</span> \</span><br><span class="line">                                                              % <span class="keyword">res</span>[<span class="string">'invocation'</span>]</span><br><span class="line">        <span class="keyword">if</span> <span class="string">'stdout'</span> in <span class="keyword">res</span>.<span class="built_in">keys</span>() <span class="built_in">and</span> <span class="keyword">res</span>[<span class="string">'stdout'</span>]:</span><br><span class="line">            subject = <span class="keyword">res</span>[<span class="string">'stdout'</span>].strip(<span class="string">'\r\n'</span>).<span class="keyword">split</span>(<span class="string">'\n'</span>)[-<span class="number">1</span>]</span><br><span class="line">            body += <span class="string">'with the following output in standard output:\n\n'</span> + <span class="keyword">res</span>[<span class="string">'stdout'</span>] + <span class="string">'\n\n'</span></span><br><span class="line">        <span class="keyword">if</span> <span class="string">'stderr'</span> in <span class="keyword">res</span>.<span class="built_in">keys</span>() <span class="built_in">and</span> <span class="keyword">res</span>[<span class="string">'stderr'</span>]:</span><br><span class="line">            subject = <span class="keyword">res</span>[<span class="string">'stderr'</span>].strip(<span class="string">'\r\n'</span>).<span class="keyword">split</span>(<span class="string">'\n'</span>)[-<span class="number">1</span>]</span><br><span class="line">            body += <span class="string">'with the following output in standard error:\n\n'</span> + <span class="keyword">res</span>[<span class="string">'stderr'</span>] + <span class="string">'\n\n'</span></span><br><span class="line">        <span class="keyword">if</span> <span class="string">'msg'</span> in <span class="keyword">res</span>.<span class="built_in">keys</span>() <span class="built_in">and</span> <span class="keyword">res</span>[<span class="string">'msg'</span>]:</span><br><span class="line">            subject = <span class="keyword">res</span>[<span class="string">'msg'</span>].strip(<span class="string">'\r\n'</span>).<span class="keyword">split</span>(<span class="string">'\n'</span>)[<span class="number">0</span>]</span><br><span class="line">            body += <span class="string">'with the following message:\n\n'</span> + <span class="keyword">res</span>[<span class="string">'msg'</span>] + <span class="string">'\n\n'</span></span><br><span class="line">        body += <span class="string">'A complete dump of the error:\n\n'</span> + str(<span class="keyword">res</span>)</span><br><span class="line">        crab(subject=subject, body=body)</span><br><span class="line"></span><br><span class="line">    def runner_on_unreachable(self, host, <span class="keyword">res</span>):</span><br><span class="line">        sender = <span class="string">'"Ansible: %s" &lt;root&gt;'</span> % host</span><br><span class="line">        <span class="keyword">if</span> isinstance(<span class="keyword">res</span>, basestring):</span><br><span class="line">            subject = <span class="string">'Unreachable: %s'</span> % <span class="keyword">res</span>.strip(<span class="string">'\r\n'</span>).<span class="keyword">split</span>(<span class="string">'\n'</span>)[-<span class="number">1</span>]</span><br><span class="line">            body = <span class="string">'An error occured for host '</span> + host + <span class="string">' with the following message:\n\n'</span> + <span class="keyword">res</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            subject = <span class="string">'Unreachable: %s'</span> % <span class="keyword">res</span>[<span class="string">'msg'</span>].strip(<span class="string">'\r\n'</span>).<span class="keyword">split</span>(<span class="string">'\n'</span>)[<span class="number">0</span>]</span><br><span class="line">            body = <span class="string">'An error occured for host '</span> + host + <span class="string">' with the following message:\n\n'</span> + \</span><br><span class="line">                   <span class="keyword">res</span>[<span class="string">'msg'</span>] + <span class="string">'\n\nA complete dump of the error:\n\n'</span> + str(<span class="keyword">res</span>)</span><br><span class="line">        crab(subject=subject, body=body)</span><br><span class="line"></span><br><span class="line">    def runner_on_error(self, host, <span class="keyword">res</span>, jid):</span><br><span class="line">        sender = <span class="string">'"Ansible: %s" &lt;root&gt;'</span> % host</span><br><span class="line">        <span class="keyword">if</span> isinstance(<span class="keyword">res</span>, basestring):</span><br><span class="line">            subject = <span class="string">'Async failure: %s'</span> % <span class="keyword">res</span>.strip(<span class="string">'\r\n'</span>).<span class="keyword">split</span>(<span class="string">'\n'</span>)[-<span class="number">1</span>]</span><br><span class="line">            body = <span class="string">'An error occured for host '</span> + host + <span class="string">' with the following message:\n\n'</span> + <span class="keyword">res</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            subject = <span class="string">'Async failure: %s'</span> % <span class="keyword">res</span>[<span class="string">'msg'</span>].strip(<span class="string">'\r\n'</span>).<span class="keyword">split</span>(<span class="string">'\n'</span>)[<span class="number">0</span>]</span><br><span class="line">            body = <span class="string">'An error occured for host '</span> + host + <span class="string">' with the following message:\n\n'</span> + \</span><br><span class="line">                   <span class="keyword">res</span>[<span class="string">'msg'</span>] + <span class="string">'\n\nA complete dump of the error:\n\n'</span> + str(<span class="keyword">res</span>)</span><br><span class="line">        crab(subject=subject, body=body)</span><br></pre></td></tr></table></figure>
+<h3 id="1-3-入库"><a href="#1-3-入库" class="headerlink" title="1.3 入库"></a>1.3 入库</h3><blockquote>
+<p>原理相同，就不赘述，只是方法换成了写数据库</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">from</span> pymongo <span class="keyword">import</span> MongoClient</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">InsertDB</span><span class="params">(values)</span>:</span></span><br><span class="line">    <span class="keyword">global</span> mongoinfo</span><br><span class="line">    dbhost = mongoinfo[<span class="string">'host'</span>]</span><br><span class="line">    dbport = mongoinfo[<span class="string">'port'</span>]</span><br><span class="line">    dbuser = mongoinfo[<span class="string">'user'</span>]</span><br><span class="line">    dbpwd  = mongoinfo[<span class="string">'password'</span>]</span><br><span class="line">    dbname = mongoinfo[<span class="string">'dbname'</span>]</span><br><span class="line">    uri = <span class="string">'mongodb://%s:%s@%s/%s'</span>%(dbuser, dbpwd, dbhost, dbname)</span><br><span class="line">    client = MongoClient(uri, safe=<span class="keyword">False</span>)</span><br><span class="line">    db = client.ansible_log</span><br><span class="line">    db.callback.insert(values) </span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CallbackModule</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">runner_on_failed</span><span class="params">(self, host, res, ignore_errors=False)</span>:</span></span><br><span class="line">        now = datetime.datetime.now()</span><br><span class="line">        result = res</span><br><span class="line">        result[<span class="string">'time'</span>] = now.strftime(TIME_FORMAT)</span><br><span class="line">        result[<span class="string">'status'</span>] = <span class="string">'fail'</span></span><br><span class="line">        InsertDB(result)</span><br></pre></td></tr></table></figure>
+<p>上面是写 mongodb，下面来写 sqlite，这里是个老外写的代码 <a href="http://jpmens.net/2012/09/11/watching-ansible-at-work-callbacks/" target="_blank" rel="noopener">Jan-Piet Mens</a></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> sqlite3</span><br><span class="line"></span><br><span class="line">dbname = <span class="string">'/etc/ansible/setup.db'</span></span><br><span class="line">TIME_FORMAT=<span class="string">'%Y-%m-%d %H:%M:%S'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    con = sqlite3.connect(dbname)</span><br><span class="line">    cur = con.cursor()</span><br><span class="line"><span class="keyword">except</span>:</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">log</span><span class="params">(host, data)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> type(data) == dict:</span><br><span class="line">        invocation = data.pop(<span class="string">'invocation'</span>, <span class="keyword">None</span>)</span><br><span class="line">        <span class="keyword">if</span> invocation.get(<span class="string">'module_name'</span>, <span class="keyword">None</span>) != <span class="string">'setup'</span>:</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">    facts = data.get(<span class="string">'ansible_facts'</span>, <span class="keyword">None</span>)</span><br><span class="line"></span><br><span class="line">    now = time.strftime(TIME_FORMAT, time.localtime())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="comment"># `host` is a unique index</span></span><br><span class="line">        cur.execute(<span class="string">"REPLACE INTO inventory (now, host, arch, dist, distvers, sys,kernel) VALUES(?,?,?,?,?,?,?);"</span>,</span><br><span class="line">        (</span><br><span class="line">            now,</span><br><span class="line">            facts.get(<span class="string">'ansible_hostname'</span>, <span class="keyword">None</span>),</span><br><span class="line">            facts.get(<span class="string">'ansible_architecture'</span>, <span class="keyword">None</span>),</span><br><span class="line">            facts.get(<span class="string">'ansible_distribution'</span>, <span class="keyword">None</span>),</span><br><span class="line">            facts.get(<span class="string">'ansible_distribution_version'</span>, <span class="keyword">None</span>),</span><br><span class="line">            facts.get(<span class="string">'ansible_system'</span>, <span class="keyword">None</span>),</span><br><span class="line">            facts.get(<span class="string">'ansible_kernel'</span>, <span class="keyword">None</span>)</span><br><span class="line">        ))</span><br><span class="line">        con.commit()</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CallbackModule</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">runner_on_ok</span><span class="params">(self, host, res)</span>:</span></span><br><span class="line">        log(host, res)</span><br></pre></td></tr></table></figure>
+<p>写入 redis，这里是峰云的代码</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">class CallbackModule(object):</span><br><span class="line">    def runner_on_ok(self, host, <span class="keyword">res</span>):</span><br><span class="line">        r = redis.Redis(host=<span class="string">'127.0.0.1'</span>, port=<span class="number">6379</span>, db=<span class="number">0</span>) </span><br><span class="line">        r.<span class="keyword">set</span>(host,str(<span class="keyword">res</span>))</span><br><span class="line"> </span><br><span class="line">        <span class="keyword">f</span> = <span class="keyword">open</span>(<span class="string">'/tmp/11'</span>,<span class="string">'a'</span>)</span><br><span class="line">        <span class="keyword">f</span>.<span class="keyword">write</span>(str(host))</span><br><span class="line">        <span class="keyword">f</span>.<span class="keyword">write</span>(str(<span class="keyword">res</span>))</span><br><span class="line">        <span class="keyword">f</span>.<span class="keyword">close</span>()</span><br><span class="line">        <span class="built_in">log</span>(host, <span class="keyword">res</span>)</span><br><span class="line">    def runner_on_failed(self, host, <span class="keyword">res</span>, ignore_errors=False):</span><br><span class="line">        <span class="keyword">f</span> = <span class="keyword">open</span>(<span class="string">'/tmp/11'</span>,<span class="string">'a'</span>)</span><br><span class="line">        <span class="keyword">f</span>.<span class="keyword">write</span>(<span class="string">'\nbad\n'</span>)</span><br><span class="line">        <span class="keyword">f</span>.<span class="keyword">close</span>()</span><br><span class="line">        <span class="built_in">log</span>(host, <span class="keyword">res</span>)</span><br></pre></td></tr></table></figure>
+<p>不过因为本身 res 返回的就是一个字典的格式，所以数据的特殊结构，还是直接上 mongodb 比较合适，这里本地测试，sqlite 也是妥妥的，回头后面写个页面进行调用下库里的内容展示展示就更直观了</p>
+<blockquote>
+<p>更多阅读</p>
+<ul>
+<li><a href="http://www.shencan.net/index.php/2014/07/17/ansible-%E6%8F%92%E4%BB%B6%E4%B9%8Bcallback_plugins-%EF%BC%88%E5%AE%9E%E6%88%98%EF%BC%89/" target="_blank" rel="noopener">灿哥博客</a></li>
+<li><a href="http://xiaorui.cc/2014/07/20/ansible%E6%8F%92%E4%BB%B6callbacks%E5%AE%9E%E7%8E%B0redis%E3%80%81mongodb%E8%BE%93%E5%87%BA/" target="_blank" rel="noopener">峰云博客</a></li>
+<li><a href="http://54im.com/%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4/ansible/ansible-callbacks-playbook-result-in-mongodb.html" target="_blank" rel="noopener">钿钿的博客</a></li>
+<li><a href="https://github.com/ansible/ansible/tree/devel/plugins/callbacks" target="_blank" rel="noopener">callbacks 源码</a></li>
+</ul>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/note/tags/ansible-callbacks/" rel="tag"># ansible callbacks</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/note/Ansible-执行原理-转.html" rel="next" title="Ansible 执行原理(转)">
+                <i class="fa fa-chevron-left"></i> Ansible 执行原理(转)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/note/argparse-实战.html" rel="prev" title="argparse 实战">
+                argparse 实战 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">宋大明明</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/note/archives/">
+              
+                  <span class="site-state-item-count">78</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-写文件"><span class="nav-number">1.</span> <span class="nav-text">1.1 写文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-发邮件"><span class="nav-number">2.</span> <span class="nav-text">1.2 发邮件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-入库"><span class="nav-number">3.</span> <span class="nav-text">1.3 入库</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2014 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">宋大明明</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/note/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/note/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/note/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

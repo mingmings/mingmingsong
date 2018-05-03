@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/note/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/note/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/note/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/note/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/note/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/note/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/note/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="redis数据备份," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="研究 mysql、mongodb 的时候总是从安装，备份恢复，等开始学起的，redis 恰好也碰到了，所以正好整起，参考了网友的文章，参照官网内容，整理如下">
+<meta name="keywords" content="redis数据备份">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redis 数据备份">
+<meta property="og:url" content="http://mingmings.org/note/db_redis-数据备份.html">
+<meta property="og:site_name" content="异类深呼吸">
+<meta property="og:description" content="研究 mysql、mongodb 的时候总是从安装，备份恢复，等开始学起的，redis 恰好也碰到了，所以正好整起，参考了网友的文章，参照官网内容，整理如下">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-04-22T07:04:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="redis 数据备份">
+<meta name="twitter:description" content="研究 mysql、mongodb 的时候总是从安装，备份恢复，等开始学起的，redis 恰好也碰到了，所以正好整起，参考了网友的文章，参照官网内容，整理如下">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/note/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://mingmings.org/note/db_redis-数据备份.html"/>
+
+
+
+
+
+  <title>redis 数据备份 | 异类深呼吸</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-55424732-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?fe4164c60a9dd0e73810fa0243796a5d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/note/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">异类深呼吸</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/note/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/note/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/note/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/note/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://mingmings.org/note/note/db_redis-数据备份.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="宋大明明">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/note/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="异类深呼吸">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">redis 数据备份</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-04-07T15:52:15+08:00">
+                2015-04-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/note/categories/DB/" itemprop="url" rel="index">
+                    <span itemprop="name">DB</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>研究 <code>mysql</code>、<code>mongodb</code> 的时候总是从安装，备份恢复，等开始学起的，<code>redis</code> 恰好也碰到了，所以正好整起，参考了网友的文章，参照官网内容，整理如下<br><a id="more"></a><br>Redis 提供了两种持久化选项，分别是 <code>RDB</code> 和 <code>AOF</code></p>
+<h2 id="一、RDB"><a href="#一、RDB" class="headerlink" title="一、RDB"></a>一、RDB</h2><p>默认情况下 60 秒刷新到磁盘一次 <code>[save 60 10000 当有1w条keys数据被改变时]</code>，Redis 的数据集保存在叫 <code>dump.rdb</code> 一个二进制文件，这种策略被称为快照。</p>
+<figure class="highlight lsl"><table><tr><td class="code"><pre><span class="line"># 手动调用 Save 或 BGSAVE 命令的：</span><br><span class="line">redis-cli -h <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> -p <span class="number">6379</span> -a pwd bgsave</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>快照易恢复，文件也小，但是如果遇到宕机等情况的时候快照的数据可能会不完整。</p>
+</blockquote>
+<h2 id="二、AOF"><a href="#二、AOF" class="headerlink" title="二、AOF"></a>二、AOF</h2><p>另一种持久化方式 <code>AOF</code>，在配置文件中打开 <code>[appendonly yes]</code>。</p>
+<p>AOF 刷新日志到磁盘的规则:</p>
+<ul>
+<li><p>appendfsync always<br>always 表示每次有写操作都进行同步，非常慢，非常安全。</p>
+</li>
+<li><p>appendfsync everysec<br>everysec 表示对写操作进行累积，每秒同步一次</p>
+</li>
+</ul>
+<p>官方的建议的 <code>everysec</code>，安全，就是速度不够快，如果是机器出现问题可能会丢失 1 秒的数据。</p>
+<figure class="highlight lsl"><table><tr><td class="code"><pre><span class="line"># 手动执行 bgrewriteaof 进行 AOF 备份：</span><br><span class="line">redis-cli -h <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> -p <span class="number">6379</span> -a pwd bgrewriteaof</span><br></pre></td></tr></table></figure>
+<h2 id="三、恢复策略"><a href="#三、恢复策略" class="headerlink" title="三、恢复策略"></a>三、恢复策略</h2><ul>
+<li>如果只配置 <code>AOF</code>,重启时加载 <code>AOF</code> 文件恢复数据；</li>
+<li>如果同时 配置了 <code>RBD</code> 和 <code>AOF</code>,启动是只加载 <code>AOF</code> 文件恢复数据;</li>
+<li>如果只配置 RBD,启动是将加载 <code>dump</code> 文件恢复数据。</li>
+<li>恢复时需要注意，要是主库挂了不能直接重启主库，否则会直接覆盖掉从库的 <code>AOF</code> 文件，一定要确保要恢复的文件都正确才能启动，否则会冲掉原来的文件。</li>
+</ul>
+<h2 id="四、备份脚本"><a href="#四、备份脚本" class="headerlink" title="四、备份脚本"></a>四、备份脚本</h2><blockquote>
+<p>参照网友文章 <a href="http://huoyingdk.blog.51cto.com/3932829/1089225" target="_blank" rel="noopener">http://huoyingdk.blog.51cto.com/3932829/1089225</a> 的脚本，改变而来，我这里只针对于开启了 AOF 持久化的情况</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"><span class="comment">#-------------------------------------------------------</span></span><br><span class="line"><span class="comment"># author: mingmings</span></span><br><span class="line"><span class="comment"># url: http://mingmings.org/</span></span><br><span class="line"><span class="comment"># mail: 369413651@qq.com</span></span><br><span class="line"><span class="comment"># date: 2015-04-07</span></span><br><span class="line"><span class="comment"># version: 1.0</span></span><br><span class="line"><span class="comment">#-------------------------------------------------------</span></span><br><span class="line">DB_DIR=<span class="string">""</span></span><br><span class="line">BACKUP_DIR=<span class="string">""</span></span><br><span class="line"><span class="comment">#-------------------------------------------------------</span></span><br><span class="line"><span class="keyword">for</span> PORT <span class="keyword">in</span> $(ps -ef | grep redis | grep -v grep | awk -F: <span class="string">'&#123;print $4&#125;'</span>)</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line"><span class="comment">#    echo $&#123;PORT&#125;</span></span><br><span class="line">    redis-cli -h 127.0.0.1 -p <span class="variable">$&#123;PORT&#125;</span> -a <span class="built_in">pwd</span> bgrewriteaof</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line">sleep 5</span><br><span class="line"></span><br><span class="line">tt=$(date +<span class="string">"%F_%T"</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ ! -d <span class="variable">$&#123;BACKUP_DIR&#125;</span> ]; <span class="keyword">then</span></span><br><span class="line">    mkdir -p <span class="variable">$&#123;BACKUP_DIR&#125;</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"--------------------------<span class="variable">$&#123;tt&#125;</span>------------------------------"</span> &gt;&gt; <span class="variable">$&#123;BACKUP_DIR&#125;</span>/redis_backup.log</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> $(find <span class="variable">$&#123;DB_DIR&#125;</span> -name <span class="string">"*.aof"</span>)</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    <span class="comment">#echo $&#123;i&#125;</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">"cp <span class="variable">$&#123;i&#125;</span> <span class="variable">$&#123;BACKUP_DIR&#125;</span>/<span class="variable">$(dirname $&#123;i&#125; | awk -F/ '&#123;print $NF&#125;')</span>/<span class="variable">$(basename $i)</span>"</span> &gt;&gt; <span class="variable">$&#123;BACKUP_DIR&#125;</span>/redis_backup.log</span><br><span class="line">    <span class="keyword">if</span> [ ! -d <span class="variable">$&#123;BACKUP_DIR&#125;</span>/$(dirname <span class="variable">$&#123;i&#125;</span> | awk -F/ <span class="string">'&#123;print $NF&#125;'</span>) ]; <span class="keyword">then</span></span><br><span class="line">        mkdir -p <span class="variable">$&#123;BACKUP_DIR&#125;</span>/$(dirname <span class="variable">$&#123;i&#125;</span> | awk -F/ <span class="string">'&#123;print $NF&#125;'</span>)</span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">    /bin/cp -f <span class="variable">$&#123;i&#125;</span> <span class="variable">$&#123;BACKUP_DIR&#125;</span>/$(dirname <span class="variable">$&#123;i&#125;</span> | awk -F/ <span class="string">'&#123;print $NF&#125;'</span>)</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">"redis backup done..."</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<h3 id="更多阅读"><a href="#更多阅读" class="headerlink" title="更多阅读"></a>更多阅读</h3><ul>
+<li><a href="http://redis.io/topics/persistence" target="_blank" rel="noopener">Redis Persistence</a></li>
+<li><a href="http://redis.readthedocs.org/en/latest/topic/persistence.html" target="_blank" rel="noopener">redis持久化</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/note/tags/redis数据备份/" rel="tag"># redis数据备份</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/note/db_MySQL-错误集锦.html" rel="next" title="MySQL 错误集锦">
+                <i class="fa fa-chevron-left"></i> MySQL 错误集锦
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/note/db_MySQL-入门书籍和方法分享-转.html" rel="prev" title="MySQL 入门书籍和方法分享(转)">
+                MySQL 入门书籍和方法分享(转) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">宋大明明</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/note/archives/">
+              
+                  <span class="site-state-item-count">78</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、RDB"><span class="nav-number">1.</span> <span class="nav-text">一、RDB</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、AOF"><span class="nav-number">2.</span> <span class="nav-text">二、AOF</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、恢复策略"><span class="nav-number">3.</span> <span class="nav-text">三、恢复策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、备份脚本"><span class="nav-number">4.</span> <span class="nav-text">四、备份脚本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#更多阅读"><span class="nav-number">4.1.</span> <span class="nav-text">更多阅读</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2014 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">宋大明明</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/note/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/note/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/note/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/note/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/note/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/note/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/note/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/note/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/note/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/note/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="zabbix 监控 nginx 和 php-fpm," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="人生所求，得之可喜，失之无忧。苦乐随缘，得失随缘。  监控常规的任务自然少不了 nginx 和 php-fpm 的监控，最近也是重新开始整理 zabbix，重新学习之，里面的脚本，配置文件以及模板都来源《zabbix 企业级分布式监控系统》一书，根据自身环境适当修改">
+<meta name="keywords" content="zabbix 监控 nginx 和 php-fpm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="zabbix 监控 nginx 和 php-fpm">
+<meta property="og:url" content="http://mingmings.org/note/zabbix-监控-nginx-和-php-fpm.html">
+<meta property="og:site_name" content="异类深呼吸">
+<meta property="og:description" content="人生所求，得之可喜，失之无忧。苦乐随缘，得失随缘。  监控常规的任务自然少不了 nginx 和 php-fpm 的监控，最近也是重新开始整理 zabbix，重新学习之，里面的脚本，配置文件以及模板都来源《zabbix 企业级分布式监控系统》一书，根据自身环境适当修改">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://mingmings.qiniudn.com/zabbix/zabbix-nginx-phpfpm.jpg">
+<meta property="og:updated_time" content="2015-06-15T07:56:18.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="zabbix 监控 nginx 和 php-fpm">
+<meta name="twitter:description" content="人生所求，得之可喜，失之无忧。苦乐随缘，得失随缘。  监控常规的任务自然少不了 nginx 和 php-fpm 的监控，最近也是重新开始整理 zabbix，重新学习之，里面的脚本，配置文件以及模板都来源《zabbix 企业级分布式监控系统》一书，根据自身环境适当修改">
+<meta name="twitter:image" content="http://mingmings.qiniudn.com/zabbix/zabbix-nginx-phpfpm.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/note/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://mingmings.org/note/zabbix-监控-nginx-和-php-fpm.html"/>
+
+
+
+
+
+  <title>zabbix 监控 nginx 和 php-fpm | 异类深呼吸</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-55424732-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?fe4164c60a9dd0e73810fa0243796a5d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/note/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">异类深呼吸</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/note/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/note/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/note/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/note/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://mingmings.org/note/note/zabbix-监控-nginx-和-php-fpm.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="宋大明明">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/note/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="异类深呼吸">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">zabbix 监控 nginx 和 php-fpm</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-06-12T17:13:48+08:00">
+                2015-06-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/note/categories/zabbix/" itemprop="url" rel="index">
+                    <span itemprop="name">zabbix</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote class="blockquote-center">人生所求，得之可喜，失之无忧。苦乐随缘，得失随缘。</blockquote>
+
+<p>监控常规的任务自然少不了 nginx 和 php-fpm 的监控，最近也是重新开始整理 zabbix，重新学习之，里面的脚本，配置文件以及模板都来源《zabbix 企业级分布式监控系统》一书，根据自身环境适当修改<br><a id="more"></a></p>
+<h2 id="一、监控-nginx-server"><a href="#一、监控-nginx-server" class="headerlink" title="一、监控 nginx server"></a>一、监控 nginx server</h2><h3 id="1-1-配置-nginx-和-php-fpm"><a href="#1-1-配置-nginx-和-php-fpm" class="headerlink" title="1.1 配置 nginx 和 php-fpm"></a>1.1 配置 nginx 和 php-fpm</h3><p>php-fpm 中 [www] 段中配置文件新增<br><figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">[www]</span><br><span class="line">pm<span class="selector-class">.status_path</span> = /fpm_status.php</span><br></pre></td></tr></table></figure></p>
+<p>nginx 配置新增 server 段<br><figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span>  <span class="number">127.0.0.1:80</span>;</span><br><span class="line">    <span class="attribute">allow</span> <span class="number">127.0.0.1</span>;</span><br><span class="line">    <span class="attribute">deny</span> all;			<span class="comment"># 这里两行控制权限</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 开启 nginx 状态页</span></span><br><span class="line">    <span class="attribute">location</span> /nginxstatus &#123;</span><br><span class="line">        <span class="attribute">stub_status</span> <span class="literal">on</span>;</span><br><span class="line">        <span class="attribute">access_log</span> <span class="literal">off</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment"># 开启 php-fpm 状态页</span></span><br><span class="line">    <span class="attribute">location</span> <span class="regexp">~ ^/(fpm_status)</span> &#123;</span><br><span class="line">            <span class="attribute">fastcgi_pass</span> <span class="number">127.0.0.1:9000</span>;</span><br><span class="line">            <span class="attribute">fastcgi_index</span> index.php;</span><br><span class="line">            <span class="attribute">include</span> fastcgi.conf;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>访问测试，确保可以查看状态信息</p>
+<figure class="highlight groovy"><table><tr><td class="code"><pre><span class="line">curl <span class="string">http:</span><span class="comment">//127.0.0.1/nginxstatus</span></span><br><span class="line">curl <span class="string">http:</span><span class="comment">//127.0.0.1/fpm_status.php</span></span><br></pre></td></tr></table></figure>
+<h3 id="1-2-配置检测脚本和-userparameter"><a href="#1-2-配置检测脚本和-userparameter" class="headerlink" title="1.2 配置检测脚本和 userparameter"></a>1.2 配置检测脚本和 userparameter</h3><blockquote>
+<p>我配置了 agent 主动发送数据到 server 的 active 模式</p>
+</blockquote>
+<p>首先看目录结构<br><figure class="highlight stata"><table><tr><td class="code"><pre><span class="line"># tree /etc/zabbix/</span><br><span class="line">/etc/zabbix/</span><br><span class="line">├── scripts</span><br><span class="line">│   ├── check_nginx_status.<span class="keyword">sh</span></span><br><span class="line">│   └── check_phpfpm.<span class="keyword">sh</span></span><br><span class="line">├── zabbix_agentd.<span class="keyword">conf</span></span><br><span class="line">└── zabbix_agentd.<span class="built_in">d</span></span><br><span class="line">    ├── userparameter_nginx.<span class="keyword">conf</span></span><br><span class="line">    └── userparameter_phpfpm.<span class="keyword">conf</span></span><br></pre></td></tr></table></figure></p>
+<p>下面分别对应每个文件</p>
+<ul>
+<li>userparameter_nginx.conf</li>
+</ul>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">UserParameter=nginx<span class="selector-class">.accepts</span>,/etc/zabbix/scripts/check_nginx_status<span class="selector-class">.sh</span> accepts</span><br><span class="line">UserParameter=nginx<span class="selector-class">.handled</span>,/etc/zabbix/scripts/check_nginx_status<span class="selector-class">.sh</span> handled</span><br><span class="line">UserParameter=nginx<span class="selector-class">.requests</span>,/etc/zabbix/scripts/check_nginx_status<span class="selector-class">.sh</span> requests</span><br><span class="line">UserParameter=nginx<span class="selector-class">.connections</span><span class="selector-class">.active</span>,/etc/zabbix/scripts/check_nginx_status<span class="selector-class">.sh</span> active</span><br><span class="line">UserParameter=nginx<span class="selector-class">.connections</span><span class="selector-class">.reading</span>,/etc/zabbix/scripts/check_nginx_status<span class="selector-class">.sh</span> reading</span><br><span class="line">UserParameter=nginx<span class="selector-class">.connections</span><span class="selector-class">.writing</span>,/etc/zabbix/scripts/check_nginx_status<span class="selector-class">.sh</span> writing</span><br><span class="line">UserParameter=nginx<span class="selector-class">.connections</span><span class="selector-class">.waiting</span>,/etc/zabbix/scripts/check_nginx_status<span class="selector-class">.sh</span> waiting</span><br></pre></td></tr></table></figure>
+<ul>
+<li>userparameter_phpfpm.conf</li>
+</ul>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">UserParameter=phpfpm<span class="selector-class">.status</span><span class="selector-class">.pool</span>,/etc/zabbix/scripts/check_phpfpm<span class="selector-class">.sh</span> pool</span><br><span class="line">UserParameter=phpfpm<span class="selector-class">.status</span><span class="selector-class">.process</span><span class="selector-class">.manager</span>,/etc/zabbix/scripts/check_phpfpm<span class="selector-class">.sh</span> process_manager</span><br><span class="line">UserParameter=phpfpm<span class="selector-class">.status</span><span class="selector-class">.start</span><span class="selector-class">.since</span>,/etc/zabbix/scripts/check_phpfpm<span class="selector-class">.sh</span> start_since</span><br><span class="line">UserParameter=phpfpm<span class="selector-class">.status</span><span class="selector-class">.accepted</span><span class="selector-class">.conn</span>,/etc/zabbix/scripts/check_phpfpm<span class="selector-class">.sh</span> accepted_conn</span><br><span class="line">UserParameter=phpfpm<span class="selector-class">.status</span><span class="selector-class">.listen</span><span class="selector-class">.queue</span>,/etc/zabbix/scripts/check_phpfpm<span class="selector-class">.sh</span> listen_queue</span><br><span class="line">UserParameter=phpfpm<span class="selector-class">.status</span><span class="selector-class">.max</span><span class="selector-class">.listen</span><span class="selector-class">.queue</span>,/etc/zabbix/scripts/check_phpfpm<span class="selector-class">.sh</span> max_listen_queue</span><br><span class="line">UserParameter=phpfpm<span class="selector-class">.status</span><span class="selector-class">.listen</span><span class="selector-class">.queue</span><span class="selector-class">.len</span>,/etc/zabbix/scripts/check_phpfpm<span class="selector-class">.sh</span> listen_queue_len</span><br><span class="line">UserParameter=phpfpm<span class="selector-class">.status</span><span class="selector-class">.idle</span><span class="selector-class">.processes</span>,/etc/zabbix/scripts/check_phpfpm<span class="selector-class">.sh</span> idle_processes</span><br><span class="line">UserParameter=phpfpm<span class="selector-class">.status</span><span class="selector-class">.active</span><span class="selector-class">.processes</span>,/etc/zabbix/scripts/check_phpfpm<span class="selector-class">.sh</span> active_processes</span><br><span class="line">UserParameter=phpfpm<span class="selector-class">.status</span><span class="selector-class">.total</span><span class="selector-class">.processes</span>,/etc/zabbix/scripts/check_phpfpm<span class="selector-class">.sh</span> total_processes</span><br><span class="line">UserParameter=phpfpm<span class="selector-class">.status</span><span class="selector-class">.max</span><span class="selector-class">.active</span><span class="selector-class">.processes</span>,/etc/zabbix/scripts/check_phpfpm<span class="selector-class">.sh</span> max_active_processes</span><br><span class="line">UserParameter=phpfpm<span class="selector-class">.status</span><span class="selector-class">.max</span><span class="selector-class">.children</span><span class="selector-class">.reached</span>,/etc/zabbix/scripts/check_phpfpm<span class="selector-class">.sh</span> max_children_reached</span><br></pre></td></tr></table></figure>
+<ul>
+<li>check_nginx_status.sh</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">source</span> /etc/bashrc &gt;/dev/null 2&gt;&amp;1</span><br><span class="line"><span class="built_in">source</span> /etc/profile  &gt;/dev/null 2&gt;&amp;1</span><br><span class="line">nginxstatus=http://127.0.0.1/nginxstatus</span><br><span class="line"></span><br><span class="line"><span class="comment"># Functions to return nginx stats</span></span><br><span class="line"><span class="keyword">function</span> checkavailable &#123;</span><br><span class="line">    code=$(curl -o /dev/null -s -w %&#123;http_code&#125; <span class="variable">$&#123;nginxstatus&#125;</span>)</span><br><span class="line">    <span class="keyword">if</span> [ <span class="string">"<span class="variable">$&#123;code&#125;</span>"</span> == <span class="string">"200"</span> ]</span><br><span class="line">    <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">return</span> 1</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">echo</span>  0</span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">function</span> active &#123;</span><br><span class="line">    checkavailable|| curl -s <span class="string">"<span class="variable">$&#123;nginxstatus&#125;</span>"</span> | grep <span class="string">'Active'</span> | awk <span class="string">'&#123;print $3&#125;'</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">function</span> reading &#123;</span><br><span class="line">    checkavailable|| curl -s <span class="string">"<span class="variable">$&#123;nginxstatus&#125;</span>"</span> | grep <span class="string">'Reading'</span> | awk <span class="string">'&#123;print $2&#125;'</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">function</span> writing &#123;</span><br><span class="line">    checkavailable|| curl -s <span class="string">"<span class="variable">$&#123;nginxstatus&#125;</span>"</span> | grep <span class="string">'Writing'</span> | awk <span class="string">'&#123;print $4&#125;'</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">function</span> waiting &#123;</span><br><span class="line">    checkavailable|| curl -s <span class="string">"<span class="variable">$&#123;nginxstatus&#125;</span>"</span> | grep <span class="string">'Waiting'</span> | awk <span class="string">'&#123;print $6&#125;'</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">function</span> accepts &#123;</span><br><span class="line">    checkavailable|| curl -s <span class="string">"<span class="variable">$&#123;nginxstatus&#125;</span>"</span> | awk NR==3 | awk <span class="string">'&#123;print $1&#125;'</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">function</span> handled &#123;</span><br><span class="line">    checkavailable|| curl -s <span class="string">"<span class="variable">$&#123;nginxstatus&#125;</span>"</span> | awk NR==3 | awk <span class="string">'&#123;print $2&#125;'</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">function</span> requests &#123;</span><br><span class="line">    checkavailable|| curl -s <span class="string">"<span class="variable">$&#123;nginxstatus&#125;</span>"</span> | awk NR==3 | awk <span class="string">'&#123;print $3&#125;'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">case</span> <span class="string">"<span class="variable">$1</span>"</span> <span class="keyword">in</span></span><br><span class="line">    active)</span><br><span class="line">        active</span><br><span class="line">        ;;</span><br><span class="line">    reading)</span><br><span class="line">        reading</span><br><span class="line">        ;;</span><br><span class="line">    writing)</span><br><span class="line">        writing</span><br><span class="line">        ;;</span><br><span class="line">    waiting)</span><br><span class="line">        waiting</span><br><span class="line">        ;;</span><br><span class="line">    accepts)</span><br><span class="line">        accepts</span><br><span class="line">        ;;</span><br><span class="line">    handled)</span><br><span class="line">        handled</span><br><span class="line">        ;;</span><br><span class="line">    requests)</span><br><span class="line">        requests</span><br><span class="line">        ;;</span><br><span class="line">    *)</span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"Usage: <span class="variable">$0</span> &#123;active |reading |writing |waiting |accepts |handled |requests &#125;"</span></span><br><span class="line"><span class="keyword">esac</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>check_phpfpm.sh</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">source</span> /etc/bashrc &gt;/dev/null 2&gt;&amp;1</span><br><span class="line"><span class="built_in">source</span> /etc/profile  &gt;/dev/null 2&gt;&amp;1</span><br><span class="line"></span><br><span class="line">LOG_FILE=/var/<span class="built_in">log</span>/zabbix/phpfpmstatus.log</span><br><span class="line">curl http://127.0.0.1/fpm_status.php &gt;<span class="variable">$&#123;LOG_FILE&#125;</span> 2&gt;&amp;1</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">pool</span></span>()&#123;</span><br><span class="line">     awk <span class="string">'/pool/ &#123;print $NF&#125;'</span> <span class="variable">$&#123;LOG_FILE&#125;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="title">process_manager</span></span>() &#123;</span><br><span class="line">     awk <span class="string">'/process manager/ &#123;print $NF&#125;'</span> <span class="variable">$&#123;LOG_FILE&#125;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">start_since</span></span>()&#123;</span><br><span class="line">    awk <span class="string">'/^start since:/ &#123;print $NF&#125;'</span> <span class="variable">$&#123;LOG_FILE&#125;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="title">accepted_conn</span></span>()&#123;</span><br><span class="line">    awk <span class="string">'/^accepted conn:/ &#123;print $NF&#125;'</span> <span class="variable">$&#123;LOG_FILE&#125;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="title">listen_queue</span></span>()&#123;</span><br><span class="line">    awk <span class="string">'/^listen queue:/ &#123;print $NF&#125;'</span> <span class="variable">$&#123;LOG_FILE&#125;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="title">max_listen_queue</span></span>()&#123;</span><br><span class="line">    awk <span class="string">'/^max listen queue:/ &#123;print $NF&#125;'</span> <span class="variable">$&#123;LOG_FILE&#125;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="title">listen_queue_len</span></span>()&#123;</span><br><span class="line">    awk <span class="string">'/^listen queue len:/ &#123;print $NF&#125;'</span> <span class="variable">$&#123;LOG_FILE&#125;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="title">idle_processes</span></span>()&#123;</span><br><span class="line">    awk <span class="string">'/^idle processes:/ &#123;print $NF&#125;'</span> <span class="variable">$&#123;LOG_FILE&#125;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="title">active_processes</span></span>()&#123;</span><br><span class="line">    awk <span class="string">'/^active processes:/ &#123;print $NF&#125;'</span> <span class="variable">$&#123;LOG_FILE&#125;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="title">total_processes</span></span>()&#123;</span><br><span class="line">    awk <span class="string">'/^total processes:/ &#123;print $NF&#125;'</span> <span class="variable">$&#123;LOG_FILE&#125;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="title">max_active_processes</span></span>()&#123;</span><br><span class="line">    awk <span class="string">'/^max active processes:/ &#123;print $NF&#125;'</span> <span class="variable">$&#123;LOG_FILE&#125;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="title">max_children_reached</span></span>()&#123;</span><br><span class="line">    awk <span class="string">'/^max children reached:/ &#123;print $NF&#125;'</span> <span class="variable">$&#123;LOG_FILE&#125;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">case</span> <span class="string">"<span class="variable">$1</span>"</span> <span class="keyword">in</span></span><br><span class="line">pool)</span><br><span class="line">    pool</span><br><span class="line">    ;;</span><br><span class="line">process_manager)</span><br><span class="line">    process_manager</span><br><span class="line">    ;;</span><br><span class="line">start_since)</span><br><span class="line">    start_since</span><br><span class="line">    ;;</span><br><span class="line">accepted_conn)</span><br><span class="line">    accepted_conn</span><br><span class="line">    ;;</span><br><span class="line">listen_queue)</span><br><span class="line">    listen_queue</span><br><span class="line">    ;;</span><br><span class="line">max_listen_queue)</span><br><span class="line">    max_listen_queue</span><br><span class="line">    ;;</span><br><span class="line">listen_queue_len)</span><br><span class="line">    listen_queue_len</span><br><span class="line">    ;;</span><br><span class="line">idle_processes)</span><br><span class="line">    idle_processes</span><br><span class="line">    ;;</span><br><span class="line">active_processes)</span><br><span class="line">    active_processes</span><br><span class="line">    ;;</span><br><span class="line">total_processes)</span><br><span class="line">    total_processes</span><br><span class="line">    ;;</span><br><span class="line">max_active_processes)</span><br><span class="line">    max_active_processes</span><br><span class="line">    ;;</span><br><span class="line">max_children_reached)</span><br><span class="line">    max_children_reached</span><br><span class="line">    ;;</span><br><span class="line">*)</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">"Usage: <span class="variable">$0</span> &#123;pool|process_manager|start_since|accepted_conn|listen_queue|max_listen_queue|listen_queue_len|idle_processes|active_processes|total_processes|max_active_processes|max_children_reached&#125;"</span></span><br><span class="line"><span class="keyword">esac</span></span><br></pre></td></tr></table></figure>
+<p>以上全部配置完成之后重启 agent 即可</p>
+<h3 id="1-3-添加模板，调用"><a href="#1-3-添加模板，调用" class="headerlink" title="1.3 添加模板，调用"></a>1.3 添加模板，调用</h3><blockquote>
+<p>松爷的书里提供了大量的模板，如果不想自己重写生成模板，直接拿着这个模板进行根据自身的环境修改即可</p>
+</blockquote>
+<ul>
+<li><a href="https://github.com/itnihao/zabbix/blob/master/templates/zbx_templates_App_Nginx.xml" target="_blank" rel="noopener">nginx 的模板</a></li>
+<li><a href="https://github.com/itnihao/zabbix/blob/master/templates/zbx_templates_App_PHP_FPM.xml" target="_blank" rel="noopener">php-fpm 的模板</a></li>
+</ul>
+<p>最后呈现出来的效果如下图(zatree中)<br><img src="http://mingmings.qiniudn.com/zabbix/zabbix-nginx-phpfpm.jpg" alt="zabbix-nginx-phpfpm.jpg"></p>
+<blockquote>
+<p>更多阅读</p>
+<ul>
+<li><a href="https://github.com/itnihao/zabbix" target="_blank" rel="noopener">松爷的 zabbix repo</a></li>
+</ul>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/note/tags/zabbix-监控-nginx-和-php-fpm/" rel="tag"># zabbix 监控 nginx 和 php-fpm</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/note/db_redis-监控技巧.html" rel="next" title="redis 监控技巧">
+                <i class="fa fa-chevron-left"></i> redis 监控技巧
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/note/travel-雾都重庆之行.html" rel="prev" title="雾都重庆">
+                雾都重庆 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">宋大明明</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/note/archives/">
+              
+                  <span class="site-state-item-count">78</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、监控-nginx-server"><span class="nav-number">1.</span> <span class="nav-text">一、监控 nginx server</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-配置-nginx-和-php-fpm"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 配置 nginx 和 php-fpm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-配置检测脚本和-userparameter"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 配置检测脚本和 userparameter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-添加模板，调用"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 添加模板，调用</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2014 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">宋大明明</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/note/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/note/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/note/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/note/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/note/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/note/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/note/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/note/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/note/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/note/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="python 的优雅技巧," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="看到微信推送了这篇文章，觉得还是蛮多用处的，遂转载自微信公众号 python程序员,有些是已经知道的技巧，但是更多的是未曾注意的，直接转载">
+<meta name="keywords" content="python 的优雅技巧">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python 的优雅技巧">
+<meta property="og:url" content="http://mingmings.org/note/Python的优雅技巧.html">
+<meta property="og:site_name" content="异类深呼吸">
+<meta property="og:description" content="看到微信推送了这篇文章，觉得还是蛮多用处的，遂转载自微信公众号 python程序员,有些是已经知道的技巧，但是更多的是未曾注意的，直接转载">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-04-29T18:14:30.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python 的优雅技巧">
+<meta name="twitter:description" content="看到微信推送了这篇文章，觉得还是蛮多用处的，遂转载自微信公众号 python程序员,有些是已经知道的技巧，但是更多的是未曾注意的，直接转载">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/note/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://mingmings.org/note/Python的优雅技巧.html"/>
+
+
+
+
+
+  <title>Python 的优雅技巧 | 异类深呼吸</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-55424732-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?fe4164c60a9dd0e73810fa0243796a5d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/note/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">异类深呼吸</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/note/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/note/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/note/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/note/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://mingmings.org/note/note/Python的优雅技巧.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="宋大明明">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/note/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="异类深呼吸">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Python 的优雅技巧</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-06-02T21:01:32+08:00">
+                2015-06-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/note/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>看到微信推送了这篇文章，觉得还是蛮多用处的，遂转载自微信公众号 <code>python程序员</code>,有些是已经知道的技巧，但是更多的是未曾注意的，直接转载<br><a id="more"></a></p>
+<h2 id="一、常用技巧"><a href="#一、常用技巧" class="headerlink" title="一、常用技巧"></a>一、常用技巧</h2><h4 id="1-1-枚举"><a href="#1-1-枚举" class="headerlink" title="1.1 枚举"></a>1.1 枚举</h4><p>不要这么做</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">i</span> = <span class="number">0</span> </span><br><span class="line"><span class="keyword">for</span> item <span class="keyword">in</span> iterable: </span><br><span class="line">    print <span class="selector-tag">i</span>, item </span><br><span class="line">    <span class="selector-tag">i</span> += <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>而是这样：</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> <span class="selector-tag">i</span>, item <span class="keyword">in</span> enumerate(iterable):</span><br><span class="line">    print <span class="selector-tag">i</span>, item</span><br></pre></td></tr></table></figure>
+<p>Enumerate 可以接受第二个参数，例如：</p>
+<figure class="highlight lsl"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; <span class="type">list</span>(enumerate(<span class="string">"abc"</span>)) </span><br><span class="line">[(<span class="number">0</span>, <span class="string">"a"</span>), (<span class="number">1</span>, <span class="string">"b"</span>), (<span class="number">2</span>, <span class="string">"c"</span>)] </span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; <span class="type">list</span>(enumerate(<span class="string">"abc"</span>, <span class="number">1</span>)) </span><br><span class="line">[(<span class="number">1</span>, <span class="string">"a"</span>), (<span class="number">2</span>, <span class="string">"b"</span>), (<span class="number">3</span>, <span class="string">"c"</span>)]</span><br></pre></td></tr></table></figure>
+<h4 id="1-2-字典-集合-解析"><a href="#1-2-字典-集合-解析" class="headerlink" title="1.2 字典/集合 解析"></a>1.2 字典/集合 解析</h4><p>你可能知道列表解析，但不知道字典/集合解析。字典/集合解析简单而且高效，例如：</p>
+<figure class="highlight maxima"><table><tr><td class="code"><pre><span class="line">my_dict = &#123;i: i * i <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">xrange</span>(<span class="number">100</span>)&#125; my_set = &#123;i * <span class="number">15</span> <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">xrange</span>(<span class="number">100</span>)&#125;# There <span class="built_in">is</span> only a difference of <span class="string">":"</span> <span class="keyword">in</span> both</span><br></pre></td></tr></table></figure>
+<h4 id="1-3-强制浮点数除法"><a href="#1-3-强制浮点数除法" class="headerlink" title="1.3 强制浮点数除法"></a>1.3 强制浮点数除法</h4><p>如果我们除以一个整数，即使结果是一个浮点数，Python（2） 依旧会给我们一个整数。为了规避这个问题，我们需要这样做：</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="attr">result</span> = <span class="number">1.0</span>/<span class="number">2</span></span><br></pre></td></tr></table></figure>
+<p>但是现在有一种别的方法可以解决这个问题，甚至在之前我都没有意识到有这种方法存在。你可以进行如下操作：</p>
+<figure class="highlight nimrod"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> __future__ <span class="keyword">import</span> division </span><br><span class="line"><span class="literal">result</span> = <span class="number">1</span>/<span class="number">2</span></span><br><span class="line"><span class="comment"># print(result)</span></span><br><span class="line"><span class="comment"># 0.5</span></span><br></pre></td></tr></table></figure>
+<p>需要注意的是这个窍门只适用于 Python 2。在 Python 3 中就不需要进行 import 操作了，因为它已经默认进行 import 了。</p>
+<h4 id="1-4-简单的服务器"><a href="#1-4-简单的服务器" class="headerlink" title="1.4 简单的服务器"></a>1.4 简单的服务器</h4><p>你想快速简单的分享目录下的文件吗？可以这样做：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Python2</span></span><br><span class="line">python -m SimpleHTTPServer</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Python 3</span></span><br><span class="line">python3 -m http.server</span><br></pre></td></tr></table></figure>
+<p>这回启动一个服务器</p>
+<h4 id="1-5-Python-表达式求值"><a href="#1-5-Python-表达式求值" class="headerlink" title="1.5 Python 表达式求值"></a>1.5 Python 表达式求值</h4><p>我们都知道 eval ,但也许并不是所有人都知道 literal_eval. 可以这么做：</p>
+<figure class="highlight elm"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> ast </span><br><span class="line"><span class="title">my_list</span> = ast.literal_eval(expr)</span><br></pre></td></tr></table></figure>
+<p>而不是这样：</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="attr">expr</span> = <span class="string">"[1, 2, 3]"</span> </span><br><span class="line"><span class="attr">my_list</span> = eval(expr)</span><br></pre></td></tr></table></figure>
+<h4 id="1-6-分析脚本"><a href="#1-6-分析脚本" class="headerlink" title="1.6 分析脚本"></a>1.6 分析脚本</h4><p>按下面的方式运行脚本，可以很简单的对其进行分析：</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line"><span class="keyword">python</span> -<span class="keyword">m</span> cProfile my_script.<span class="keyword">py</span></span><br></pre></td></tr></table></figure>
+<h4 id="1-7-对象自检"><a href="#1-7-对象自检" class="headerlink" title="1.7 对象自检"></a>1.7 对象自检</h4><p>在 Python中，可以通过 dir() 来检查对象，例如：</p>
+<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;</span>&gt; foo = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line"><span class="meta">&gt;&gt;</span>&gt; dir(foo) </span><br><span class="line">[<span class="string">"__add__"</span>, <span class="string">"__class__"</span>, <span class="string">"__contains__"</span>, </span><br><span class="line"><span class="string">"__delattr__"</span>, <span class="string">"__delitem__"</span>, <span class="string">"__delslice__"</span>, ... , </span><br><span class="line"><span class="string">"extend"</span>, <span class="string">"index"</span>, <span class="string">"insert"</span>, <span class="string">"pop"</span>, <span class="string">"remove"</span>, </span><br><span class="line"><span class="string">"reverse"</span>, <span class="string">"sort"</span>]</span><br></pre></td></tr></table></figure>
+<h4 id="1-8-调试脚本"><a href="#1-8-调试脚本" class="headerlink" title="1.8 调试脚本"></a>1.8 调试脚本</h4><p>你可以使用pdb模块在脚本中设置断点来调试脚本，就像这样：</p>
+<figure class="highlight elm"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> pdb</span><br><span class="line"><span class="title">pdb</span>.set_trace()</span><br></pre></td></tr></table></figure>
+<p>你可以在脚本的任何地方加入 pdb.set_trace()，该函数会在那个位置设置一个断点。超级方便。你应该多阅读 pdb 函数的相关内容，因为在它里面还有很多鲜为人知的功能。</p>
+<h4 id="1-9-简化-if-结构"><a href="#1-9-简化-if-结构" class="headerlink" title="1.9 简化 if 结构"></a>1.9 简化 if 结构</h4><p>如果必须检查一些值，可以用</p>
+<figure class="highlight actionscript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> n <span class="keyword">in</span> [<span class="number">1</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>]:</span><br></pre></td></tr></table></figure>
+<p>而不是用复杂的if结构：</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="attribute">n</span>==1 <span class="keyword">or</span> <span class="attribute">n</span>==4 <span class="keyword">or</span> <span class="attribute">n</span>==5 <span class="keyword">or</span> <span class="attribute">n</span>==6:</span><br></pre></td></tr></table></figure>
+<h4 id="1-10-字符串-数列-逆序"><a href="#1-10-字符串-数列-逆序" class="headerlink" title="1.10 字符串/数列 逆序"></a>1.10 字符串/数列 逆序</h4><p>下面的方式可以快速反转一个列表：</p>
+<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;</span>&gt; a = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>]</span><br><span class="line"><span class="meta">&gt;&gt;</span>&gt; a[<span class="symbol">:</span><span class="symbol">:-</span><span class="number">1</span>]</span><br><span class="line">[<span class="number">4</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># This creates a new reversed list. </span></span><br><span class="line"><span class="comment"># If you want to reverse a list in place you can do:</span></span><br><span class="line"></span><br><span class="line">a.reverse()</span><br></pre></td></tr></table></figure>
+<p>这种方式同样适用于字符串：</p>
+<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;</span>&gt; foo = <span class="string">"yasoob"</span></span><br><span class="line"><span class="meta">&gt;&gt;</span>&gt; foo[<span class="symbol">:</span><span class="symbol">:-</span><span class="number">1</span>]</span><br><span class="line"><span class="string">"boosay"</span></span><br></pre></td></tr></table></figure>
+<h4 id="1-11-优雅地打印"><a href="#1-11-优雅地打印" class="headerlink" title="1.11 优雅地打印"></a>1.11 优雅地打印</h4><p>下面的方式可以用优雅的方式打印字典和列表：</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">from pprint import pprint </span><br><span class="line"><span class="function"><span class="title">pprint</span><span class="params">(my_dict)</span></span></span><br></pre></td></tr></table></figure>
+<p>这用于字典打印是非常高效的，如果你想从文件中快速优雅的打印出json，可以这样做：</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line"><span class="keyword">cat</span> <span class="keyword">file</span>.json | <span class="keyword">python</span> -<span class="keyword">m</span> json.tools</span><br></pre></td></tr></table></figure>
+<h4 id="1-12-三元运算"><a href="#1-12-三元运算" class="headerlink" title="1.12 三元运算"></a>1.12 三元运算</h4><p>三元运算是 if-else 语句的快捷操作，也被称为条件运算。这里有几个例子可以供你参考:</p>
+<figure class="highlight nix"><table><tr><td class="code"><pre><span class="line">[on_true] <span class="keyword">if</span> [expression] <span class="keyword">else</span> [on_false]</span><br><span class="line">x, <span class="attr">y</span> = <span class="number">50</span>, <span class="number">25</span></span><br><span class="line"><span class="attr">small</span> = x <span class="keyword">if</span> x &lt; y <span class="keyword">else</span> y</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>译文出处：<a href="http://www.ido321.com/1576.html" target="_blank" rel="noopener">http://www.ido321.com/1576.html</a><br>本文根据@Nicolas Bevacqua的《nifty-python-tricks》所译，整个译文带有我自己的理解与思想，如果译得不好或有不对之处还请同行朋友指点。如需转载此译文，需注明英文出处：<a href="https://freepythontips.wordpress.com/2015/04/19/nifty-python-tricks/。" target="_blank" rel="noopener">https://freepythontips.wordpress.com/2015/04/19/nifty-python-tricks/。</a></p>
+</blockquote>
+<p>&emsp;&emsp;</p>
+<blockquote>
+<p>参考阅读</p>
+<ul>
+<li><a href="http://mp.weixin.qq.com/s?__biz=MjM5NzU0MzU0Nw==&amp;mid=208327526&amp;idx=1&amp;sn=e61b44b46f6d477603855354bfcece40&amp;key=c468684b929d2be2dc6567d8a6a6e8d22a1a7015214fc196b4c3e0e7ef3d9dc44453a4b3ff4e1e1642044ab50c705966&amp;ascene=0&amp;uin=NDM2NDMxNDM1&amp;devicetype=iMac+MacBookAir6%2C2+OSX+OSX+10.10.3+build(14D136" target="_blank" rel="noopener">Python的优雅技巧</a>&amp;version=11020012&amp;pass_ticket=U2h1d9YESwwdxEEUmFkbvmgr9RdOy%2F%2Fm6oEfYQHruh2BtAabzG7wTkaFbdmO4W%2B%2F)</li>
+</ul>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/note/tags/python-的优雅技巧/" rel="tag"># python 的优雅技巧</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/note/db_redis-持久化.html" rel="next" title="redis 持久化">
+                <i class="fa fa-chevron-left"></i> redis 持久化
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/note/db_redis-监控技巧.html" rel="prev" title="redis 监控技巧">
+                redis 监控技巧 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">宋大明明</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/note/archives/">
+              
+                  <span class="site-state-item-count">78</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、常用技巧"><span class="nav-number">1.</span> <span class="nav-text">一、常用技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-枚举"><span class="nav-number">1.0.1.</span> <span class="nav-text">1.1 枚举</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-字典-集合-解析"><span class="nav-number">1.0.2.</span> <span class="nav-text">1.2 字典/集合 解析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-强制浮点数除法"><span class="nav-number">1.0.3.</span> <span class="nav-text">1.3 强制浮点数除法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-4-简单的服务器"><span class="nav-number">1.0.4.</span> <span class="nav-text">1.4 简单的服务器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-5-Python-表达式求值"><span class="nav-number">1.0.5.</span> <span class="nav-text">1.5 Python 表达式求值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-6-分析脚本"><span class="nav-number">1.0.6.</span> <span class="nav-text">1.6 分析脚本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-7-对象自检"><span class="nav-number">1.0.7.</span> <span class="nav-text">1.7 对象自检</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-8-调试脚本"><span class="nav-number">1.0.8.</span> <span class="nav-text">1.8 调试脚本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-9-简化-if-结构"><span class="nav-number">1.0.9.</span> <span class="nav-text">1.9 简化 if 结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-10-字符串-数列-逆序"><span class="nav-number">1.0.10.</span> <span class="nav-text">1.10 字符串/数列 逆序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-11-优雅地打印"><span class="nav-number">1.0.11.</span> <span class="nav-text">1.11 优雅地打印</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-12-三元运算"><span class="nav-number">1.0.12.</span> <span class="nav-text">1.12 三元运算</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2014 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">宋大明明</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/note/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/note/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/note/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/note/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/note/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/note/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/note/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/note/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/note/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/note/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="python库," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="工欲善其事，必先利其器。Python 社区高产富饶，有大量的美丽，实用的库, 这里挑选出来一些接口设计简洁的库。文章转载自 hit9">
+<meta name="keywords" content="python库">
+<meta property="og:type" content="article">
+<meta property="og:title" content="让人耳目一新的python库（转）">
+<meta property="og:url" content="http://mingmings.org/note/python-让人耳目一新的python库.html">
+<meta property="og:site_name" content="异类深呼吸">
+<meta property="og:description" content="工欲善其事，必先利其器。Python 社区高产富饶，有大量的美丽，实用的库, 这里挑选出来一些接口设计简洁的库。文章转载自 hit9">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-04-29T18:11:48.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="让人耳目一新的python库（转）">
+<meta name="twitter:description" content="工欲善其事，必先利其器。Python 社区高产富饶，有大量的美丽，实用的库, 这里挑选出来一些接口设计简洁的库。文章转载自 hit9">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/note/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://mingmings.org/note/python-让人耳目一新的python库.html"/>
+
+
+
+
+
+  <title>让人耳目一新的python库（转） | 异类深呼吸</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-55424732-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?fe4164c60a9dd0e73810fa0243796a5d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/note/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">异类深呼吸</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/note/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/note/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/note/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/note/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://mingmings.org/note/note/python-让人耳目一新的python库.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="宋大明明">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/note/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="异类深呼吸">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">让人耳目一新的python库（转）</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-01-09T15:11:28+08:00">
+                2015-01-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/note/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>工欲善其事，必先利其器。Python 社区高产富饶，有大量的美丽，实用的库, 这里挑选出来一些接口设计简洁的库。文章转载自 <a href="http://pyzh.readthedocs.org/en/latest/awesome-python-libraries.html" target="_blank" rel="noopener">hit9</a><br><a id="more"></a></p>
+<h2 id="1、docopt"><a href="#1、docopt" class="headerlink" title="1、docopt"></a>1、docopt</h2><blockquote>
+<p>Pythonic的命令行参数解析库，<a href="http://pyzh.readthedocs.org/en/latest/awesome-python-libraries.html" target="_blank" rel="noopener">github</a> 地址</p>
+</blockquote>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line"><span class="string">""</span><span class="comment">"Usage:</span></span><br><span class="line">  quick_example.<span class="keyword">py</span> tcp <span class="symbol">&lt;host&gt;</span> <span class="symbol">&lt;port&gt;</span> [--timeout=<span class="symbol">&lt;seconds&gt;</span>]</span><br><span class="line">  quick_example.<span class="keyword">py</span> serial <span class="symbol">&lt;port&gt;</span> [--baud=<span class="number">9600</span>] [--timeout=<span class="symbol">&lt;seconds&gt;</span>]</span><br><span class="line">  quick_example.<span class="keyword">py</span> -h | --<span class="keyword">help</span> | --<span class="keyword">version</span></span><br><span class="line"></span><br><span class="line"><span class="string">""</span><span class="comment">"</span></span><br><span class="line">from docopt import docopt</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    arguments = docopt(__doc__, <span class="keyword">version</span>=<span class="string">'0.1.1rc'</span>)</span><br><span class="line">    <span class="keyword">print</span>(arguments)</span><br></pre></td></tr></table></figure>
+<h2 id="2、requests"><a href="#2、requests" class="headerlink" title="2、requests"></a>2、requests</h2><blockquote>
+<p>大神kennethreitz的作品，简易明了的HTTP请求操作库, 是urllib2的理想替代品，API简洁明了，这才是Python开发者喜欢的</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>r = requests.get(<span class="string">'https://api.github.com/user'</span>, auth=(<span class="string">'user'</span>, <span class="string">'pass'</span>))</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.status_code</span><br><span class="line"><span class="number">200</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.headers[<span class="string">'content-type'</span>]</span><br><span class="line"><span class="string">'application/json; charset=utf8'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.encoding</span><br><span class="line"><span class="string">'utf-8'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.text</span><br><span class="line"><span class="string">u'&#123;"type":"User"...'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.json()</span><br><span class="line">&#123;<span class="string">u'private_gists'</span>: <span class="number">419</span>, <span class="string">u'total_private_repos'</span>: <span class="number">77</span>, ...&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="3、sh"><a href="#3、sh" class="headerlink" title="3、sh"></a>3、sh</h2><blockquote>
+<p>如其名，子进程接口。<a href="http://amoffat.github.io/sh/" target="_blank" rel="noopener">github</a> 地址</p>
+</blockquote>
+<figure class="highlight coffeescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sh <span class="keyword">import</span> ifconfig</span><br><span class="line"><span class="built_in">print</span>(ifconfig(<span class="string">"wlan0"</span>))</span><br></pre></td></tr></table></figure>
+<h2 id="4、purl"><a href="#4、purl" class="headerlink" title="4、purl"></a>4、purl</h2><blockquote>
+<p>拥有简洁接口的URL处理器，<a href="github: https://github.com/codeinthehole/purl" target="_blank" rel="noopener">github</a> 地址</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> purl <span class="keyword">import</span> URL</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>from_str = URL(<span class="string">'https://www.google.com/search?q=testing'</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>u.query_param(<span class="string">'q'</span>)</span><br><span class="line"><span class="string">u'testing'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>u.host()</span><br><span class="line"><span class="string">u'www.google.com'</span></span><br></pre></td></tr></table></figure>
+<h2 id="5、when-py"><a href="#5、when-py" class="headerlink" title="5、when.py"></a>5、when.py</h2><blockquote>
+<p>友好时间的日期库，<a href="https://github.com/dirn/When.py" target="_blank" rel="noopener">github</a> 地址</p>
+</blockquote>
+<figure class="highlight lsl"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; import when</span><br><span class="line">&gt;&gt;&gt; when.timezone()</span><br><span class="line">'Asia/Shanghai'</span><br><span class="line">&gt;&gt;&gt; when.today()</span><br><span class="line">datetime.date(<span class="number">2013</span>, <span class="number">5</span>, <span class="number">14</span>)</span><br><span class="line">&gt;&gt;&gt; when.tomorrow()</span><br><span class="line">datetime.date(<span class="number">2013</span>, <span class="number">5</span>, <span class="number">15</span>)</span><br><span class="line">&gt;&gt;&gt; when.now()</span><br><span class="line">datetime.datetime(<span class="number">2013</span>, <span class="number">5</span>, <span class="number">14</span>, <span class="number">21</span>, <span class="number">2</span>, <span class="number">23</span>, <span class="number">78838</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="6、clize"><a href="#6、clize" class="headerlink" title="6、clize"></a>6、clize</h2><blockquote>
+<p>clize是一个类似 getopt 的库。可以用程序的函数名字来作为使用方法，<a href="https://github.com/epsy/clize" target="_blank" rel="noopener">github</a> 地址</p>
+</blockquote>
+<figure class="highlight processing"><table><tr><td class="code"><pre><span class="line">#!/usr/bin/env python</span><br><span class="line"></span><br><span class="line">from clize <span class="keyword">import</span> clize</span><br><span class="line"></span><br><span class="line">@clize</span><br><span class="line">def echo(<span class="built_in">text</span>, <span class="built_in">reverse</span>=<span class="keyword">false</span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">reverse</span>:</span><br><span class="line">        <span class="built_in">text</span> = <span class="built_in">text</span>[::<span class="number">-1</span>]</span><br><span class="line">    <span class="built_in">print</span>(<span class="built_in">text</span>)</span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    <span class="keyword">import</span> sys</span><br><span class="line">    echo(*sys.argv)</span><br></pre></td></tr></table></figure>
+<p>而这个小程序就可以这么使用:</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">$ ./<span class="keyword">echo</span>.<span class="keyword">py</span> --<span class="keyword">help</span></span><br><span class="line">Usage: ./<span class="keyword">echo</span>.<span class="keyword">py</span> [OPTIONS] text</span><br><span class="line"></span><br><span class="line">Positional <span class="keyword">argument</span><span class="variable">s:</span></span><br><span class="line">  text</span><br><span class="line"></span><br><span class="line">Option<span class="variable">s:</span></span><br><span class="line">  --<span class="built_in">reverse</span></span><br><span class="line">  -h, --<span class="keyword">help</span>   Show this <span class="keyword">help</span></span><br></pre></td></tr></table></figure>
+<h2 id="Pocoo小组"><a href="#Pocoo小组" class="headerlink" title="Pocoo小组"></a>Pocoo小组</h2><blockquote>
+<p>pocoo出的库，必属精品。它的库很出名: flask, jinja2, pygments,sphinx… <a href="http://www.pocoo.org/" target="_blank" rel="noopener">github</a> 地址</p>
+</blockquote>
+<p>&emsp;&emsp;</p>
+<blockquote>
+<p>参考阅读</p>
+</blockquote>
+<ul>
+<li><a href="https://gist.github.com/medecau/797129" target="_blank" rel="noopener">看下这个gist</a></li>
+<li><a href="https://news.ycombinator.com/item?id=4772261" target="_blank" rel="noopener">HN</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/note/tags/python库/" rel="tag"># python库</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/note/多线程的基本概念.html" rel="next" title="多线程的基本概念">
+                <i class="fa fa-chevron-left"></i> 多线程的基本概念
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/note/zabbix 报错集锦.html" rel="prev" title="zabbix 报错集锦">
+                zabbix 报错集锦 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">宋大明明</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/note/archives/">
+              
+                  <span class="site-state-item-count">78</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、docopt"><span class="nav-number">1.</span> <span class="nav-text">1、docopt</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、requests"><span class="nav-number">2.</span> <span class="nav-text">2、requests</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、sh"><span class="nav-number">3.</span> <span class="nav-text">3、sh</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4、purl"><span class="nav-number">4.</span> <span class="nav-text">4、purl</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5、when-py"><span class="nav-number">5.</span> <span class="nav-text">5、when.py</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6、clize"><span class="nav-number">6.</span> <span class="nav-text">6、clize</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pocoo小组"><span class="nav-number">7.</span> <span class="nav-text">Pocoo小组</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2014 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">宋大明明</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/note/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/note/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/note/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

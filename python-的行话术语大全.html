@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/note/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/note/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/note/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/note/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/note/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/note/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/note/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="python 行话,python 术语," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="读一些无用的书，做一些无用的事，花一些无用的时间，都是为了在一切已知之外，保留一个超越自己的机会，人生中一些很了不起的变化，就是来自这种时刻。">
+<meta name="keywords" content="python 行话,python 术语">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python 的行话术语大全">
+<meta property="og:url" content="http://mingmings.org/note/python-的行话术语大全.html">
+<meta property="og:site_name" content="异类深呼吸">
+<meta property="og:description" content="读一些无用的书，做一些无用的事，花一些无用的时间，都是为了在一切已知之外，保留一个超越自己的机会，人生中一些很了不起的变化，就是来自这种时刻。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-04-07T03:46:14.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="python 的行话术语大全">
+<meta name="twitter:description" content="读一些无用的书，做一些无用的事，花一些无用的时间，都是为了在一切已知之外，保留一个超越自己的机会，人生中一些很了不起的变化，就是来自这种时刻。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/note/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://mingmings.org/note/python-的行话术语大全.html"/>
+
+
+
+
+
+  <title>python 的行话术语大全 | 异类深呼吸</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-55424732-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?fe4164c60a9dd0e73810fa0243796a5d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/note/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">异类深呼吸</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/note/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/note/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/note/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/note/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://mingmings.org/note/note/python-的行话术语大全.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="宋大明明">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/note/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="异类深呼吸">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">python 的行话术语大全</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-07T11:04:56+08:00">
+                2017-04-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote class="blockquote-center">读一些无用的书，做一些无用的事，花一些无用的时间，都是为了在一切已知之外，保留一个超越自己的机会，人生中一些很了不起的变化，就是来自这种时刻。</blockquote>
+
+<a id="more"></a>
+<p>python 中有些术语还是知道的比较好，像沉浸其中的老鸟可能张嘴就是术语，像我这类新人刚入总会被术语弄的云里雾里，网上看到这篇文章，转载过来，加深学习</p>
+<h4 id="ABC-计算机语言"><a href="#ABC-计算机语言" class="headerlink" title="ABC(计算机语言)"></a>ABC(计算机语言)</h4><blockquote>
+<p>是由 Leo Geurts, Lambert Meertens 和 Steven Pemberton 创建的一种编程语言。开发了 Python 的 Guido van Rossum，在 20 世纪 80 年代曾以程序员的身份实现了 ABC 的环境。块由缩进来组织，内置元组和字典，元组拆分，for 循环语义，以及对所有序列化类型的一致处理等这些 Python 的鲜明特性都借鉴自 ABC。</p>
+</blockquote>
+<h4 id="Abstract-base-class-ABC"><a href="#Abstract-base-class-ABC" class="headerlink" title="Abstract base class(ABC)"></a>Abstract base class(ABC)</h4><blockquote>
+<p>一个不能被实例化，只能被子类化的类。Python 中的接口由 ABC 形式化表示。除了可以继承一个 ABC 外，类也可以通过注册成一个 ABC 的虚拟子类来声明实现了某个接口。</p>
+</blockquote>
+<h4 id="accessor"><a href="#accessor" class="headerlink" title="accessor"></a>accessor</h4><blockquote>
+<p>一个实现了可用于访问单个数据属性的方法。一些开发者将 accessor 作为一个通用术语使用，即包含 getter 和 setter 方法，而另一些开发者使用时只表述 getter，setter 表述为 mutator。</p>
+</blockquote>
+<h4 id="aliasing"><a href="#aliasing" class="headerlink" title="aliasing"></a>aliasing</h4><blockquote>
+<p>为相同的对象分配两个或多个名字。例如，在 a = []; b = a 这个例子中，变量 a 和 b 都是同一个列表对象的别名。在任何一种变量用于存储对象引用的语言中，别名会很自然地发生。为避免混淆，只需忘掉变量是保存对象的盒子这样的想法（一个对象不能同时保存在两个盒子中）。最好将它们理解成是贴在对象上的标签（一个对象可以有多个标签）。</p>
+</blockquote>
+<h4 id="argument"><a href="#argument" class="headerlink" title="argument"></a>argument</h4><blockquote>
+<p>指调用一个函数时，所传递的一个表达式。在 Python 中，argument 和 parameter 几乎就是同义词。关于这两个术语的区别和使用方法的更多信息，见术语 parameter。</p>
+</blockquote>
+<h4 id="attribute"><a href="#attribute" class="headerlink" title="attribute"></a>attribute</h4><blockquote>
+<p>方法和数据属性(如 Java 术语中的 “fields” 等）在 Python 中都被称作属性。方法也是一个属性，只不过这个属性恰好是一个可调用对象（通常是一个函数，但不是必需的）。</p>
+</blockquote>
+<h4 id="BDFL"><a href="#BDFL" class="headerlink" title="BDFL"></a>BDFL</h4><blockquote>
+<p>Benevolent Dictator For Life，是 Python 语言的创造者 Guido van Rossum 的别称。</p>
+</blockquote>
+<h4 id="binary-sequence"><a href="#binary-sequence" class="headerlink" title="binary sequence"></a>binary sequence</h4><blockquote>
+<p>一个用于表述含有字节元素的序列化类型的通用术语。内置的二进制序列类型有 byte，bytearray 和 memoryview。</p>
+</blockquote>
+<h4 id="BOM"><a href="#BOM" class="headerlink" title="BOM"></a>BOM</h4><blockquote>
+<p>Byte Order Mark（字节序标识符），该字节串可能会出现在以 UTF-16 编码的文件的开头处。一个 BOM 就是字符 U+FEFF(ZERO WIDTH NO-BREAK SPACE)，它编码后在大数端的 CPU 上生成 b’\xfe\xff’，在小数端的 CPU 上生成 b’\xff\xfe’。因为 Unicode 中没有 U+FFFE 这个字符，因此一旦出现该字节串就能明确判断出该编码使用的字节序。可能有点多余，但在 UTF-8 文件中可能会找到编码成 b’\xef\xbb\xbf’ 的 BOM。</p>
+</blockquote>
+<h4 id="bound-method"><a href="#bound-method" class="headerlink" title="bound method"></a>bound method</h4><blockquote>
+<p>一个需要通过实例访问的方法，因为它被绑定到了那个实例。任何一个方法实际上都是一个描述子 descriptor(实现了 get)，当被访问时，它将自身封装到一个对象中，该对象将方法绑定到实例。该对象就是一个绑定方法。调用它可以不用传递 self 值。例如，通过以下赋值 my_method = my_obj.method，该绑定函数以后可以通过 my_method() 调用。</p>
+</blockquote>
+<h4 id="build-in-function-BIF"><a href="#build-in-function-BIF" class="headerlink" title="build-in function(BIF)"></a>build-in function(BIF)</h4><blockquote>
+<p>一个与 Python 解析器捆绑的函数，它使用低层实现语言编写（例如，CPython 用的 C; Jython 用的 Java 等等）。该术语通常只表述那些无需导入就能使用的函数。但是内置模块如 sys, math, re 等也含有内置函数。</p>
+</blockquote>
+<h4 id="byte-string"><a href="#byte-string" class="headerlink" title="byte string"></a>byte string</h4><blockquote>
+<p>很不幸 Python 3 中仍然还用这个名字表示 bytes 和 bytearray。在 Python 2 中， str 类型实际上是一个字节字符串，因此使用该术语将 str 字符串和 unicode字符串进行区分是说得通的。而在 Python 3 中还坚持使用这个术语就没有意义了，Python 3 中最好用 byte sequence 表述。</p>
+</blockquote>
+<h4 id="bytes-like-object"><a href="#bytes-like-object" class="headerlink" title="bytes-like object"></a>bytes-like object</h4><blockquote>
+<p>一个通用的字节序列。最常见的 bytes-like 类型是 bytes, bytearray 和 memoryview。但是其它支持低层 CPython buffer 协议的对象，如果它们的元素都是单字节的话，也有符合条件的。</p>
+</blockquote>
+<h4 id="callable-object"><a href="#callable-object" class="headerlink" title="callable object"></a>callable object</h4><blockquote>
+<p>一个可以通过调用操作符 () 进行调用的对象，它能返回一个结果或者执行某些操作。在 Python 中有七种可调用对象: 用户定义的函数，内置函数，内置方法，实例方法，生成器函数，类，实现了 <strong>call</strong> 特殊方法的类实例。</p>
+</blockquote>
+<h4 id="CamelCase"><a href="#CamelCase" class="headerlink" title="CamelCase"></a>CamelCase</h4><blockquote>
+<p>标识的一种写法约定：相连的每个词首字母都大写（如 ConnectionRefusedError）。PEP-8 建议类名应该以 CamelCase 约定命名，但是 Python 的标准库并没有遵循这个建议。见 snake_case 术语。</p>
+</blockquote>
+<h4 id="CheeseShop"><a href="#CheeseShop" class="headerlink" title="CheeseShop"></a>CheeseShop</h4><blockquote>
+<p><a href="https://pypi.python.org/pypi" target="_blank" rel="noopener">Python Package Index(PyPi)</a> 的原名，以 Monty Python 剧中的奶酪店命名。目前 <a href="https://cheeseshop.python.org" target="_blank" rel="noopener">https://cheeseshop.python.org</a> 仍然可访问。 见 PyPI 术语。</p>
+</blockquote>
+<h4 id="class"><a href="#class" class="headerlink" title="class"></a>class</h4><blockquote>
+<p>一种用于定义新类型的程序结构，它具有数据属性和可在其上进行某些操作的方法。见 type 术语。</p>
+</blockquote>
+<h4 id="code-point"><a href="#code-point" class="headerlink" title="code point"></a>code point</h4><blockquote>
+<p>0 到 0x10FFFF 区间内的一个整数，用于标识 Unicode 字符数据库中的一个记录。在 Unicode 7.0 中，只有不到 3% 的代码点被分配了字符。在 Python 文档中，该术语可能有两种表述。例如， chr 函数说需要一个整数 “code point”，而其相应的 ord 函数，描述为返回一个 “Unicode code point”。</p>
+</blockquote>
+<h4 id="code-smell"><a href="#code-smell" class="headerlink" title="code smell"></a>code smell</h4><blockquote>
+<p>表明该程序设计可能会有问题的一种代码编写模式。例如，过度使用 isinstance 来检查具体类就是一种 code smell，因为它使程序在将来难以扩展以应对新的类型。</p>
+</blockquote>
+<h4 id="codec"><a href="#codec" class="headerlink" title="codec"></a>codec</h4><blockquote>
+<p>(encoder/decoder)，一个具有编码和解析函数的模块，通常用于进行 str 和 bytes 间的相互转换，虽然 Python 也有几个 codecs 可以用于执行 bytes 到 bytes，以及 str 到 str 的转换。</p>
+</blockquote>
+<h4 id="collection"><a href="#collection" class="headerlink" title="collection"></a>collection</h4><blockquote>
+<p>一种通用术语，用于表述这类数据结构：它由多个项组成，并且项能被单独存取。 一些 collection (集合) 可以包含任意类型的对象（见 container 术语），而另一些只能包含一种简单原子类型的对象（见 flat sequence 术语）。list 和 bytes 都是集合， 但是 list 是一个 container，而 bytes 是一个 flat sequence。</p>
+</blockquote>
+<h4 id="considered-harmful"><a href="#considered-harmful" class="headerlink" title="considered harmful"></a>considered harmful</h4><blockquote>
+<p>Edsger Dijkstra 的一封名叫 “Go To Statement Considered Harmful” 的信为那些批评某种计算机科学技术的论文标题建立了一种范式。Wikipedia 上的 <a href="https://en.wikipedia.org/wiki/Considered_harmful" target="_blank" rel="noopener">“Considered harmful”</a> 文章 举了一些例子，包括由 Eric A. Meyer 写的 <a href="http://meyerweb.com/eric/comment/chech.html" target="_blank" rel="noopener">“Considered Harmful Essays Considered Harmful”</a>。</p>
+</blockquote>
+<h4 id="constructor-NaN"><a href="#constructor-NaN" class="headerlink" title="constructor"></a>constructor</h4><blockquote>
+<p>非正式地，类中的 <strong>init</strong> 实例方法被称为构造器，因为它的语义和 Java 的构造器非常相似。但是，<strong>init</strong> 更恰当的名字应该叫初始化器，因为它实际上并没有构造该实例，它只是接收这个实例为自己的 self 参数。constructor 这个术语用于描述类中的 <strong>new</strong> 方法会更好，Python 在调用 <strong>init</strong> 前调用该方法，它实际上负责创建并返回实例对象。见 initializer 术语。</p>
+</blockquote>
+<h4 id="container"><a href="#container" class="headerlink" title="container"></a>container</h4><blockquote>
+<p>一个能保存其它对象的引用的对象。Python 中的大多数 collection 类型都是容器，但有些不是。例如 flat sequence，它是 collection，但不是 container。</p>
+</blockquote>
+<h4 id="context-manager"><a href="#context-manager" class="headerlink" title="context manager"></a>context manager</h4><blockquote>
+<p>一个实现了 <strong>enter</strong> 和 <strong>exit</strong> 这两个特殊方法的对象，用于 with 块中。</p>
+</blockquote>
+<h4 id="coroutine"><a href="#coroutine" class="headerlink" title="coroutine"></a>coroutine</h4><blockquote>
+<p>一个用于并行程序开发的 generator(生成器)，该生成器通过 coro.send(value) 从一个 schedulere (调度器) 或 event loop (事件循环器) 中获取数值。该术语可用于描述 generator function (生成器函数)，也可以描述通过调用生成器函数所获得的 generator object (生成器对象)。见 generator 术语。</p>
+</blockquote>
+<h4 id="CPython"><a href="#CPython" class="headerlink" title="CPython"></a>CPython</h4><blockquote>
+<p>标准 Python 解析器，用 C 实现。该术语只在以下情况下使用：讨论特定于某种实现的特性时，或讨论 PyPy 等有多种可用 Python 解析器时。</p>
+</blockquote>
+<h4 id="CURD"><a href="#CURD" class="headerlink" title="CURD"></a>CURD</h4><blockquote>
+<p>即 Create, Read, Update 和 Delete 的字母缩写，它们是任何数据存储型应用系统的四个基本功能。</p>
+</blockquote>
+<h4 id="decorator"><a href="#decorator" class="headerlink" title="decorator"></a>decorator</h4><blockquote>
+<p>一个可调用对象 A，调用能返回另一个可调用对象 B，对 A 的调用要在一个可调用对象 C 的定义体前使用语法 @A 进行。当碰到这种代码时，Python 解析器调用 A(C) 并将结果 B 绑定到之前分配给 C 的变量，从而事实上将 C 的定义替换成了 B。如果该目标可调用对象 C 是一个函数，那么 A 就是一个函数装饰器;如果 C 是一个类，那么 A 就是一个类装饰器。</p>
+</blockquote>
+<h4 id="deep-copy"><a href="#deep-copy" class="headerlink" title="deep copy"></a>deep copy</h4><blockquote>
+<p>拷贝一个对象时，对象中的所有属性自身也被拷贝。对比 shallow copy。</p>
+</blockquote>
+<h4 id="descriptor"><a href="#descriptor" class="headerlink" title="descriptor"></a>descriptor</h4><blockquote>
+<p>一个实现了 <strong>get</strong>, <strong>set</strong>, <strong>delete</strong> 这三个特殊方法中的一个或多个方法的类，当它的一个实例成为了另一个类（即 managed class， 受管理类) 的类属性时，即成为一个 descriptor (描述子)。描述子对受管理类中的受管理属性的存取和删除操作进行管理，并通常将数据保存到 managed instance (受管理实例）中。</p>
+</blockquote>
+<h4 id="docstring"><a href="#docstring" class="headerlink" title="docstring"></a>docstring</h4><blockquote>
+<p>即 documentation string 的简写。当一个模块、类或函数中的首行语句是一个字符串时，Python 会将该字符串作为该对象的 docstring，并保存到该对象的 <strong>doc</strong> 属性上。见 doctest 术语。</p>
+</blockquote>
+<h4 id="doctest"><a href="#doctest" class="headerlink" title="doctest"></a>doctest</h4><blockquote>
+<p>是一个模块，它包含一些函数用于解析和运行嵌在 Python 模块的 docstring 中或纯文本文件中的示例代码。也可以在命令行中这样使用:</p>
+</blockquote>
+<blockquote>
+<p>python -m doctest module_with_tests.py</p>
+</blockquote>
+<h4 id="DRY"><a href="#DRY" class="headerlink" title="DRY"></a>DRY</h4><blockquote>
+<p>Don’t Repeat Yourself–一种软件工程原则，它表述为 “Every piece of knowledge must have a single, unambiguous, authoritative representation within a system”。它最先出现在 Andy Hunt 和 Dava Thomas 写的 《The Pragmatic Programmer》(Addison-Wesley, 1999) 中。</p>
+</blockquote>
+<h4 id="duck-typing"><a href="#duck-typing" class="headerlink" title="duck typing"></a>duck typing</h4><blockquote>
+<p>多态的一种形式: 函数可作用于任何实现了特定方法的对象上，而不需要考虑它们的类或者显式接口声明。</p>
+</blockquote>
+<h4 id="dunder"><a href="#dunder" class="headerlink" title="dunder"></a>dunder</h4><blockquote>
+<p>double underscores 的简写，用于简化那些前后带有双下划线的特殊方法和属性名的发音（如 len 读作 “dunder len”)。</p>
+</blockquote>
+<h4 id="dunder-method"><a href="#dunder-method" class="headerlink" title="dunder method"></a>dunder method</h4><blockquote>
+<p>见术语 dunder 和 special methods 。</p>
+</blockquote>
+<h4 id="EAFP"><a href="#EAFP" class="headerlink" title="EAFP"></a>EAFP</h4><blockquote>
+<p>是 “It’s easier to ask forgiveness than permission” 的缩写，它源于计算机先驱 Grace Hopper，Python 开发人员引用它来阐述这样的动态编程实践: 对属性的存取都可假定属性是存在的，因而不必进行事先测试，如果不存在的话，只需捕获相关异常即可。hasattr 函数的 docstring 实际上这样描述它的工作原理: “通过调用 getattr(object, name) 并捕猎 AttributeError。”</p>
+</blockquote>
+<h4 id="eager"><a href="#eager" class="headerlink" title="eager"></a>eager</h4><blockquote>
+<p>一个 iterable object (可迭代对象），它会立马构建出其所有的元素。在 Python 中，一个 list comprehension (列表推导器) 是一个 eager。相较于 lazy。</p>
+</blockquote>
+<h4 id="fail-fast"><a href="#fail-fast" class="headerlink" title="fail-fast"></a>fail-fast</h4><blockquote>
+<p>一种系统设计原则，它建议错误应该尽早汇报。相比于大部分动态语言，Python 更加遵循该原则。例如，它没有 “undefined” 值: 变量没有初始化前一旦P被引用就会产生错误，并且 my_dict[k] 时当 k 不存在时会抛出异常 (相较于 JavaScript)。另一个例子，Python 中通过元组拆分进行的并行赋值只有当元组中的每个元素都匹配时才能进行，而 Ruby 却是不声不响地处理了元素个数不匹配的情况: 忽略 = 右边没有使用的元素，或者将 nil 值赋给左边多余的变量。</p>
+</blockquote>
+<h4 id="falsy"><a href="#falsy" class="headerlink" title="falsy"></a>falsy</h4><blockquote>
+<p>表示任何一个值 x, 该值 x 当调用 bool(x) 时会返回 False; 在布尔上下文中，例如控制 if 或 while 循环的表达式中，Python 默认使用 bool 来计算对象值。它的相反的值是 truthy。</p>
+</blockquote>
+<h4 id="file-like-object"><a href="#file-like-object" class="headerlink" title="file-like object"></a>file-like object</h4><blockquote>
+<p>在官方文档中非正式地用于表述实现了文件协议的对象，这些对象都有像 read, write, close 等方法。常见的变体有: 包含已编码字符串以便于面向行读写的文本文件，StringIO 实例–内存中的文本文件和包含未编码字节数据的二进制文件。后者可能有缓冲，也可能没有。标准文件类型自 Python 2.6 开始都定义在 io 模块中。</p>
+</blockquote>
+<h4 id="first-class-function"><a href="#first-class-function" class="headerlink" title="first-class function"></a>first-class function</h4><blockquote>
+<p>编程语言中能作为 first-class object (一类对象) 的任何函数 (即可以在运行时创建，能赋值给变量，能作为参数传递，能作为另一个函数的返回值返回)。Python 函数都是一类函数。</p>
+</blockquote>
+<h4 id="flat-sequence"><a href="#flat-sequence" class="headerlink" title="flat sequence"></a>flat sequence</h4><blockquote>
+<p>一种序列类型: 它实际存储其元素的值，而不是存储到其它对象的引用。内置的类型如 str, bytes, bytearray, memoryview 和 array.array 等都是 flat sequence (简单序列)。而 list, tuple 和 collections.deque 都是 container sequence (容器序列)。见术语 container。</p>
+</blockquote>
+<h4 id="function"><a href="#function" class="headerlink" title="function"></a>function</h4><blockquote>
+<p>严格来说，是一个从 def 块或 lambda 表达式运行而来的对象。非正式地，function 这个词用于描述任何可调用对象，如方法、甚至有时也可以是类。官方的 内置函数 列表中也含有一些内置类，像 dict, range 和 str 等。见 callable object。</p>
+</blockquote>
+<h4 id="genexp"><a href="#genexp" class="headerlink" title="genexp"></a>genexp</h4><blockquote>
+<p>generator expression 的缩写。</p>
+</blockquote>
+<h4 id="generator"><a href="#generator" class="headerlink" title="generator"></a>generator</h4><blockquote>
+<p>一个由 generator function (生成器函数) 或 generator expression (生成器表达式) 构建的迭代器，它在产生值时无需遍历整个集合; 典型的例子是一个产生 Fibonacci 序列的生成器，由于该序列是无限的，因而不适合在存于一个集合中。该术语除了表述从生成器函数调用中返回的对象外，有时也用于表述该生成器函数本身。</p>
+</blockquote>
+<h4 id="generator-function"><a href="#generator-function" class="headerlink" title="generator function"></a>generator function</h4><blockquote>
+<p>一个在函数体中使用了 yeild 关键字的函数。当被调用时，generator function (生成器函数) 会返回一个 generator (生成器)。</p>
+</blockquote>
+<h4 id="generator-expression"><a href="#generator-expression" class="headerlink" title="generator expression"></a>generator expression</h4><blockquote>
+<p>一种由括号包围的表达式，它使用和 list comprehension (列表推导式) 相同的语法，只不过它返回的不是列表，而是一个生成器。一个 generator expression (生成器表达式) 可以被理解成列表推导式的 lazy 版本。见术语 lazy。</p>
+</blockquote>
+<h4 id="generic-function"><a href="#generic-function" class="headerlink" title="generic function"></a>generic function</h4><blockquote>
+<p>指一组函数：它们意在以可定制的方式为不同的对象类型实现相同的操作。在 Python 3.4 中，functools.singledispatch 装饰器是创建 generic function (通用函数) 的标准方法。在其它语言中也叫做 multimethods。</p>
+</blockquote>
+<h4 id="GoF-book"><a href="#GoF-book" class="headerlink" title="GoF book"></a>GoF book</h4><blockquote>
+<p>《Design Patterns: Elements of Resuable Object-Oriented Software》(Addison Wesley, 1995) 的别称。它的作者即所谓的四人帮: Erich Gamma, Richard Helm, Ralph Johnson 和 John Vlissides。</p>
+</blockquote>
+<h4 id="hashable"><a href="#hashable" class="headerlink" title="hashable"></a>hashable</h4><blockquote>
+<p>一个对象为 hashable 即指它同时含有 <strong>hash</strong> 和 <strong>eq</strong> 方法，并且有以下限制: 它的哈希值永远不会变且当 a == b 成立时 hash(a) == hash(b) 也必须为 True。大多数内置的不可修改类型都是 hashable 的，但是元组只有当其每个元素都 hashable 时才是 hashable 的。</p>
+</blockquote>
+<h4 id="higher-order-function"><a href="#higher-order-function" class="headerlink" title="higher-order function"></a>higher-order function</h4><blockquote>
+<p>指一个能接受另一个函数作为参数的函数，如 sorted, map 和 filter 等，或者指一个将函数作为返回值的函数，如 Python 装饰器。</p>
+</blockquote>
+<h4 id="idion"><a href="#idion" class="headerlink" title="idion"></a>idion</h4><blockquote>
+<p>“A manner of speaking that it natural to native speakers of a language”，摘自 Princeton WordNet。</p>
+</blockquote>
+<h4 id="import-time"><a href="#import-time" class="headerlink" title="import time"></a>import time</h4><blockquote>
+<p>指一个模块初始化运行的时刻，此时模块代码被 Python 解析器加载，并从上到下进行运算，然后被编译成字节码。这是类和函数执行定义并变成活跃对象的时刻，也是执行装假器的时刻。</p>
+</blockquote>
+<h4 id="initializer"><a href="#initializer" class="headerlink" title="initializer"></a>initializer</h4><blockquote>
+<p>更适合 <strong>init</strong> 方法的名字(相较于 constructor 构造器)。<strong>init</strong> 的任务是初始化作为 self 参数接收来的实例。而实际的实例构建过程是由 <strong>new</strong> 函数完成的。见术语 constructor。</p>
+</blockquote>
+<h4 id="iteralbe"><a href="#iteralbe" class="headerlink" title="iteralbe"></a>iteralbe</h4><blockquote>
+<p>任何一个只要通过 iter 这个内置函数能获取一个 iterator (迭代器) 的对象。iterable object (可迭代对象) 可作为 for 循环、推导式和元组拆分时的元素源。那些实现了 <strong>iter</strong> 方法并返回一个迭代器的对象都是 iterable 的; 而其它实现了 <strong>getitem</strong> 方法的对象可能也是 iterable 的。</p>
+</blockquote>
+<h4 id="iterable-unpacking"><a href="#iterable-unpacking" class="headerlink" title="iterable unpacking"></a>iterable unpacking</h4><blockquote>
+<p>tuple unpacking 的一个现代的，更加准确的同义词。见 parallel assignment。</p>
+</blockquote>
+<h4 id="iterator"><a href="#iterator" class="headerlink" title="iterator"></a>iterator</h4><blockquote>
+<p>任何一个实现了 <strong>next</strong> 方法的的对象，<strong>next</strong> 不接收参数，调用它时会返回序列中的下一个元素，或者当序列中已无元素时会抛出 StopIteration 异常。Python 的 iterator (迭代器) 也会实现 <strong>iter</strong> 方法，因而它们也是 iterable 的。经典的迭代器，根据原来的设计模式，是从集合中返回元素。generator (生成器) 也是一个迭代器，但是它更加灵活。见术语 generator。</p>
+</blockquote>
+<h4 id="KISS-principle"><a href="#KISS-principle" class="headerlink" title="KISS principle"></a>KISS principle</h4><blockquote>
+<p>即 “Keep It Simple, Stupid”。提倡寻求尽可能简单，稳定的解决方案。这句话是由 Kelly Johnson 提出的，Johnson 是一个天才的航空航天工程师，他在真正的 51 区工作，20 世纪的很多高级飞行器都是由他设计出来的。</p>
+</blockquote>
+<h4 id="lazy"><a href="#lazy" class="headerlink" title="lazy"></a>lazy</h4><blockquote>
+<p>一个按需产生元素的可迭代对象。在 Python 中，相较于 eager，生成器是 lazy 的。</p>
+</blockquote>
+<h4 id="listcomp"><a href="#listcomp" class="headerlink" title="listcomp"></a>listcomp</h4><blockquote>
+<p>list comprehension 的简写。</p>
+</blockquote>
+<h4 id="list-comprehension"><a href="#list-comprehension" class="headerlink" title="list comprehension"></a>list comprehension</h4><blockquote>
+<p>一种由方括号包围的表达式: 它使用 for 和 in 关键字，并对来自一个或多个可迭代对象中的元素进行处理和过滤，从而创建出一个列表。list comprehension (列表推导式) 是即时计算的，见术语 eager。</p>
+</blockquote>
+<h4 id="liveness"><a href="#liveness" class="headerlink" title="liveness"></a>liveness</h4><blockquote>
+<p>一个异步的、多线程的或者分布式的系统，当 “某些好事终会发生” (即虽然一些期望的计算现在还没有发生，但它最终会完成的) 时，即展现了它的 liveness (活性)。如果系统死锁了，那它就失去了它的活性。</p>
+</blockquote>
+<h4 id="magic-method"><a href="#magic-method" class="headerlink" title="magic method"></a>magic method</h4><blockquote>
+<p>同 special method。</p>
+</blockquote>
+<h4 id="managed-attribute"><a href="#managed-attribute" class="headerlink" title="managed attribute"></a>managed attribute</h4><blockquote>
+<p>一个由描述子对象管理的公共属性。虽然 managed attribute (受管理属性) 是在 managed class (受管理类) 中定义的，但是它操作起来像一个实例属性 (即它通常在每个实例中都有一个值，并保存在 storage attribute 中)。见术语 descriptor。</p>
+</blockquote>
+<h4 id="managed-class"><a href="#managed-class" class="headerlink" title="managed class"></a>managed class</h4><blockquote>
+<p>一个使用描述子对象来管理其至少一个属性的类。见术语 descriptor。</p>
+</blockquote>
+<h4 id="managed-instance"><a href="#managed-instance" class="headerlink" title="managed instance"></a>managed instance</h4><blockquote>
+<p>managed class 的一个实例。见 managed attribute 和 descriptor。</p>
+</blockquote>
+<h4 id="metaclass"><a href="#metaclass" class="headerlink" title="metaclass"></a>metaclass</h4><blockquote>
+<p>一种其实例也是类的类。默认地，Python 的类是 type 的实例，例如，type(int) 返回类 type，因此 type 是一个 metaclass。用户自定义的 metaclass 可以通过继承 type 来创建。</p>
+</blockquote>
+<h4 id="metaprogramming"><a href="#metaprogramming" class="headerlink" title="metaprogramming"></a>metaprogramming</h4><blockquote>
+<p>一种使用有关其自身的运行时信息来修改其行为的程序编写实践。例如，ORM 可能会检查数据模型类的声明来确定如何去验证数据库记录中的数据域，以及如何将数据库类型转换成 Python 中的类型。</p>
+</blockquote>
+<h4 id="monkey-patching"><a href="#monkey-patching" class="headerlink" title="monkey patching"></a>monkey patching</h4><blockquote>
+<p>在运行时动态地修改一个模块、类，或者函数，通常是为了添加功能和修正 Bug。因为它是在内存中实现的，并没有修改源代码，因此一个 monkey patch 只在当前运行的进程中有效。Monkey patch 破坏了封装性并且趋于和修复部分的实现细节紧密藕合，因此它们只被认为是临时的解决方法，不是代码集成的一种推荐技术。</p>
+</blockquote>
+<h4 id="mixin-class"><a href="#mixin-class" class="headerlink" title="mixin class"></a>mixin class</h4><blockquote>
+<p>一种意在与一个或更多个类一起使用在多重类继承树的类。一个 mixin 类不能被初始化，mixin class 的具体子类也应该继承其它的非 mixin class。</p>
+</blockquote>
+<h4 id="mixin-method"><a href="#mixin-method" class="headerlink" title="mixin method"></a>mixin method</h4><blockquote>
+<p>一个具体的方法实现: 该方法由一个 ABC 或 mixin class 提供。</p>
+</blockquote>
+<h4 id="mutator"><a href="#mutator" class="headerlink" title="mutator"></a>mutator</h4><blockquote>
+<p>见术语 accessor。</p>
+</blockquote>
+<h4 id="name-mangling"><a href="#name-mangling" class="headerlink" title="name mangling"></a>name mangling</h4><blockquote>
+<p>自动将私有属性从 <strong>x 重命名为 _MyClass</strong>x 的过程，它由 Python 解析器在运行时执行。</p>
+</blockquote>
+<h4 id="nonoverriding-descriptor"><a href="#nonoverriding-descriptor" class="headerlink" title="nonoverriding descriptor"></a>nonoverriding descriptor</h4><blockquote>
+<p>一种未实现 <strong>set</strong> 的描述子，因而不会干涉受管理实例上的受管理属性的设置过程。其结果是，如果受管理实例上设置了一个同名属性，将隐藏该实例上的描述子。也称作 nondata descriptor 或者 shadowable descriptor。相较于 overriding descriptor。</p>
+</blockquote>
+<h4 id="ORM"><a href="#ORM" class="headerlink" title="ORM"></a>ORM</h4><blockquote>
+<p>Object-Relation Mapper–一种 API: 它以 Python 类和对象的形式提供访问数据库和记录的方式，提供方法调用来执行数据库操作。SQLAlchemy 是一个流行地独立 Python ORM; Django 和 Web2py 框架都有它们自己捆绑的 ORM。</p>
+</blockquote>
+<h4 id="overriding-descriptor"><a href="#overriding-descriptor" class="headerlink" title="overriding descriptor"></a>overriding descriptor</h4><blockquote>
+<p>一种实现了 <strong>set</strong> 的描述子，因而它会干预并覆盖在受管理实例上设置受管理属性的企图。也称为 data descriptor 或者 enforced descriptor。相较于 nonoverriding descriptor。</p>
+</blockquote>
+<h4 id="parallel-assignment"><a href="#parallel-assignment" class="headerlink" title="parallel assignment"></a>parallel assignment</h4><blockquote>
+<p>用来将一个可迭代对象中的多个元素赋值给多个变量，使用像 a, b = [c, d] 这样的语法–也称为 destructing assignment (解构赋值)。这是 tuple unpacking (元组拆分) 的常见用法。</p>
+</blockquote>
+<h4 id="parameter"><a href="#parameter" class="headerlink" title="parameter"></a>parameter</h4><blockquote>
+<p>函数会声明成具有 0 到多个 “形式参数”，它们都是未绑定的本地变量。当函数被调用时，传递的参数或 “实参” 会绑定到这些变量。通常，arguemnt 指实参，而 parameter 指形参，但是 Python 文档和 API 中这两者都是混用的。见术语 argument。</p>
+</blockquote>
+<h4 id="prime-动词"><a href="#prime-动词" class="headerlink" title="prime (动词)"></a>prime (动词)</h4><blockquote>
+<p>prime 动词的含义是 “填充、事先准备好”，它在一个协程上调用 next(coro)，使其运行到首个 yeild 表达式处，从而使其能准备好接收由接下来的 coro.send(value) 调用发送的数值。</p>
+</blockquote>
+<h4 id="PyPI"><a href="#PyPI" class="headerlink" title="PyPI"></a>PyPI</h4><blockquote>
+<p>即 <a href="https://pypi.python.org/pypi" target="_blank" rel="noopener">Python Package Index</a>，上面有超过 60,000 个包，也称作 Cheese shop (见术语 Cheese shop)。PyPI 发音为 “pie-P-eye”，以避免与 PyPy 混淆。</p>
+</blockquote>
+<h4 id="PyPy"><a href="#PyPy" class="headerlink" title="PyPy"></a>PyPy</h4><blockquote>
+<p>Python 编程语言的另一种实现，它所使用的工具链将 Python 的一个子集编译成了机器码，因此解析器的源代码实际上是用 Python 编写的。PyPy 还包含一个 JIT，用于将用户程序实时转换成机器码–像 Java VM 做的一样。截止 2014 年 12 月，根据 <a href="http://speed.pypy.org/" target="_blank" rel="noopener">公布的评测数据</a>，PyPy 平均比 CPython 快 6.8 倍。PyPy 发音为 “pie-pie”，以避免与 PyPI 混淆。</p>
+</blockquote>
+<h4 id="Pythonic"><a href="#Pythonic" class="headerlink" title="Pythonic"></a>Pythonic</h4><blockquote>
+<p>用于称赞符合语言习惯的 Python 代码，这些代码很好地利用了语言特性，从而显得简洁、易读，通常也更快。也用于表述 API，这些 API 使得熟练的 Python 程序员使用它们进行编程时显得很自然。</p>
+</blockquote>
+<h4 id="refcount"><a href="#refcount" class="headerlink" title="refcount"></a>refcount</h4><blockquote>
+<p>每个 CPython 对象在内部保存的引用计算器，以便决定它自身何时能被垃圾回收器回收。</p>
+</blockquote>
+<h4 id="REPL"><a href="#REPL" class="headerlink" title="REPL"></a>REPL</h4><blockquote>
+<p>Read-Eval-Print Loop，一个交互式的控制台，例如标准的 python 或者其它的像 ipython, bpython 和 Python Anywhere 等。</p>
+</blockquote>
+<h4 id="sequence"><a href="#sequence" class="headerlink" title="sequence"></a>sequence</h4><blockquote>
+<p>某些可迭代数据结构的通用名字: 这些数据结构有已知的大小 (如 len(s)) 并且允许使用基于 0 的整数索引进行访问 (如 s[0])。sequence 一开始就是一个 Python 术语，但是直到 Python 2.6 它才正式地作为一个抽象类在 collections.abc.Sequence 中定义。</p>
+</blockquote>
+<h4 id="serialization"><a href="#serialization" class="headerlink" title="serialization"></a>serialization</h4><blockquote>
+<p>将一个对象从其内存结构转换成一个二进制或面向文本的结构，以便于存储或传输，它能使用的方式能便于以后在相同或不同的系统上重建该对象的一个克隆版本。pickle 模块支持将任意的 Python 对象序列化成一个二进制格式。</p>
+</blockquote>
+<h4 id="shallow-copy"><a href="#shallow-copy" class="headerlink" title="shallow copy"></a>shallow copy</h4><blockquote>
+<p>对象的拷贝版本与原对象共享属性对象的引用。相较于 deep copy。也见 aliasing。</p>
+</blockquote>
+<h4 id="singleton"><a href="#singleton" class="headerlink" title="singleton"></a>singleton</h4><blockquote>
+<p>一个对象是某个类的唯一存在的实例–通常不是偶尔引起的，而是有意设计该类以避免其能创建多个实例。有一个设计模式也叫 Singleton，是编写这种类的指南。Python 中的 None 对象就是一个 singleton (独子)。</p>
+</blockquote>
+<h4 id="slicing"><a href="#slicing" class="headerlink" title="slicing"></a>slicing</h4><blockquote>
+<p>通过使用切片表示法来生产某个序列的子集，比如 my_sequence[2:6]。Slicing (切片) 通常是通过复制数据来创建一个新的对象; 特别如 my_sequence[:] 会创建整个序列的一个 shallow copy (浅复制版本)。而一个 memoryview 对象通过切片生成的新 memoryview 对象能与源对象共享数据。</p>
+</blockquote>
+<h4 id="snake-case"><a href="#snake-case" class="headerlink" title="snake_case"></a>snake_case</h4><blockquote>
+<p>标识的一种写法约定：用下划线 (_) 连接单词，例如 run_until_complete。PEP-8 称这种风格为 “单词都小写，并以下划线分隔” 并且推荐以它来命名函数，方法，参数和变量。而对于包，PEP-8 建议名字中的各名词直接相连接，不使用分隔符。Python 标准库中有很多 snake_case 型的标识例子，但是也有很多标识中的单词没有用分隔符 (例如 getattr, classmethod, isinstance, str.endswith 等)。见术语 CamelCase。</p>
+</blockquote>
+<h4 id="special-method"><a href="#special-method" class="headerlink" title="special method"></a>special method</h4><blockquote>
+<p>具有特殊名字的方法，如 <strong>getitem</strong>，它的开头和结尾都有双下划线。</p>
+</blockquote>
+<h4 id="storage-attribute"><a href="#storage-attribute" class="headerlink" title="storage attribute"></a>storage attribute</h4><blockquote>
+<p>managed instance (受管理实例) 中的一个属性，用于保存某个受描述子管理的属性值。</p>
+</blockquote>
+<h4 id="strong-reference"><a href="#strong-reference" class="headerlink" title="strong reference"></a>strong reference</h4><blockquote>
+<p>该引用使被引用的对象在 Python 中一直保持活跃。相较于 weak reference。</p>
+</blockquote>
+<h4 id="tuple-unpacking"><a href="#tuple-unpacking" class="headerlink" title="tuple unpacking"></a>tuple unpacking</h4><blockquote>
+<p>将来自一个可迭代对象中的元素赋值给一组变量 (例如: first, second, third = my_list)。Python 开发人员一般都使用该术语，但是 iterable unpacking 也越来越受到青睐。</p>
+</blockquote>
+<h4 id="truthy"><a href="#truthy" class="headerlink" title="truthy"></a>truthy</h4><blockquote>
+<p>表示任何一个值 x, 该值 x 当调用 bool(x) 时会返回 True; 在布尔上下文中，例如控制 if 或 while 循环的表达式中，Python 默认使用 bool 来计算对象值。它的相反的值是 falsy。</p>
+</blockquote>
+<h4 id="type"><a href="#type" class="headerlink" title="type"></a>type</h4><blockquote>
+<p>它表述有关程序数据的每个特定类别，它通过一组可能值及可运用于其上的操作来定义。有些 Python type (类型) 与机器数据类型很接近 (如 float 和 bytes)，而其它的会有相应的扩展 (如 int 不受限于 CPU 的字大小，str 能保存多字节的 Unicode 数据点)，同时还有很高级的抽象类型 (如 dict, deque 等)。类型可以是用户自定义的，也可以是内置于解析器中的 ( 一个 “内置” 类型)。在 Python 2.2 之前，type/class 还没有统一起来，那时 type 和 class 是不同的实体，用户自定义的类无法对内置的类型进行扩展。而自 Python 2.2 后，内置类型和新型的类开始变得相互兼容，class (类) 成为了 type (类型) 的一个实例。而在 Python 3 中，所有类都是新型类。见 class 和 metaclass。</p>
+</blockquote>
+<h4 id="unbound-method"><a href="#unbound-method" class="headerlink" title="unbound method"></a>unbound method</h4><blockquote>
+<p>一个实例方法如果直接通过类来访问就没有绑定到该实例上; 从而被称为是一个 “unbound method (未绑定的方法)”。要想顺利进行，对一个未绑定方法的调用必须显式地传递一个类的实例作为首个参数。那个实例将赋给该方法的 self 参数。见术语 bound method。</p>
+</blockquote>
+<h4 id="uniform-access-principle"><a href="#uniform-access-principle" class="headerlink" title="uniform access principle"></a>uniform access principle</h4><blockquote>
+<p>Bertrand Meyer, Eiffel 语言的创建者，写道: “All services offered by a module should be available through a uniform notation, which does not betray whether they are implemented through storage or through computation.” 属性和描述子使得在 Python 中能实现 uniform access principle (统一访问原则)。由于没有 new 操作符，调用函数和初始化对象看起来是一样的，这也是该原则的另一种形式: 调用者无需知道被调用对象是一个类、一个函数、或者是任何其它的可调用对象。</p>
+</blockquote>
+<h4 id="user-defined"><a href="#user-defined" class="headerlink" title="user-defined"></a>user-defined</h4><blockquote>
+<p>在 Python 文档中 user 这个单词几乎总是指你和我–使用 Python 语言的程序员–相较于那些实现 Python 解析器的开发人员。因此术语 “user-defined class” 意指一个用 Python 编写的类，相较于内置的用 C 编写的类，比如说 str。</p>
+</blockquote>
+<h4 id="view"><a href="#view" class="headerlink" title="view"></a>view</h4><blockquote>
+<p>Python 3 中的 view (视图) 指的是通过 dict 的 .keys(), .values() 和 .items() 方法返回的特殊数据结构，它无需进行数据复制，就能为我们提供一个关于 dict 键和值的一个动态视图，而在 Python 2 中，由于这些方法返回列表，因而有数据复制的过程。所有 dict 视图都是可迭代的，并且都支持 in 操作符。另外，如果被视图引用的元素都是 hashable 的，那么该视图也会实现 collections.abc.Set 接口。所有由 .keys() 方法返回的视图都属于这种情况，而当 dict 的值是 hashable 时，由 .items() 方法返回的视图也是 hashable 的。</p>
+</blockquote>
+<h4 id="vitual-subclass"><a href="#vitual-subclass" class="headerlink" title="vitual subclass"></a>vitual subclass</h4><blockquote>
+<p>一个没有继承 superclass，但又使用 TheSuperClass.register(TheSubClass) 注册过的类。参见 abc.ABCMeta.register 的文档。</p>
+</blockquote>
+<h4 id="wart"><a href="#wart" class="headerlink" title="wart"></a>wart</h4><blockquote>
+<p>该语言的不好的特性。Andrew Kuchling 的那篇很有名的文章 “Python warts” 已经被 BDFL 认可了，并在他设计 Python 3 时做出打破向后兼容性这样的决定中起来了很大作用，因为如果不这样，提到的大部分缺陷都将无法修复。Kuchling 提到的很多问题都已在 Python 3 中修复了。</p>
+</blockquote>
+<h4 id="weak-reference"><a href="#weak-reference" class="headerlink" title="weak reference"></a>weak reference</h4><blockquote>
+<p>一种特殊种类的对象引用，它不增加 referent 对象引用计数值。弱引用由 weakref 模块中的某个函数和数据结构创建。</p>
+</blockquote>
+<h4 id="YAGNI"><a href="#YAGNI" class="headerlink" title="YAGNI"></a>YAGNI</h4><blockquote>
+<p>“You Ain’t Gonna Need It”, 该标语用来避免实现那些现在不需要，而基于未来假定会需要的那些功能。</p>
+</blockquote>
+<h4 id="Zen-of-Python"><a href="#Zen-of-Python" class="headerlink" title="Zen of Python"></a>Zen of Python</h4><blockquote>
+<p>在 Python 2.2 版本之后的任何 Python 终端中输入 import this 即可显示。</p>
+</blockquote>
+<p>&emsp;&emsp;</p>
+<blockquote>
+<p>参考阅读</p>
+<ul>
+<li><a href="http://www.atjiang.com/python-jargon/" target="_blank" rel="noopener">atjiang</a></li>
+<li><a href="">《Fluent Python》中 Python Jargon 章。</a></li>
+</ul>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/note/tags/python-行话/" rel="tag"># python 行话</a>
+          
+            <a href="/note/tags/python-术语/" rel="tag"># python 术语</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/note/python-项目整合套件-pipenv.html" rel="next" title="python 项目整合套件 pipenv">
+                <i class="fa fa-chevron-left"></i> python 项目整合套件 pipenv
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/note/django-reverse-vs-reverse-lazy.html" rel="prev" title="django reverse vs reverse_lazy">
+                django reverse vs reverse_lazy <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">宋大明明</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/note/archives/">
+              
+                  <span class="site-state-item-count">78</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#ABC-计算机语言"><span class="nav-number">1.</span> <span class="nav-text">ABC(计算机语言)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Abstract-base-class-ABC"><span class="nav-number">2.</span> <span class="nav-text">Abstract base class(ABC)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#accessor"><span class="nav-number">3.</span> <span class="nav-text">accessor</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#aliasing"><span class="nav-number">4.</span> <span class="nav-text">aliasing</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#argument"><span class="nav-number">5.</span> <span class="nav-text">argument</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#attribute"><span class="nav-number">6.</span> <span class="nav-text">attribute</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#BDFL"><span class="nav-number">7.</span> <span class="nav-text">BDFL</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#binary-sequence"><span class="nav-number">8.</span> <span class="nav-text">binary sequence</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#BOM"><span class="nav-number">9.</span> <span class="nav-text">BOM</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#bound-method"><span class="nav-number">10.</span> <span class="nav-text">bound method</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#build-in-function-BIF"><span class="nav-number">11.</span> <span class="nav-text">build-in function(BIF)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#byte-string"><span class="nav-number">12.</span> <span class="nav-text">byte string</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#bytes-like-object"><span class="nav-number">13.</span> <span class="nav-text">bytes-like object</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#callable-object"><span class="nav-number">14.</span> <span class="nav-text">callable object</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CamelCase"><span class="nav-number">15.</span> <span class="nav-text">CamelCase</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CheeseShop"><span class="nav-number">16.</span> <span class="nav-text">CheeseShop</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#class"><span class="nav-number">17.</span> <span class="nav-text">class</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#code-point"><span class="nav-number">18.</span> <span class="nav-text">code point</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#code-smell"><span class="nav-number">19.</span> <span class="nav-text">code smell</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#codec"><span class="nav-number">20.</span> <span class="nav-text">codec</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#collection"><span class="nav-number">21.</span> <span class="nav-text">collection</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#considered-harmful"><span class="nav-number">22.</span> <span class="nav-text">considered harmful</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#constructor-NaN"><span class="nav-number">23.</span> <span class="nav-text">constructor</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#container"><span class="nav-number">24.</span> <span class="nav-text">container</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#context-manager"><span class="nav-number">25.</span> <span class="nav-text">context manager</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#coroutine"><span class="nav-number">26.</span> <span class="nav-text">coroutine</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CPython"><span class="nav-number">27.</span> <span class="nav-text">CPython</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CURD"><span class="nav-number">28.</span> <span class="nav-text">CURD</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#decorator"><span class="nav-number">29.</span> <span class="nav-text">decorator</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#deep-copy"><span class="nav-number">30.</span> <span class="nav-text">deep copy</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#descriptor"><span class="nav-number">31.</span> <span class="nav-text">descriptor</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#docstring"><span class="nav-number">32.</span> <span class="nav-text">docstring</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#doctest"><span class="nav-number">33.</span> <span class="nav-text">doctest</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DRY"><span class="nav-number">34.</span> <span class="nav-text">DRY</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#duck-typing"><span class="nav-number">35.</span> <span class="nav-text">duck typing</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dunder"><span class="nav-number">36.</span> <span class="nav-text">dunder</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dunder-method"><span class="nav-number">37.</span> <span class="nav-text">dunder method</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#EAFP"><span class="nav-number">38.</span> <span class="nav-text">EAFP</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#eager"><span class="nav-number">39.</span> <span class="nav-text">eager</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#fail-fast"><span class="nav-number">40.</span> <span class="nav-text">fail-fast</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#falsy"><span class="nav-number">41.</span> <span class="nav-text">falsy</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#file-like-object"><span class="nav-number">42.</span> <span class="nav-text">file-like object</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#first-class-function"><span class="nav-number">43.</span> <span class="nav-text">first-class function</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#flat-sequence"><span class="nav-number">44.</span> <span class="nav-text">flat sequence</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#function"><span class="nav-number">45.</span> <span class="nav-text">function</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#genexp"><span class="nav-number">46.</span> <span class="nav-text">genexp</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#generator"><span class="nav-number">47.</span> <span class="nav-text">generator</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#generator-function"><span class="nav-number">48.</span> <span class="nav-text">generator function</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#generator-expression"><span class="nav-number">49.</span> <span class="nav-text">generator expression</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#generic-function"><span class="nav-number">50.</span> <span class="nav-text">generic function</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GoF-book"><span class="nav-number">51.</span> <span class="nav-text">GoF book</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hashable"><span class="nav-number">52.</span> <span class="nav-text">hashable</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#higher-order-function"><span class="nav-number">53.</span> <span class="nav-text">higher-order function</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#idion"><span class="nav-number">54.</span> <span class="nav-text">idion</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#import-time"><span class="nav-number">55.</span> <span class="nav-text">import time</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#initializer"><span class="nav-number">56.</span> <span class="nav-text">initializer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#iteralbe"><span class="nav-number">57.</span> <span class="nav-text">iteralbe</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#iterable-unpacking"><span class="nav-number">58.</span> <span class="nav-text">iterable unpacking</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#iterator"><span class="nav-number">59.</span> <span class="nav-text">iterator</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#KISS-principle"><span class="nav-number">60.</span> <span class="nav-text">KISS principle</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#lazy"><span class="nav-number">61.</span> <span class="nav-text">lazy</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#listcomp"><span class="nav-number">62.</span> <span class="nav-text">listcomp</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#list-comprehension"><span class="nav-number">63.</span> <span class="nav-text">list comprehension</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#liveness"><span class="nav-number">64.</span> <span class="nav-text">liveness</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#magic-method"><span class="nav-number">65.</span> <span class="nav-text">magic method</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#managed-attribute"><span class="nav-number">66.</span> <span class="nav-text">managed attribute</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#managed-class"><span class="nav-number">67.</span> <span class="nav-text">managed class</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#managed-instance"><span class="nav-number">68.</span> <span class="nav-text">managed instance</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#metaclass"><span class="nav-number">69.</span> <span class="nav-text">metaclass</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#metaprogramming"><span class="nav-number">70.</span> <span class="nav-text">metaprogramming</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#monkey-patching"><span class="nav-number">71.</span> <span class="nav-text">monkey patching</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mixin-class"><span class="nav-number">72.</span> <span class="nav-text">mixin class</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mixin-method"><span class="nav-number">73.</span> <span class="nav-text">mixin method</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mutator"><span class="nav-number">74.</span> <span class="nav-text">mutator</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#name-mangling"><span class="nav-number">75.</span> <span class="nav-text">name mangling</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#nonoverriding-descriptor"><span class="nav-number">76.</span> <span class="nav-text">nonoverriding descriptor</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ORM"><span class="nav-number">77.</span> <span class="nav-text">ORM</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#overriding-descriptor"><span class="nav-number">78.</span> <span class="nav-text">overriding descriptor</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#parallel-assignment"><span class="nav-number">79.</span> <span class="nav-text">parallel assignment</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#parameter"><span class="nav-number">80.</span> <span class="nav-text">parameter</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#prime-动词"><span class="nav-number">81.</span> <span class="nav-text">prime (动词)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#PyPI"><span class="nav-number">82.</span> <span class="nav-text">PyPI</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#PyPy"><span class="nav-number">83.</span> <span class="nav-text">PyPy</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Pythonic"><span class="nav-number">84.</span> <span class="nav-text">Pythonic</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#refcount"><span class="nav-number">85.</span> <span class="nav-text">refcount</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#REPL"><span class="nav-number">86.</span> <span class="nav-text">REPL</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sequence"><span class="nav-number">87.</span> <span class="nav-text">sequence</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#serialization"><span class="nav-number">88.</span> <span class="nav-text">serialization</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shallow-copy"><span class="nav-number">89.</span> <span class="nav-text">shallow copy</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#singleton"><span class="nav-number">90.</span> <span class="nav-text">singleton</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#slicing"><span class="nav-number">91.</span> <span class="nav-text">slicing</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#snake-case"><span class="nav-number">92.</span> <span class="nav-text">snake_case</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#special-method"><span class="nav-number">93.</span> <span class="nav-text">special method</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#storage-attribute"><span class="nav-number">94.</span> <span class="nav-text">storage attribute</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#strong-reference"><span class="nav-number">95.</span> <span class="nav-text">strong reference</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tuple-unpacking"><span class="nav-number">96.</span> <span class="nav-text">tuple unpacking</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#truthy"><span class="nav-number">97.</span> <span class="nav-text">truthy</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#type"><span class="nav-number">98.</span> <span class="nav-text">type</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#unbound-method"><span class="nav-number">99.</span> <span class="nav-text">unbound method</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#uniform-access-principle"><span class="nav-number">100.</span> <span class="nav-text">uniform access principle</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#user-defined"><span class="nav-number">101.</span> <span class="nav-text">user-defined</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#view"><span class="nav-number">102.</span> <span class="nav-text">view</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#vitual-subclass"><span class="nav-number">103.</span> <span class="nav-text">vitual subclass</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#wart"><span class="nav-number">104.</span> <span class="nav-text">wart</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#weak-reference"><span class="nav-number">105.</span> <span class="nav-text">weak reference</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#YAGNI"><span class="nav-number">106.</span> <span class="nav-text">YAGNI</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Zen-of-Python"><span class="nav-number">107.</span> <span class="nav-text">Zen of Python</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2014 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">宋大明明</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/note/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/note/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/note/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/note/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/note/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/note/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/note/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/note/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/note/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/note/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="pipenv," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="也许过程有些煎熬，但真的，熬过去就好了。">
+<meta name="keywords" content="pipenv">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python 项目整合套件 pipenv">
+<meta property="og:url" content="http://mingmings.org/note/python-项目整合套件-pipenv.html">
+<meta property="og:site_name" content="异类深呼吸">
+<meta property="og:description" content="也许过程有些煎熬，但真的，熬过去就好了。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-04-10T09:23:39.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="python 项目整合套件 pipenv">
+<meta name="twitter:description" content="也许过程有些煎熬，但真的，熬过去就好了。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/note/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://mingmings.org/note/python-项目整合套件-pipenv.html"/>
+
+
+
+
+
+  <title>python 项目整合套件 pipenv | 异类深呼吸</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-55424732-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?fe4164c60a9dd0e73810fa0243796a5d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/note/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">异类深呼吸</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/note/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/note/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/note/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/note/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://mingmings.org/note/note/python-项目整合套件-pipenv.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="宋大明明">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/note/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="异类深呼吸">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">python 项目整合套件 pipenv</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-06T15:14:35+08:00">
+                2017-04-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/note/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote class="blockquote-center">也许过程有些煎熬，但真的，熬过去就好了。</blockquote>
+
+<a id="more"></a>
+<p>&emsp;&emsp;今天翻看了<a href="https://www.heyyezi.com/2017/03/07/python-ponyorm/" target="_blank" rel="noopener">强哥的博客</a>，发觉他 mark 了一个工具，<code>pipenv</code>，是<code>requests</code>作者 <a href="https://github.com/nateprewitt" target="_blank" rel="noopener">kennethreitz</a> 的又一新作，直观这即将成为又一装逼利器，于是乎虎躯一震，赶紧翻翻介绍，官网，本地测试。</p>
+<p>&emsp;&emsp;<a href="https://python.freelycode.com/contribution/detail/682" target="_blank" rel="noopener">python 部落的这篇文章</a>比较能说明痛点，目前在Python语言中，没有类似于Bundler或Gemfiles的东西，所以通常情况下Python开发人员使用<code>Virtualenv</code>创建一个虚拟环境，再创建一个依赖包列表<code>requirements.txt</code>，然后使用 Pip 安装依赖项。这种方法一般都会正常工作，但有时它也会表现出一些怪异的行为，因此你必须手动安装或删除某些特定版本的包，并记得定期更新<code>requirements.txt</code>文件，以保持项目环境的一致。特别是当你想要在你的虚拟环境中安装Python包，但它不一定与项目本身相关联。 此外，一些项目有时会保留<code>requirements.txt</code>文件的两个版本——一个用于开发环境，一个用于生产环境，这可能会导致更多的复杂性。<code>Kenneth Reitz</code>的最新工具<code>Pipenv</code>可以用于简化Python项目中依赖项的管理。 它汇集了<code>Pip</code>，<code>Pipfile</code>和<code>Virtualenv</code>的功能，是一个强大的命令行工具。</p>
+<p>根据作者自己的说法</p>
+<blockquote>
+<p>Pipenv 是一个实验性项目，旨在将所有最好的 packaging 世界带到 Python 世界。它将 Pipfile，pip 和 virtualenv 整合到一个单一的工具。</p>
+</blockquote>
+<p>功能特性：</p>
+<ul>
+<li>自动生成和检查文件的哈希值锁定的依赖</li>
+<li>自动更新 PIP</li>
+<li>自动在包卸载时移除包</li>
+<li>在安装包时自动为 Pipfile 添加包</li>
+<li>自动在标准位置创建一个 virtualenv</li>
+<li>如果 aPipfile.lock 不尊在自动生成一个</li>
+<li>如果 aPipfile 不存在自动生成一个</li>
+<li>通过寻找 aPipfile 自动查找工程主页，递归</li>
+</ul>
+<h3 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h3><p>1、官网已经给了例子，简单说下安装<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> pip install pipenv</span></span><br></pre></td></tr></table></figure></p>
+<p>2、初始化项目目录<br><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">$ mkdir your_dir</span><br><span class="line">$ pipenv <span class="keyword">install</span></span><br><span class="line">Creating a Pipfile <span class="keyword">for</span> this project...</span><br><span class="line">Creating a virtualenv <span class="keyword">for</span> this project...</span><br><span class="line">⠋<span class="keyword">New</span> python executable <span class="keyword">in</span> /<span class="keyword">Users</span>/song/.local/<span class="keyword">share</span>/virtualenvs/testpro-jrC8Ehsa/<span class="keyword">bin</span>/python</span><br><span class="line">Installing setuptools, pip, wheel...done.</span><br><span class="line"></span><br><span class="line">Virtualenv location: /<span class="keyword">Users</span>/song/.local/<span class="keyword">share</span>/virtualenvs/testpro-jrC8Ehsa</span><br><span class="line"><span class="keyword">No</span> <span class="keyword">package</span> provided, installing all dependencies.</span><br><span class="line">Pipfile <span class="keyword">found</span> <span class="keyword">at</span> /<span class="keyword">Users</span>/song/tmp/testpro/Pipfile. Considering this <span class="keyword">to</span> be the <span class="keyword">project</span> home.</span><br><span class="line">Pipfile.lock <span class="keyword">not</span> <span class="keyword">found</span>, creating...</span><br><span class="line">Locking [dev-packages] dependencies...</span><br><span class="line">⠸Locking [packages] dependencies...</span><br><span class="line">⠴<span class="keyword">Updated</span> Pipfile.lock!</span><br><span class="line">Installing dependencies <span class="keyword">from</span> Pipfile.lock...</span><br><span class="line">⠋</span><br><span class="line">⠴</span><br><span class="line"><span class="keyword">To</span> <span class="keyword">activate</span> this <span class="keyword">project</span><span class="string">'s virtualenv, run the following:</span></span><br><span class="line"><span class="string"> $ pipenv shell</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">$ ll</span></span><br><span class="line"><span class="string">total 16</span></span><br><span class="line"><span class="string">-rw-r--r--  1 song  staff    68B Apr 10 16:01 Pipfile</span></span><br><span class="line"><span class="string">-rw-r--r--  1 song  staff   355B Apr 10 16:01 Pipfile.lock</span></span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>从提示上可以看到在这个目录下新建两个文件，并且还在家目录下用 virtualenv 新建了一个虚拟环境<code>/Users/song/.local/share/virtualenvs/testpro-jrC8Ehsa</code>，这里终端是有色彩显示的，但是我这里显示的原因</p>
+</blockquote>
+<p>2、进入虚拟环境<br><figure class="highlight gradle"><table><tr><td class="code"><pre><span class="line">$ pipenv shell</span><br><span class="line">Spawning environment shell (<span class="regexp">/bin/</span>zsh).</span><br><span class="line"><span class="keyword">source</span> <span class="regexp">/Users/</span>song<span class="regexp">/.local/</span>share<span class="regexp">/virtualenvs/</span>testpro-jrC8Ehsa<span class="regexp">/bin/</span>activate</span><br><span class="line"> song@mingming  ~<span class="regexp">/tmp/</span>testpro  <span class="keyword">source</span> <span class="regexp">/Users/</span>song<span class="regexp">/.local/</span>share<span class="regexp">/virtualenvs/</span>testpro-jrC8Ehsa<span class="regexp">/bin/</span>activate</span><br><span class="line">(testpro-jrC8Ehsa)  song@mingming  ~<span class="regexp">/tmp/</span>testpro</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>这里碰到一个问题，我这条命令执行，终端缺没有变化，找寻了一遍发觉没能找到原因，直接在 github 上问了下作者，发觉已经有人碰到过类似的问题了，这里贴下</p>
+<ul>
+<li><a href="https://github.com/berdario/pew/issues/77" target="_blank" rel="noopener">Display ($VIRTUALENV) in PS1 #77</a></li>
+<li><a href="https://github.com/kennethreitz/pipenv/issues/269" target="_blank" rel="noopener">terminal prompt doesn’t show you’re in the venv #269</a></li>
+</ul>
+</blockquote>
+<blockquote>
+<p>除了用<code>pew</code>可以解决外，直接使用<code>pipenv shell -c</code> 进入虚拟环境</p>
+</blockquote>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>1、首先看下项目下的这两个文件，这是纯净状态下的配置<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看当前项目目录</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> pipenv --<span class="built_in">where</span></span></span><br><span class="line">Pipfile found at /Users/song/tmp/testpro/Pipfile. Considering this to be the project home.</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看虚拟环境目录</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> pipenv --venv</span></span><br><span class="line">/Users/song/.local/share/virtualenvs/testpro-jrC8Ehsa</span><br></pre></td></tr></table></figure></p>
+<p>文件的初始状态<br><figure class="highlight xquery"><table><tr><td class="code"><pre><span class="line">$ cat Pipfile</span><br><span class="line">[[source]]</span><br><span class="line">url = <span class="string">"https://pypi.python.org/simple"</span></span><br><span class="line">verify_ssl = <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">$ cat Pipfile.lock</span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">"_meta"</span>: &#123;</span><br><span class="line">        <span class="string">"hash"</span>: &#123;</span><br><span class="line">            <span class="string">"sha256"</span>: <span class="string">"cb65967bdf3a7372749ce6144be4ee63f412aeeac624342fda3a2b58b1c43c15"</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"requires"</span>: &#123;&#125;,</span><br><span class="line">        <span class="string">"sources"</span>: [</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="string">"url"</span>: <span class="string">"https://pypi.python.org/simple"</span>,</span><br><span class="line">                <span class="string">"verify_ssl"</span>: true</span><br><span class="line">            &#125;</span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">"default"</span>: &#123;&#125;,</span><br><span class="line">    <span class="string">"develop"</span>: &#123;&#125;</span><br><span class="line">&#125;%</span><br></pre></td></tr></table></figure></p>
+<p>2、下面当项目里安装第三方模块<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">(testpro-jrC8Ehsa) song@mingming $ pip install requests</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 此时查看虚拟环境中的 lib 库，即/Users/song/.<span class="built_in">local</span>/share/virtualenvs/testpro-jrC8Ehsa/lib/python2.7/site-packages/ 就能看到安装的包了</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 如果不想进入虚拟环境，但同时想往虚拟环境里执行命令的话，pipenv 也提供了对应的命令</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> pipenv run [<span class="built_in">command</span>]</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> pipenv run pip install requests</span></span><br></pre></td></tr></table></figure></p>
+<p>3、查看<code>Pipfile</code>的变化<br><figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="section">[[source]]</span></span><br><span class="line"><span class="attr">url</span> = <span class="string">"https://pypi.python.org/simple"</span></span><br><span class="line"><span class="attr">verify_ssl</span> = <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="section">[packages]</span></span><br><span class="line"><span class="attr">requests</span> = <span class="string">"*"</span></span><br></pre></td></tr></table></figure></p>
+<p>4、紧接锁定当前包的版本<br><figure class="highlight prolog"><table><tr><td class="code"><pre><span class="line">$ pipenv lock</span><br><span class="line"><span class="symbol">Locking</span> [dev-packages] dependencies...</span><br><span class="line">⠹<span class="symbol">Locking</span> [packages] dependencies...</span><br><span class="line">⠼<span class="symbol">Updated</span> <span class="symbol">Pipfile</span>.lock!</span><br></pre></td></tr></table></figure></p>
+<p>可以看到 Pipfile.lock 的变化，产生了一个 hash 值<br><figure class="highlight xquery"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">"default"</span>: &#123;</span><br><span class="line">        <span class="string">"requests"</span>: &#123;</span><br><span class="line">            <span class="string">"version"</span>: <span class="string">"==2.13.0"</span>,</span><br><span class="line">            <span class="string">"hash"</span>: <span class="string">"sha256:1a720e8862a41aa22e339373b526f508ef0c8988baf48b84d3fc891a8e237efb"</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">"develop"</span>: &#123;&#125;,</span><br><span class="line">    <span class="string">"_meta"</span>: &#123;</span><br><span class="line">        <span class="string">"sources"</span>: [</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="string">"url"</span>: <span class="string">"https://pypi.python.org/simple"</span>,</span><br><span class="line">                <span class="string">"verify_ssl"</span>: true</span><br><span class="line">            &#125;</span><br><span class="line">        ],</span><br><span class="line">        <span class="string">"requires"</span>: &#123;&#125;,</span><br><span class="line">        <span class="string">"hash"</span>: &#123;</span><br><span class="line">            <span class="string">"sha256"</span>: <span class="string">"da2810af0c3b5333e0de2fce9bea2a228812e2014e5f5fe3b1c533badc6c24e4"</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;%</span><br></pre></td></tr></table></figure></p>
+<p>这个时候，如果换个目录，换个环境，如果将我现在这个环境的依赖全部带过去<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cp project/Pipfile  /new_project/dir/</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> pipenv install</span></span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>新的项目目录即可按照文件里包的版本全部将对应的依赖撞到新的环境中，达到迁移的目的</p>
+</blockquote>
+<p>中间出过问题，可能和我用的环境 zsh 有关，作者也说这是个实验性项目，不可避免的问题，不过看起来还是非常赞的，期待这个项目变得越来越好，如果有项目上，再继续更新</p>
+<p>&emsp;&emsp;</p>
+<blockquote>
+<p>参考阅读</p>
+<ul>
+<li><a href="https://github.com/kennethreitz/pipenv" target="_blank" rel="noopener">pipenv github page</a></li>
+<li><a href="http://docs.pipenv.org/en/latest/" target="_blank" rel="noopener">pipenv doc</a></li>
+</ul>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/note/tags/pipenv/" rel="tag"># pipenv</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/note/django-分页.html" rel="next" title="django 分页">
+                <i class="fa fa-chevron-left"></i> django 分页
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/note/python-的行话术语大全.html" rel="prev" title="python 的行话术语大全">
+                python 的行话术语大全 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">宋大明明</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/note/archives/">
+              
+                  <span class="site-state-item-count">78</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#开始"><span class="nav-number">1.</span> <span class="nav-text">开始</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用"><span class="nav-number">2.</span> <span class="nav-text">使用</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2014 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">宋大明明</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/note/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/note/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/note/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

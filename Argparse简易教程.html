@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/note/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/note/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/note/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/note/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/note/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/note/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/note/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Argparse Tutorial," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="写 python 中碰到了需求，所以查询看到这个哥们翻译的挺好的，就直接转载过来的，原文地址见这里">
+<meta name="keywords" content="Argparse Tutorial">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Argparse简易教程">
+<meta property="og:url" content="http://mingmings.org/note/Argparse简易教程.html">
+<meta property="og:site_name" content="异类深呼吸">
+<meta property="og:description" content="写 python 中碰到了需求，所以查询看到这个哥们翻译的挺好的，就直接转载过来的，原文地址见这里">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2015-03-11T16:31:48.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Argparse简易教程">
+<meta name="twitter:description" content="写 python 中碰到了需求，所以查询看到这个哥们翻译的挺好的，就直接转载过来的，原文地址见这里">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/note/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://mingmings.org/note/Argparse简易教程.html"/>
+
+
+
+
+
+  <title>Argparse简易教程 | 异类深呼吸</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-55424732-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?fe4164c60a9dd0e73810fa0243796a5d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/note/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">异类深呼吸</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/note/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/note/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/note/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/note/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://mingmings.org/note/note/Argparse简易教程.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="宋大明明">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/note/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="异类深呼吸">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Argparse简易教程</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-01-02T01:51:18+08:00">
+                2015-01-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/note/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>写 python 中碰到了需求，所以查询看到这个哥们翻译的挺好的，就直接转载过来的，原文地址见<a href="http://blog.ixxoo.me/argparse.html" target="_blank" rel="noopener">这里</a></p>
+<a id="more"></a>
+<p>本教程是对于Python标准库中推荐使用的命令行解析模块argparse的简单介绍。</p>
+<blockquote>
+<p>PS：还有其他两个模块实现这一功能，getopt(等同于C语言中的getopt())和弃用的optparse。因为argparse是基于optparse，所以用法很类似。</p>
+</blockquote>
+<h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><p>让我们先用 <code>ls</code> 来展示这篇教程将要介绍的相关特性：</p>
+<figure class="highlight stata"><table><tr><td class="code"><pre><span class="line">$ <span class="keyword">ls</span></span><br><span class="line">cpython  devguide  <span class="keyword">prog</span>.py  pypy  <span class="keyword">rm</span>-unused-function.patch</span><br><span class="line">$ <span class="keyword">ls</span> pypy</span><br><span class="line">ctypes_configure  demo  dotviewer  <span class="keyword">include</span>  lib_pypy  lib-python ...</span><br><span class="line">$ <span class="keyword">ls</span> -<span class="keyword">l</span></span><br><span class="line"><span class="keyword">total</span> 20</span><br><span class="line">drwxr-xr-x 19 wena wena 4096 Feb 18 18:51 cpython</span><br><span class="line">drwxr-xr-x  4 wena wena 4096 Feb  8 12:04 devguide</span><br><span class="line">-rwxr-xr-x  1 wena wena  535 Feb 19 00:05 <span class="keyword">prog</span>.py</span><br><span class="line">drwxr-xr-x 14 wena wena 4096 Feb  7 00:59 pypy</span><br><span class="line">-rw-r--r--  1 wena wena  741 Feb 18 01:01 <span class="keyword">rm</span>-unused-function.patch</span><br><span class="line">$ <span class="keyword">ls</span> --<span class="keyword">help</span></span><br><span class="line">Usage: <span class="keyword">ls</span> [OPTION]... [<span class="keyword">FILE</span>]...</span><br><span class="line"><span class="keyword">List</span> information <span class="keyword">about</span> the FILEs (the current directory <span class="keyword">by</span> default).</span><br><span class="line"><span class="keyword">Sort</span> entries alphabetically <span class="keyword">if</span> none of -cftuvSUX nor --<span class="keyword">sort</span> is specified.</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>从上面的四个命令，我们可以了解一些概念：</p>
+<ul>
+<li><code>ls</code> 命令在没有参数的情况下也是可以使用的。默认显示当前目录的内容。</li>
+<li>如果想让它展示不同，需要给它更多的参数。这个例子中,我们想让它显示目录 pypy ,需要指定必要的参数。因为程序需要基于这些参数确定做些什么。这个概念类似 cp, 比如最常见的 cp SRC DST。第一个参数表示你要复制什么，第二个参数表示复制到哪里去。</li>
+<li>现在，我想要改变程序的行为。在示例中，我们让它显示更多的信息，不仅仅是文件名，这里的 <code>-l</code> 就是一个可选参数。</li>
+<li>最后是一个帮助文档的片段。这些帮助对于没有使用过这个程序的人很有帮助，他们可以通过简单的阅读，就可以了解程序的用法。</li>
+</ul>
+<h1 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h1><p>让我们从一个简单的例子开始，它(几乎)什么都不</p>
+<figure class="highlight elm"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"><span class="title">parser</span> = argparse.<span class="type">ArgumentParser</span>()</span><br><span class="line"><span class="title">parser</span>.parse_args()</span><br></pre></td></tr></table></figure>
+<p>运行：</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span></span><br><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span> --<span class="keyword">help</span></span><br><span class="line">usage: prog.<span class="keyword">py</span> [-h]</span><br><span class="line"></span><br><span class="line">optional <span class="keyword">argument</span><span class="variable">s:</span></span><br><span class="line">  -h, --<span class="keyword">help</span>  show this <span class="keyword">help</span> message <span class="built_in">and</span> <span class="keyword">exit</span></span><br><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span> --<span class="keyword">verbose</span></span><br><span class="line">usage: prog.<span class="keyword">py</span> [-h]</span><br><span class="line">prog.<span class="keyword">py</span>: error: unrecognized <span class="keyword">argument</span><span class="variable">s:</span> --<span class="keyword">verbose</span></span><br><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span> foo</span><br><span class="line">usage: prog.<span class="keyword">py</span> [-h]</span><br><span class="line">prog.<span class="keyword">py</span>: error: unrecognized <span class="keyword">argument</span><span class="variable">s:</span> foo</span><br></pre></td></tr></table></figure>
+<p>结果分析：</p>
+<ul>
+<li>不加任何参数运行，什么也不显示，没有什么用。</li>
+<li>第二条展示了 <code>argparse</code> 模块的好处，几乎什么都不做，却得到了一个很有用的帮助信息。</li>
+<li><code>--help</code> 参数可简写成-h,是唯一预设的(不需要指定)。</li>
+</ul>
+<h1 id="定位参数"><a href="#定位参数" class="headerlink" title="定位参数"></a>定位参数</h1><p>例子：</p>
+<figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line">import argparse</span><br><span class="line">parser = argparse.ArgumentParser()</span><br><span class="line">parser.add_argument(<span class="string">"echo"</span>)</span><br><span class="line">args = parser.parse_args()</span><br><span class="line">print args.echo</span><br></pre></td></tr></table></figure>
+<p>运行：</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span></span><br><span class="line">usage: prog.<span class="keyword">py</span> [-h] <span class="keyword">echo</span></span><br><span class="line">prog.<span class="keyword">py</span>: error: the following arguments are required: <span class="keyword">echo</span></span><br><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span> --<span class="keyword">help</span></span><br><span class="line">usage: prog.<span class="keyword">py</span> [-h] <span class="keyword">echo</span></span><br><span class="line"></span><br><span class="line">positional <span class="keyword">argument</span><span class="variable">s:</span></span><br><span class="line">  <span class="keyword">echo</span></span><br><span class="line"></span><br><span class="line">optional <span class="keyword">argument</span><span class="variable">s:</span></span><br><span class="line">  -h, --<span class="keyword">help</span>  show this <span class="keyword">help</span> message <span class="built_in">and</span> <span class="keyword">exit</span></span><br><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span> foo</span><br><span class="line">foo</span><br></pre></td></tr></table></figure>
+<p>结果分析：</p>
+<ul>
+<li>我们用到了方法 <code>add_argument()</code>，用来指定程序需要接受的命令参数，本例中的 echo。</li>
+<li>现在运行程序必须指定一个参数。</li>
+<li>方法 <code>parse_args()</code> 通过分析指定的参数返回一些数据，如本例中的 echo。</li>
+<li>像魔法一样，<code>argparse</code>  自动生成这些变量，你可能已经注意到变量 echo 和我们指定的参数相同。</li>
+</ul>
+<p>虽然现在帮助信息已经很美观了，但是还不够好。例如我们知道 echo 是个定位参数，但是却不知道该参数的意思，只能通过猜或者读源码。下面，我们可以让它更有帮助：</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">import argparse</span><br><span class="line">parser = argparse.ArgumentParser()</span><br><span class="line">parser.add_argument(<span class="string">"echo"</span>, <span class="keyword">help</span>=<span class="string">"echo the string you use here"</span>)</span><br><span class="line"><span class="keyword">args</span> = parser.parse_args()</span><br><span class="line"><span class="keyword">print</span> <span class="keyword">args</span>.<span class="keyword">echo</span></span><br></pre></td></tr></table></figure>
+<p>运行：</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span> -h</span><br><span class="line">usage: prog.<span class="keyword">py</span> [-h] <span class="keyword">echo</span></span><br><span class="line"></span><br><span class="line">positional <span class="keyword">argument</span><span class="variable">s:</span></span><br><span class="line">  <span class="keyword">echo</span>        <span class="keyword">echo</span> the <span class="built_in">string</span> you use here</span><br><span class="line"></span><br><span class="line">optional <span class="keyword">argument</span><span class="variable">s:</span></span><br><span class="line">  -h, --<span class="keyword">help</span>  show this <span class="keyword">help</span> message <span class="built_in">and</span> <span class="keyword">exit</span></span><br></pre></td></tr></table></figure>
+<p>再修改下：</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">import argparse</span><br><span class="line">parser = argparse.ArgumentParser()</span><br><span class="line">parser.add_argument(<span class="string">"square"</span>, <span class="attribute">help</span>=<span class="string">"display a square of a given number"</span>)</span><br><span class="line">args = parser.parse_args()</span><br><span class="line"><span class="builtin-name">print</span> args.square*<span class="number">*2</span></span><br></pre></td></tr></table></figure>
+<p>运行如下：</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span> <span class="number">4</span></span><br><span class="line">Traceback (most recent <span class="keyword">call</span> <span class="keyword">last</span>):</span><br><span class="line">  File <span class="string">"prog.py"</span>, <span class="built_in">line</span> <span class="number">5</span>, in <span class="symbol">&lt;module&gt;</span></span><br><span class="line">    <span class="keyword">print</span> <span class="keyword">args</span>.square**<span class="number">2</span></span><br><span class="line">TypeError: unsupported operand <span class="built_in">type</span>(s) <span class="keyword">for</span> ** <span class="built_in">or</span> <span class="built_in">pow</span>(): <span class="string">'str'</span> <span class="built_in">and</span> <span class="string">'int'</span></span><br></pre></td></tr></table></figure>
+<p>运行有点问题，因为如果不指定参数类型，<code>argparse</code> 默认它是字符串。因此我们需要告诉 <code>argparse</code> 该参数是整型。</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">import argparse</span><br><span class="line">parser = argparse.ArgumentParser()</span><br><span class="line">parser.add_argument(<span class="string">"square"</span>, <span class="attribute">help</span>=<span class="string">"display a square of a given number"</span>,</span><br><span class="line">                    <span class="attribute">type</span>=int)</span><br><span class="line">args = parser.parse_args()</span><br><span class="line"><span class="builtin-name">print</span> args.square*<span class="number">*2</span></span><br></pre></td></tr></table></figure>
+<p>运行：</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">$ python prog<span class="selector-class">.py</span> <span class="number">4</span></span><br><span class="line"><span class="number">16</span></span><br><span class="line">$ python prog<span class="selector-class">.py</span> four</span><br><span class="line">usage: prog<span class="selector-class">.py</span> [-h] square</span><br><span class="line">prog<span class="selector-class">.py</span>: error: argument square: invalid int value: <span class="string">'four'</span></span><br></pre></td></tr></table></figure>
+<p>可以运行了，程序能够在执行前过滤一些错误的参数输入。</p>
+<h1 id="可选参数"><a href="#可选参数" class="headerlink" title="可选参数"></a>可选参数</h1><p>以上，展示了定位参数的用法。下面让我们来看看如何添加可选参数：</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">import argparse</span><br><span class="line">parser = argparse.ArgumentParser()</span><br><span class="line">parser.add_argument(<span class="string">"--verbosity"</span>, <span class="attribute">help</span>=<span class="string">"increase output verbosity"</span>)</span><br><span class="line">args = parser.parse_args()</span><br><span class="line"><span class="keyword">if</span> args.verbosity:</span><br><span class="line">    <span class="builtin-name">print</span> <span class="string">"verbosity turned on"</span></span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span> --verbosity <span class="number">1</span></span><br><span class="line">verbosity turned <span class="keyword">on</span></span><br><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span></span><br><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span> --<span class="keyword">help</span></span><br><span class="line">usage: prog.<span class="keyword">py</span> [-h] [--verbosity VERBOSITY]</span><br><span class="line"></span><br><span class="line">optional <span class="keyword">argument</span><span class="variable">s:</span></span><br><span class="line">  -h, --<span class="keyword">help</span>            show this <span class="keyword">help</span> message <span class="built_in">and</span> <span class="keyword">exit</span></span><br><span class="line">  --verbosity VERBOSITY</span><br><span class="line">                        increase output verbosity</span><br><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span> --verbosity</span><br><span class="line">usage: prog.<span class="keyword">py</span> [-h] [--verbosity VERBOSITY]</span><br><span class="line">prog.<span class="keyword">py</span>: error: <span class="keyword">argument</span> --verbosity: expected one <span class="keyword">argument</span></span><br></pre></td></tr></table></figure>
+<p>结果分析：</p>
+<ul>
+<li>当指定 <code>--verbosity</code> 时程序就显示一些东西，没指定的时候就不显示。</li>
+<li>这个参数事实上是可选的，不指定它也不会出错。如果不指定可选的参数，对应的变量就被设置为 None，比如本例中的 <code>args.verbosity</code>, 这就是为什么示例中的 if 没有执行的原因。</li>
+<li>帮助信息发生了点变化</li>
+<li>当我们使用可选参数 <code>--verbosity</code> 时，也必须指定一些值。</li>
+</ul>
+<p>上面的示例中可选参数 <code>--verbosity</code> 后面接受任意的整型值，但是对于简单的程序，实际上只需要两种值，<code>True</code> 或者 <code>False</code>。因此可以修改上面的代码</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">import argparse</span><br><span class="line">parser = argparse.ArgumentParser()</span><br><span class="line">parser.add_argument(<span class="string">"--verbose"</span>, <span class="attribute">help</span>=<span class="string">"increase output verbosity"</span>,</span><br><span class="line">                    <span class="attribute">action</span>=<span class="string">"store_true"</span>)</span><br><span class="line">args = parser.parse_args()</span><br><span class="line"><span class="keyword">if</span> args.verbose:</span><br><span class="line">   <span class="builtin-name">print</span> <span class="string">"verbosity turned on"</span></span><br></pre></td></tr></table></figure>
+<p>运行：</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span> --<span class="keyword">verbose</span></span><br><span class="line">verbosity turned <span class="keyword">on</span></span><br><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span> --<span class="keyword">verbose</span> <span class="number">1</span></span><br><span class="line">usage: prog.<span class="keyword">py</span> [-h] [--<span class="keyword">verbose</span>]</span><br><span class="line">prog.<span class="keyword">py</span>: error: unrecognized <span class="keyword">argument</span><span class="variable">s:</span> <span class="number">1</span></span><br><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span> --<span class="keyword">help</span></span><br><span class="line">usage: prog.<span class="keyword">py</span> [-h] [--<span class="keyword">verbose</span>]</span><br><span class="line"></span><br><span class="line">optional <span class="keyword">argument</span><span class="variable">s:</span></span><br><span class="line">  -h, --<span class="keyword">help</span>  show this <span class="keyword">help</span> message <span class="built_in">and</span> <span class="keyword">exit</span></span><br><span class="line">  --<span class="keyword">verbose</span>   increase output verbosity</span><br></pre></td></tr></table></figure>
+<p>结果分析：</p>
+<ul>
+<li>现在多加一个标志来替代必须给出一些值，并修改了名称来表达我们的意思。注意现在指定了一个新的关键词 <code>action</code>，并且赋值为 <code>store_ture</code>。如果指定了这个可选参数，<code>args.verbose</code> 就赋值为 <code>True</code> ,否则就为<code>False</code>。</li>
+<li>多指定了值，它就会发出错误提示。</li>
+<li>注意帮助文档有什么不同</li>
+</ul>
+<p>简写<br>如果你很熟悉命令行，你可能已经注意到我在上面已经提到了参数的简写，非常的简单：</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">import argparse</span><br><span class="line">parser = argparse.ArgumentParser()</span><br><span class="line">parser.add_argument(<span class="string">"-v"</span>, <span class="string">"--verbose"</span>, <span class="attribute">help</span>=<span class="string">"increase output verbosity"</span>,</span><br><span class="line">                    <span class="attribute">action</span>=<span class="string">"store_true"</span>)</span><br><span class="line">args = parser.parse_args()</span><br><span class="line"><span class="keyword">if</span> args.verbose:</span><br><span class="line">    <span class="builtin-name">print</span> <span class="string">"verbosity turned on"</span></span><br></pre></td></tr></table></figure>
+<p>运行如下：</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span> -v</span><br><span class="line">verbosity turned <span class="keyword">on</span></span><br><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span> --<span class="keyword">help</span></span><br><span class="line">usage: prog.<span class="keyword">py</span> [-h] [-v]</span><br><span class="line"></span><br><span class="line">optional <span class="keyword">argument</span><span class="variable">s:</span></span><br><span class="line">  -h, --<span class="keyword">help</span>     show this <span class="keyword">help</span> message <span class="built_in">and</span> <span class="keyword">exit</span></span><br><span class="line">  -v, --<span class="keyword">verbose</span>  increase output verbosity</span><br></pre></td></tr></table></figure>
+<p>注意帮助信息也有相应的变化。</p>
+<h1 id="混合使用定位参数和可选参数"><a href="#混合使用定位参数和可选参数" class="headerlink" title="混合使用定位参数和可选参数"></a>混合使用定位参数和可选参数</h1><p>再复杂一点：</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">import argparse</span><br><span class="line">parser = argparse.ArgumentParser()</span><br><span class="line">parser.add_argument(<span class="string">"square"</span>, <span class="attribute">type</span>=int,</span><br><span class="line">                    <span class="attribute">help</span>=<span class="string">"display a square of a given number"</span>)</span><br><span class="line">parser.add_argument(<span class="string">"-v"</span>, <span class="string">"--verbose"</span>, <span class="attribute">action</span>=<span class="string">"store_true"</span>,</span><br><span class="line">                    <span class="attribute">help</span>=<span class="string">"increase output verbosity"</span>)</span><br><span class="line">args = parser.parse_args()</span><br><span class="line">answer = args.square*<span class="number">*2</span></span><br><span class="line"><span class="keyword">if</span> args.verbose:</span><br><span class="line">    <span class="builtin-name">print</span> <span class="string">"the square of &#123;&#125; equals &#123;&#125;"</span>.format(args.square, answer)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="builtin-name">print</span> answer</span><br></pre></td></tr></table></figure>
+<p>运行：</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">$ python prog.py</span><br><span class="line">usage: prog<span class="selector-class">.py</span> [-h] [-v] square</span><br><span class="line">prog<span class="selector-class">.py</span>: error: the following arguments are required: square</span><br><span class="line">$ python prog<span class="selector-class">.py</span> <span class="number">4</span></span><br><span class="line"><span class="number">16</span></span><br><span class="line">$ python prog<span class="selector-class">.py</span> <span class="number">4</span> --verbose</span><br><span class="line">the square of <span class="number">4</span> equals <span class="number">16</span></span><br><span class="line">$ python prog<span class="selector-class">.py</span> --verbose <span class="number">4</span></span><br><span class="line">the square of <span class="number">4</span> equals <span class="number">16</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>为了让程序复杂点，我们重新加上了定位参数。</li>
+<li>注意到参数的顺序是没有影响的。</li>
+</ul>
+<p>来看看为程序加上处理重复参数的能力会怎么样：</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">import argparse</span><br><span class="line">parser = argparse.ArgumentParser()</span><br><span class="line">parser.add_argument(<span class="string">"square"</span>, <span class="attribute">type</span>=int,</span><br><span class="line">                    <span class="attribute">help</span>=<span class="string">"display a square of a given number"</span>)</span><br><span class="line">parser.add_argument(<span class="string">"-v"</span>, <span class="string">"--verbosity"</span>, <span class="attribute">type</span>=int,</span><br><span class="line">                    <span class="attribute">help</span>=<span class="string">"increase output verbosity"</span>)</span><br><span class="line">args = parser.parse_args()</span><br><span class="line">answer = args.square*<span class="number">*2</span></span><br><span class="line"><span class="keyword">if</span> args.verbosity == 2:</span><br><span class="line">    <span class="builtin-name">print</span> <span class="string">"the square of &#123;&#125; equals &#123;&#125;"</span>.format(args.square, answer)</span><br><span class="line">elif args.verbosity == 1:</span><br><span class="line">    <span class="builtin-name">print</span> <span class="string">"&#123;&#125;^2 == &#123;&#125;"</span>.format(args.square, answer)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="builtin-name">print</span> answer</span><br></pre></td></tr></table></figure>
+<p>运行：</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">$ python prog<span class="selector-class">.py</span> <span class="number">4</span></span><br><span class="line"><span class="number">16</span></span><br><span class="line">$ python prog<span class="selector-class">.py</span> <span class="number">4</span> -v</span><br><span class="line">usage: prog<span class="selector-class">.py</span> [-h] [-v VERBOSITY] square</span><br><span class="line">prog<span class="selector-class">.py</span>: error: argument -v/--verbosity: expected one argument</span><br><span class="line">$ python prog<span class="selector-class">.py</span> <span class="number">4</span> -v <span class="number">1</span></span><br><span class="line"><span class="number">4</span>^<span class="number">2</span> == <span class="number">16</span></span><br><span class="line">$ python prog<span class="selector-class">.py</span> <span class="number">4</span> -v <span class="number">2</span></span><br><span class="line">the square of <span class="number">4</span> equals <span class="number">16</span></span><br><span class="line">$ python prog<span class="selector-class">.py</span> <span class="number">4</span> -v <span class="number">3</span></span><br><span class="line"><span class="number">16</span></span><br></pre></td></tr></table></figure>
+<p>除了最后一个暴露了一个bug，其他的看起都来运行良好。让我们通过限制–verbosity后面跟的值来修正：</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">import argparse</span><br><span class="line">parser = argparse.ArgumentParser()</span><br><span class="line">parser.add_argument(<span class="string">"square"</span>, <span class="attribute">type</span>=int,</span><br><span class="line">                    <span class="attribute">help</span>=<span class="string">"display a square of a given number"</span>)</span><br><span class="line">parser.add_argument(<span class="string">"-v"</span>, <span class="string">"--verbosity"</span>, <span class="attribute">type</span>=int, choices=[0, 1, 2],</span><br><span class="line">                    <span class="attribute">help</span>=<span class="string">"increase output verbosity"</span>)</span><br><span class="line">args = parser.parse_args()</span><br><span class="line">answer = args.square*<span class="number">*2</span></span><br><span class="line"><span class="keyword">if</span> args.verbosity == 2:</span><br><span class="line">    <span class="builtin-name">print</span> <span class="string">"the square of &#123;&#125; equals &#123;&#125;"</span>.format(args.square, answer)</span><br><span class="line">elif args.verbosity == 1:</span><br><span class="line">    <span class="builtin-name">print</span> <span class="string">"&#123;&#125;^2 == &#123;&#125;"</span>.format(args.square, answer)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="builtin-name">print</span> answer</span><br></pre></td></tr></table></figure>
+<p>运行：</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span> <span class="number">4</span> -v <span class="number">3</span></span><br><span class="line">usage: prog.<span class="keyword">py</span> [-h] [-v &#123;<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>&#125;] square</span><br><span class="line">prog.<span class="keyword">py</span>: error: <span class="keyword">argument</span> -v/--verbosity: invalid choice: <span class="number">3</span> (choose from <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span> <span class="number">4</span> -h</span><br><span class="line">usage: prog.<span class="keyword">py</span> [-h] [-v &#123;<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>&#125;] square</span><br><span class="line"></span><br><span class="line">positional <span class="keyword">argument</span><span class="variable">s:</span></span><br><span class="line">  square                <span class="keyword">display</span> <span class="keyword">a</span> square of <span class="keyword">a</span> given <span class="keyword">number</span></span><br><span class="line"></span><br><span class="line">optional <span class="keyword">argument</span><span class="variable">s:</span></span><br><span class="line">  -h, --<span class="keyword">help</span>            show this <span class="keyword">help</span> message <span class="built_in">and</span> <span class="keyword">exit</span></span><br><span class="line">  -v &#123;<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>&#125;, --verbosity &#123;<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>&#125;</span><br><span class="line">                        increase output verbosity</span><br></pre></td></tr></table></figure>
+<p>注意帮助信息和错误信息都发生了变化。</p>
+<p>现在让我们用一种更常用的方法来处理，类似 <code>CPython</code> 处理自己的参数(参考 <code>python --help</code>)：</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">import argparse</span><br><span class="line">parser = argparse.ArgumentParser()</span><br><span class="line">parser.add_argument(<span class="string">"square"</span>, <span class="attribute">type</span>=int,</span><br><span class="line">                    <span class="attribute">help</span>=<span class="string">"display the square of a given number"</span>)</span><br><span class="line">parser.add_argument(<span class="string">"-v"</span>, <span class="string">"--verbosity"</span>, <span class="attribute">action</span>=<span class="string">"count"</span>,</span><br><span class="line">                    <span class="attribute">help</span>=<span class="string">"increase output verbosity"</span>)</span><br><span class="line">args = parser.parse_args()</span><br><span class="line">answer = args.square*<span class="number">*2</span></span><br><span class="line"><span class="keyword">if</span> args.verbosity == 2:</span><br><span class="line">    <span class="builtin-name">print</span> <span class="string">"the square of &#123;&#125; equals &#123;&#125;"</span>.format(args.square, answer)</span><br><span class="line">elif args.verbosity == 1:</span><br><span class="line">    <span class="builtin-name">print</span> <span class="string">"&#123;&#125;^2 == &#123;&#125;"</span>.format(args.square, answer)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="builtin-name">print</span> answer</span><br></pre></td></tr></table></figure>
+<p>我们引入了另一个关键词 <code>count</code> 来统计可选参数出现的次数：</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span> <span class="number">4</span></span><br><span class="line"><span class="number">16</span></span><br><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span> <span class="number">4</span> -v</span><br><span class="line"><span class="number">4</span>^<span class="number">2</span> == <span class="number">16</span></span><br><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span> <span class="number">4</span> -vv</span><br><span class="line">the square of <span class="number">4</span> equals <span class="number">16</span></span><br><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span> <span class="number">4</span> --verbosity --verbosity</span><br><span class="line">the square of <span class="number">4</span> equals <span class="number">16</span></span><br><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span> <span class="number">4</span> -v <span class="number">1</span></span><br><span class="line">usage: prog.<span class="keyword">py</span> [-h] [-v] square</span><br><span class="line">prog.<span class="keyword">py</span>: error: unrecognized <span class="keyword">argument</span><span class="variable">s:</span> <span class="number">1</span></span><br><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span> <span class="number">4</span> -h</span><br><span class="line">usage: prog.<span class="keyword">py</span> [-h] [-v] square</span><br><span class="line"></span><br><span class="line">positional <span class="keyword">argument</span><span class="variable">s:</span></span><br><span class="line">  square           <span class="keyword">display</span> <span class="keyword">a</span> square of <span class="keyword">a</span> given <span class="keyword">number</span></span><br><span class="line"></span><br><span class="line">optional <span class="keyword">argument</span><span class="variable">s:</span></span><br><span class="line">  -h, --<span class="keyword">help</span>       show this <span class="keyword">help</span> message <span class="built_in">and</span> <span class="keyword">exit</span></span><br><span class="line">  -v, --verbosity  increase output verbosity</span><br><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span> <span class="number">4</span> -vvv</span><br><span class="line"><span class="number">16</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>和前面的版本相比这里多了一个关键词(类似 <code>action=&quot;store_true</code>”)。</li>
+<li>行为上也类似 <code>store_true</code>。</li>
+<li><code>count</code> 关键词的示范，大家可能在其他地方已经看过了。</li>
+<li>就像 <code>store_ture</code>，如果不指定 <code>-v</code>，响应变量就会被设置为 <code>None</code>。</li>
+<li>指定完整的名称和简写效果是一样的。</li>
+<li>但是不爽的是，帮助信息并没有做出有用的提示，不过可以通过修改 <code>help</code> 来改善这个问题。</li>
+<li>最后那个输出又暴露了程序的 <code>bug</code></li>
+</ul>
+<p>修改一下：</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">import argparse</span><br><span class="line">parser = argparse.ArgumentParser()</span><br><span class="line">parser.add_argument(<span class="string">"square"</span>, <span class="attribute">type</span>=int,</span><br><span class="line">                    <span class="attribute">help</span>=<span class="string">"display a square of a given number"</span>)</span><br><span class="line">parser.add_argument(<span class="string">"-v"</span>, <span class="string">"--verbosity"</span>, <span class="attribute">action</span>=<span class="string">"count"</span>,</span><br><span class="line">                    <span class="attribute">help</span>=<span class="string">"increase output verbosity"</span>)</span><br><span class="line">args = parser.parse_args()</span><br><span class="line">answer = args.square*<span class="number">*2</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># bugfix: replace == with &gt;=</span></span><br><span class="line"><span class="keyword">if</span> args.verbosity &gt;= 2:</span><br><span class="line">    <span class="builtin-name">print</span> <span class="string">"the square of &#123;&#125; equals &#123;&#125;"</span>.format(args.square, answer)</span><br><span class="line">elif args.verbosity &gt;= 1:</span><br><span class="line">    <span class="builtin-name">print</span> <span class="string">"&#123;&#125;^2 == &#123;&#125;"</span>.format(args.square, answer)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="builtin-name">print</span> answer</span><br></pre></td></tr></table></figure>
+<p>运行如下：</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span> <span class="number">4</span> -vvv</span><br><span class="line">the square of <span class="number">4</span> equals <span class="number">16</span></span><br><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span> <span class="number">4</span> -vvvv</span><br><span class="line">the square of <span class="number">4</span> equals <span class="number">16</span></span><br><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span> <span class="number">4</span></span><br><span class="line">Traceback (most recent <span class="keyword">call</span> <span class="keyword">last</span>):</span><br><span class="line">  File <span class="string">"prog.py"</span>, <span class="built_in">line</span> <span class="number">11</span>, in <span class="symbol">&lt;module&gt;</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">args</span>.verbosity &gt;= <span class="number">2</span>:</span><br><span class="line">TypeError: unorderable <span class="built_in">type</span><span class="variable">s:</span> NoneType() &gt;= <span class="keyword">int</span>()</span><br></pre></td></tr></table></figure>
+<ul>
+<li>第一个输出是正确的，修正了上个版本的问题，参数出现次数 <code>&gt;=2</code> 时都能显示详细的信息。</li>
+<li>第三个输出还是有问题</li>
+</ul>
+<p>再来修改下：</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">import argparse</span><br><span class="line">parser = argparse.ArgumentParser()</span><br><span class="line">parser.add_argument(<span class="string">"square"</span>, <span class="attribute">type</span>=int,</span><br><span class="line">                    <span class="attribute">help</span>=<span class="string">"display a square of a given number"</span>)</span><br><span class="line">parser.add_argument(<span class="string">"-v"</span>, <span class="string">"--verbosity"</span>, <span class="attribute">action</span>=<span class="string">"count"</span>, <span class="attribute">default</span>=0,</span><br><span class="line">                    <span class="attribute">help</span>=<span class="string">"increase output verbosity"</span>)</span><br><span class="line">args = parser.parse_args()</span><br><span class="line">answer = args.square*<span class="number">*2</span></span><br><span class="line"><span class="keyword">if</span> args.verbosity &gt;= 2:</span><br><span class="line">    <span class="builtin-name">print</span> <span class="string">"the square of &#123;&#125; equals &#123;&#125;"</span>.format(args.square, answer)</span><br><span class="line">elif args.verbosity &gt;= 1:</span><br><span class="line">    <span class="builtin-name">print</span> <span class="string">"&#123;&#125;^2 == &#123;&#125;"</span>.format(args.square, answer)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="builtin-name">print</span> answer</span><br></pre></td></tr></table></figure>
+<p>我们又加入了一个关键词 <code>default</code>。设置它的默认值为 0，这样可以让它兼容其他整型。注意，如果一个可选参数没有指定，它就会被设置成 <code>None</code>，<code>None</code> 是不能和整型比较的(触发 <code>[TypeError][5]</code> 异常)。<br>运行结果：</p>
+<figure class="highlight lsl"><table><tr><td class="code"><pre><span class="line">$ python prog.py <span class="number">4</span></span><br><span class="line"><span class="number">16</span></span><br></pre></td></tr></table></figure>
+<p>你可以使用我们所学来做很多事情，但是这仅仅是皮毛而已。<code>argparse</code> 模块非常强大，下面来看看更多的用法。</p>
+<h1 id="高级用法"><a href="#高级用法" class="headerlink" title="高级用法"></a>高级用法</h1><p>如果我们想扩展程序的功能，而不仅仅是求平方：</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">import argparse</span><br><span class="line">parser = argparse.ArgumentParser()</span><br><span class="line">parser.add_argument(<span class="string">"x"</span>, <span class="attribute">type</span>=int, <span class="attribute">help</span>=<span class="string">"the base"</span>)</span><br><span class="line">parser.add_argument(<span class="string">"y"</span>, <span class="attribute">type</span>=int, <span class="attribute">help</span>=<span class="string">"the exponent"</span>)</span><br><span class="line">parser.add_argument(<span class="string">"-v"</span>, <span class="string">"--verbosity"</span>, <span class="attribute">action</span>=<span class="string">"count"</span>, <span class="attribute">default</span>=0)</span><br><span class="line">args = parser.parse_args()</span><br><span class="line">answer = args.x*<span class="number">*a</span>rgs.y</span><br><span class="line"><span class="keyword">if</span> args.verbosity &gt;= 2:</span><br><span class="line">    <span class="builtin-name">print</span> <span class="string">"&#123;&#125; to the power &#123;&#125; equals &#123;&#125;"</span>.format(args.x, args.y, answer)</span><br><span class="line">elif args.verbosity &gt;= 1:</span><br><span class="line">    <span class="builtin-name">print</span> <span class="string">"&#123;&#125;^&#123;&#125; == &#123;&#125;"</span>.format(args.x, args.y, answer)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="builtin-name">print</span> answer</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span></span><br><span class="line">usage: prog.<span class="keyword">py</span> [-h] [-v] <span class="keyword">x</span> <span class="keyword">y</span></span><br><span class="line">prog.<span class="keyword">py</span>: error: the following arguments are required: <span class="keyword">x</span>, <span class="keyword">y</span></span><br><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span> -h</span><br><span class="line">usage: prog.<span class="keyword">py</span> [-h] [-v] <span class="keyword">x</span> <span class="keyword">y</span></span><br><span class="line"></span><br><span class="line">positional <span class="keyword">argument</span><span class="variable">s:</span></span><br><span class="line">  <span class="keyword">x</span>                the base</span><br><span class="line">  <span class="keyword">y</span>                the exponent</span><br><span class="line"></span><br><span class="line">optional <span class="keyword">argument</span><span class="variable">s:</span></span><br><span class="line">  -h, --<span class="keyword">help</span>       show this <span class="keyword">help</span> message <span class="built_in">and</span> <span class="keyword">exit</span></span><br><span class="line">  -v, --verbosity</span><br><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span> <span class="number">4</span> <span class="number">2</span> -v</span><br><span class="line"><span class="number">4</span>^<span class="number">2</span> == <span class="number">16</span></span><br></pre></td></tr></table></figure>
+<p>截止到目前，我们都在利用详细的级别来改变输出，下面的示例演示了利用详细的级别来显示更多输出：</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">import argparse</span><br><span class="line">parser = argparse.ArgumentParser()</span><br><span class="line">parser.add_argument(<span class="string">"x"</span>, <span class="attribute">type</span>=int, <span class="attribute">help</span>=<span class="string">"the base"</span>)</span><br><span class="line">parser.add_argument(<span class="string">"y"</span>, <span class="attribute">type</span>=int, <span class="attribute">help</span>=<span class="string">"the exponent"</span>)</span><br><span class="line">parser.add_argument(<span class="string">"-v"</span>, <span class="string">"--verbosity"</span>, <span class="attribute">action</span>=<span class="string">"count"</span>, <span class="attribute">default</span>=0)</span><br><span class="line">args = parser.parse_args()</span><br><span class="line">answer = args.x*<span class="number">*a</span>rgs.y</span><br><span class="line"><span class="keyword">if</span> args.verbosity &gt;= 2:</span><br><span class="line">    <span class="builtin-name">print</span> <span class="string">"Running '&#123;&#125;'"</span>.format(__file__)</span><br><span class="line"><span class="keyword">if</span> args.verbosity &gt;= 1:</span><br><span class="line">    <span class="builtin-name">print</span> <span class="string">"&#123;&#125;^&#123;&#125; =="</span>.format(args.x, args.y),</span><br><span class="line"><span class="builtin-name">print</span> answer</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight lsl"><table><tr><td class="code"><pre><span class="line">$ python prog.py <span class="number">4</span> <span class="number">2</span></span><br><span class="line"><span class="number">16</span></span><br><span class="line">$ python prog.py <span class="number">4</span> <span class="number">2</span> -v</span><br><span class="line"><span class="number">4</span>^<span class="number">2</span> == <span class="number">16</span></span><br><span class="line">$ python prog.py <span class="number">4</span> <span class="number">2</span> -vv</span><br><span class="line">Running 'prog.py'</span><br><span class="line"><span class="number">4</span>^<span class="number">2</span> == <span class="number">16</span></span><br></pre></td></tr></table></figure>
+<p>参数冲突:</p>
+<p>迄今为止，我们已经使用到了 <code>[argparse.ArgumentParser][6]</code> 的两个方法，来看看他的另一个方法 <code>add_mutually_exclusive_group()</code>。它可以让我们指定某个参数和其他参数冲突。下面来修改下程序以对这个新方法有更多的了解：我们将加入参数 <code>--quiet</code>，它和参数 <code>--verbose</code> 冲突，不能同时指定：</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">import argparse</span><br><span class="line"></span><br><span class="line">parser = argparse.ArgumentParser()</span><br><span class="line">group = parser.add_mutually_exclusive_group()</span><br><span class="line">group.add_argument(<span class="string">"-v"</span>, <span class="string">"--verbose"</span>, <span class="attribute">action</span>=<span class="string">"store_true"</span>)</span><br><span class="line">group.add_argument(<span class="string">"-q"</span>, <span class="string">"--quiet"</span>, <span class="attribute">action</span>=<span class="string">"store_true"</span>)</span><br><span class="line">parser.add_argument(<span class="string">"x"</span>, <span class="attribute">type</span>=int, <span class="attribute">help</span>=<span class="string">"the base"</span>)</span><br><span class="line">parser.add_argument(<span class="string">"y"</span>, <span class="attribute">type</span>=int, <span class="attribute">help</span>=<span class="string">"the exponent"</span>)</span><br><span class="line">args = parser.parse_args()</span><br><span class="line">answer = args.x*<span class="number">*a</span>rgs.y</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> args.quiet:</span><br><span class="line">    <span class="builtin-name">print</span> answer</span><br><span class="line">elif args.verbose:</span><br><span class="line">    <span class="builtin-name">print</span> <span class="string">"&#123;&#125; to the power &#123;&#125; equals &#123;&#125;"</span>.format(args.x, args.y, answer)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="builtin-name">print</span> <span class="string">"&#123;&#125;^&#123;&#125; == &#123;&#125;"</span>.format(args.x, args.y, answer)</span><br></pre></td></tr></table></figure>
+<p>程序很简单，为了演示冲突，去掉了其他功能特性展示，运行结果：</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span> <span class="number">4</span> <span class="number">2</span></span><br><span class="line"><span class="number">4</span>^<span class="number">2</span> == <span class="number">16</span></span><br><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span> <span class="number">4</span> <span class="number">2</span> -q</span><br><span class="line"><span class="number">16</span></span><br><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span> <span class="number">4</span> <span class="number">2</span> -v</span><br><span class="line"><span class="number">4</span> <span class="keyword">to</span> the power <span class="number">2</span> equals <span class="number">16</span></span><br><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span> <span class="number">4</span> <span class="number">2</span> -vq</span><br><span class="line">usage: prog.<span class="keyword">py</span> [-h] [-v | -q] <span class="keyword">x</span> <span class="keyword">y</span></span><br><span class="line">prog.<span class="keyword">py</span>: error: <span class="keyword">argument</span> -q/--quie<span class="variable">t:</span> not allowed with <span class="keyword">argument</span> -v/--<span class="keyword">verbose</span></span><br><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span> <span class="number">4</span> <span class="number">2</span> -v --quiet</span><br><span class="line">usage: prog.<span class="keyword">py</span> [-h] [-v | -q] <span class="keyword">x</span> <span class="keyword">y</span></span><br><span class="line">prog.<span class="keyword">py</span>: error: <span class="keyword">argument</span> -q/--quie<span class="variable">t:</span> not allowed with <span class="keyword">argument</span> -v/--<span class="keyword">verbose</span></span><br></pre></td></tr></table></figure>
+<p>很好理解，我们添加最后那个输出是为了展示灵活性，比如，指定参数时可以同时混用参数全称和简写。<br>通过前面的学习，为了以防万一，你可能想通过帮助信息来告诉用户如何使用你的程序：</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">import argparse</span><br><span class="line"></span><br><span class="line">parser = argparse.ArgumentParser(<span class="attribute">description</span>=<span class="string">"calculate X to the power of Y"</span>)</span><br><span class="line">group = parser.add_mutually_exclusive_group()</span><br><span class="line">group.add_argument(<span class="string">"-v"</span>, <span class="string">"--verbose"</span>, <span class="attribute">action</span>=<span class="string">"store_true"</span>)</span><br><span class="line">group.add_argument(<span class="string">"-q"</span>, <span class="string">"--quiet"</span>, <span class="attribute">action</span>=<span class="string">"store_true"</span>)</span><br><span class="line">parser.add_argument(<span class="string">"x"</span>, <span class="attribute">type</span>=int, <span class="attribute">help</span>=<span class="string">"the base"</span>)</span><br><span class="line">parser.add_argument(<span class="string">"y"</span>, <span class="attribute">type</span>=int, <span class="attribute">help</span>=<span class="string">"the exponent"</span>)</span><br><span class="line">args = parser.parse_args()</span><br><span class="line">answer = args.x*<span class="number">*a</span>rgs.y</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> args.quiet:</span><br><span class="line">    <span class="builtin-name">print</span> answer</span><br><span class="line">elif args.verbose:</span><br><span class="line">    <span class="builtin-name">print</span> <span class="string">"&#123;&#125; to the power &#123;&#125; equals &#123;&#125;"</span>.format(args.x, args.y, answer)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="builtin-name">print</span> <span class="string">"&#123;&#125;^&#123;&#125; == &#123;&#125;"</span>.format(args.x, args.y, answer)</span><br></pre></td></tr></table></figure>
+<p>注意下面的帮助信息，<code>[-v | -q]</code> 表明了可以使用 <code>-v</code> 或者 <code>-q</code>，但是不能同时使用。</p>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">$ <span class="keyword">python</span> prog.<span class="keyword">py</span> --<span class="keyword">help</span></span><br><span class="line">usage: prog.<span class="keyword">py</span> [-h] [-v | -q] <span class="keyword">x</span> <span class="keyword">y</span></span><br><span class="line"></span><br><span class="line">calculate <span class="keyword">X</span> <span class="keyword">to</span> the power of Y</span><br><span class="line"></span><br><span class="line">positional <span class="keyword">argument</span><span class="variable">s:</span></span><br><span class="line">  <span class="keyword">x</span>              the base</span><br><span class="line">  <span class="keyword">y</span>              the exponent</span><br><span class="line"></span><br><span class="line">optional <span class="keyword">argument</span><span class="variable">s:</span></span><br><span class="line">  -h, --<span class="keyword">help</span>     show this <span class="keyword">help</span> message <span class="built_in">and</span> <span class="keyword">exit</span></span><br><span class="line">  -v, --<span class="keyword">verbose</span></span><br><span class="line">  -q, --quiet</span><br></pre></td></tr></table></figure>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p><code>argparse</code> 模块提供了比我们展示的多得多的功能。它的文档更加详尽和深入，并且配了大量的示例。自己去深入阅读下，文档很容易理解。</p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ul>
+<li>原文地址：<a href="http://docs.python.org/2/howto/argparse.html" target="_blank" rel="noopener">Argparse Tutorial</a></li>
+<li>官方文档：<a href="https://docs.python.org/2/library/argparse.html" target="_blank" rel="noopener">argparse</a></li>
+<li>另外一篇：<a href="http://youngsterxyf.github.io/2013/03/30/argparse/" target="_blank" rel="noopener">argparse</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/note/tags/Argparse-Tutorial/" rel="tag"># Argparse Tutorial</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/note/db_NoSQL类型以及适用场景.html" rel="next" title="NoSQL类型以及适用场景">
+                <i class="fa fa-chevron-left"></i> NoSQL类型以及适用场景
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/note/多线程的基本概念.html" rel="prev" title="多线程的基本概念">
+                多线程的基本概念 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">宋大明明</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/note/archives/">
+              
+                  <span class="site-state-item-count">78</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概念"><span class="nav-number">1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基础"><span class="nav-number">2.</span> <span class="nav-text">基础</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#定位参数"><span class="nav-number">3.</span> <span class="nav-text">定位参数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#可选参数"><span class="nav-number">4.</span> <span class="nav-text">可选参数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#混合使用定位参数和可选参数"><span class="nav-number">5.</span> <span class="nav-text">混合使用定位参数和可选参数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#高级用法"><span class="nav-number">6.</span> <span class="nav-text">高级用法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考链接"><span class="nav-number">8.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2014 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">宋大明明</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/note/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/note/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/note/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

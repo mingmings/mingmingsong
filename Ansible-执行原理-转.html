@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/note/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/note/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/note/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/note/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/note/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/note/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/note/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="ansible 执行原理," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="转载自阳哥的文章">
+<meta name="keywords" content="ansible 执行原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ansible 执行原理(转)">
+<meta property="og:url" content="http://mingmings.org/note/Ansible-执行原理-转.html">
+<meta property="og:site_name" content="异类深呼吸">
+<meta property="og:description" content="转载自阳哥的文章">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://mingmings.qiniudn.com/ansible-exec.png">
+<meta property="og:updated_time" content="2015-03-11T16:28:48.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Ansible 执行原理(转)">
+<meta name="twitter:description" content="转载自阳哥的文章">
+<meta name="twitter:image" content="http://mingmings.qiniudn.com/ansible-exec.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/note/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://mingmings.org/note/Ansible-执行原理-转.html"/>
+
+
+
+
+
+  <title>Ansible 执行原理(转) | 异类深呼吸</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-55424732-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?fe4164c60a9dd0e73810fa0243796a5d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/note/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">异类深呼吸</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/note/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/note/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/note/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/note/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://mingmings.org/note/note/Ansible-执行原理-转.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="宋大明明">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/note/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="异类深呼吸">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Ansible 执行原理(转)</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-02-01T12:44:13+08:00">
+                2015-02-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/note/categories/ansible/" itemprop="url" rel="index">
+                    <span itemprop="name">ansible</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>转载自<a href="http://www.the5fire.com/explore-the-ansible.html" target="_blank" rel="noopener">阳哥</a>的文章<br><a id="more"></a></p>
+<h1 id="一、runner"><a href="#一、runner" class="headerlink" title="一、runner"></a>一、runner</h1><p>不得不说的这个 runner 接口，这是 ansible 下层用来执行远程命令的一个接口，无论是上一篇说的 Ad-Hoc 命令的执行: <code>ansible -i ~/hosts all -m command -a &#39;who&#39;</code>,还是最后一个执行playbook的命令: <code>ansible-playbook playbook.yml</code> ，下面掉得都是这个接口。</p>
+<p>在 ansible 官网文档的 Python API  处也是介绍的这个接口：<a href="http://docs.ansible.com/developing_api.html#id1" target="_blank" rel="noopener">Python API</a> 。比如要执行上面那个Ad-Hoc的命令，直接调用这个接口的话得这么写:</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">import ansible.runner</span><br><span class="line"></span><br><span class="line">runner = ansible.runner.Runner(</span><br><span class="line">    <span class="attribute">module_name</span>=<span class="string">'command'</span>,</span><br><span class="line">    <span class="attribute">module_args</span>=<span class="string">'who'</span>,</span><br><span class="line">    <span class="attribute">pattern</span>=<span class="string">'local'</span>,</span><br><span class="line">    <span class="attribute">forks</span>=10</span><br><span class="line">)</span><br><span class="line">datastructure = runner.<span class="builtin-name">run</span>()</span><br><span class="line"><span class="builtin-name">print</span> datastructure</span><br></pre></td></tr></table></figure>
+<p>打印出来的结果是这样的:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line"> <span class="string">'dark'</span>: &#123;</span><br><span class="line"></span><br><span class="line"> &#125;,</span><br><span class="line"> <span class="string">'contacted'</span>: &#123;</span><br><span class="line">     <span class="string">'127.0.0.1'</span>: &#123;</span><br><span class="line">     <span class="string">u'changed'</span>: <span class="keyword">True</span>,</span><br><span class="line">     <span class="string">u'end'</span>: <span class="string">u'2014-02-25 22:11:16.566084'</span>,</span><br><span class="line">     <span class="string">u'stdout'</span>: <span class="string">u'Guest    console  Feb  1 16:29 \nthe5fire console  Jan 20 19:50 \nthe5fire ttys023  Feb 25 22:11 \t(localhost)\nthe5fire ttys024  Feb 24 22:20 \t(localhost)'</span>,</span><br><span class="line">     <span class="string">u'cmd'</span>: [</span><br><span class="line">         <span class="string">u'who'</span></span><br><span class="line">     ],</span><br><span class="line">     <span class="string">u'rc'</span>: <span class="number">0</span>,</span><br><span class="line">     <span class="string">u'start'</span>: <span class="string">u'2014-02-25 22:11:16.556888'</span>,</span><br><span class="line">     <span class="string">u'stderr'</span>: <span class="string">u''</span>,</span><br><span class="line">     <span class="string">u'delta'</span>: <span class="string">u'0:00:00.009196'</span>,</span><br><span class="line">     <span class="string">'invocation'</span>: &#123;</span><br><span class="line">         <span class="string">'module_name'</span>: <span class="string">'command'</span>,</span><br><span class="line">         <span class="string">'module_args'</span>: <span class="string">'who'</span></span><br><span class="line">     &#125;</span><br><span class="line">     &#125;</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从这个地方我们可以了解到为什么对于受控制服务器需要安装 <code>simplejson</code>，因为控制服务器和受控服务器都需要通过json 格式进行数据传递的。</p>
+<h1 id="二、整体的流程图"><a href="#二、整体的流程图" class="headerlink" title="二、整体的流程图"></a>二、整体的流程图</h1><p><img src="http://mingmings.qiniudn.com/ansible-exec.png" alt="ansible-exec"></p>
+<p>图上是一个大概的流程，只是针对 playbook 来说( Ad-Hoc 的执行是直接掉得 runner)。</p>
+<ul>
+<li>首先 ansbile-playbook 接受到参数： <code>playbook.yml</code>，然后读取这个 yml 文件，根据这个 yml 文件生成 Playbook 对象，代码: <a href="https://github.com/ansible/ansible/blob/devel/lib/ansible/playbook/__init__.py#L34" target="_blank" rel="noopener">class Playbook</a> 。</li>
+<li>在这个 Playbook 中加载 yml 文件，在执行时生成 Play 对象，在 Play 对象中又包含了 Task 对象，一个 Task 对象可以算是一个最小的执行单元。</li>
+<li>到了 Task 这一步之后就应该调用 runner 接口了，这个接口的调用还是在 Playbook 这个类中: <a href="https://github.com/ansible/ansible/blob/devel/lib/ansible/playbook/__init__.py#L317" target="_blank" rel="noopener">Playbook._run_task_internal</a> 。而这个 runner 接口，上面已经介绍了，到此也就大体了解上层的执行过程了。</li>
+</ul>
+<h1 id="三、再继续探索-runner-下层"><a href="#三、再继续探索-runner-下层" class="headerlink" title="三、再继续探索 runner 下层"></a>三、再继续探索 runner 下层</h1><p>上面已经探索了 ansible-playbook 在执行时的流程，这里再继续深入了解一下，想看看 ansible 到底是如何执行的。</p>
+<ul>
+<li><p>在 runner 这个类中，具体执行某一个 task 时是通过一个 <code>Action Module</code> 来完成的，这个 <code>action module</code> 是根据参数确定的，比如咱配置的是异步操作还是同步操作，这个不深究，默认是加载 normal 中的 <code>Action Module</code>，位置： <a href="https://github.com/ansible/ansible/blob/devel/lib/ansible/runner/action_plugins/normal.py" target="_blank" rel="noopener">normal</a> 。在这个Action中对要执行的命令做了处理，对 shell 和 command 进行了处理，然后调用 runner 中的 <code>self.runner._execute_module</code> 来执行对应模块的操作，也就是 playbook 上写的 git 或者 shell 这样的模块。</p>
+</li>
+<li><p>到这整个过程其实还是挺无趣的，不过这个 <code>_execute_module</code> 里面的过程还是有点意思的。这个过程做了什么事呢？<br>首先，根据对应模块加载了 library 下面的对应的模块代码比如 shell 加载的是: <code>library/commands/command</code> 这个代码，<strong>（这里要注意，上面加载的是 norma l的 action 模块，在那个模块里对 shell 进行了处理，变为 command，因此这里就是 command 了）</strong>。找到这个具体的模块文件之后，ansible 会加载一个 <code>module_common.py</code>，对其进行渲染（把咱们定义的命令，比如：<code>virtualenv ~demo</code>，渲染到这个文件中）。</p>
+</li>
+<li><p>渲染完毕之后，会把这个文件 copy 到远程服务器的用户家目录下的 <code>.ansible/tmp/ansible-xxxxxx</code> 这样的文件夹下<strong>（那个 ansible-xxxx 中 xxx 表示不知道是以什么方式生成的字符序列，可能是时间戳)</strong>。如果咱们定义的是一个shell，这里会多一个 command 的 py 文件，并且是可执行的。如果是 git，这个文件名就是 git。</p>
+</li>
+<li><p>传输完毕之后，就是执行了。ansible 默认是以兼容的 ssh 来进行远程命令执行的，执行的方法就是，通过subprocess，来执行 ssh 和已经传输到远程服务器的可执行的 python 文件，通过 <code>PIPE</code> 的方式把执行结果输出回来，输出的 CLI 上。</p>
+</li>
+<li><p>大概就是这么个过程，只是大致的看了下整个的执行过程，很多地方复杂的逻辑都忽略了，最后的通过 subprocess 的方式执行 ssh 远程操作，并把结果通过 PIPE 输出回来不是特别理解其原理。</p>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/note/tags/ansible-执行原理/" rel="tag"># ansible 执行原理</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/note/Mac-下一些小技巧.html" rel="next" title="Mac 下一些小技巧">
+                <i class="fa fa-chevron-left"></i> Mac 下一些小技巧
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/note/Ansible-plugin-之callbacks-实现写文件，邮件，入库.html" rel="prev" title="Ansible plugin 之 callbacks 实现写文件，邮件，入库">
+                Ansible plugin 之 callbacks 实现写文件，邮件，入库 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">宋大明明</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/note/archives/">
+              
+                  <span class="site-state-item-count">78</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、runner"><span class="nav-number">1.</span> <span class="nav-text">一、runner</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、整体的流程图"><span class="nav-number">2.</span> <span class="nav-text">二、整体的流程图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、再继续探索-runner-下层"><span class="nav-number">3.</span> <span class="nav-text">三、再继续探索 runner 下层</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2014 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">宋大明明</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/note/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/note/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/note/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

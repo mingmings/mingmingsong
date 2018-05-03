@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/note/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/note/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/note/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/note/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/note/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/note/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/note/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="mongodb复制集," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="简介官方站点在大数据的时代，传统的关系型数据库要能更高的服务必须要解决高并发读写、海量数据高效存储、高可扩展性和高可用性这些难题。不过就是因为这些问题Nosql诞生了。">
+<meta name="keywords" content="mongodb复制集">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mongodb复制集">
+<meta property="og:url" content="http://mingmings.org/note/db_mongodb复制集.html">
+<meta property="og:site_name" content="异类深呼吸">
+<meta property="og:description" content="简介官方站点在大数据的时代，传统的关系型数据库要能更高的服务必须要解决高并发读写、海量数据高效存储、高可扩展性和高可用性这些难题。不过就是因为这些问题Nosql诞生了。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-04-22T07:02:30.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="mongodb复制集">
+<meta name="twitter:description" content="简介官方站点在大数据的时代，传统的关系型数据库要能更高的服务必须要解决高并发读写、海量数据高效存储、高可扩展性和高可用性这些难题。不过就是因为这些问题Nosql诞生了。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/note/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://mingmings.org/note/db_mongodb复制集.html"/>
+
+
+
+
+
+  <title>mongodb复制集 | 异类深呼吸</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-55424732-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?fe4164c60a9dd0e73810fa0243796a5d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/note/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">异类深呼吸</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/note/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/note/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/note/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/note/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://mingmings.org/note/note/db_mongodb复制集.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="宋大明明">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/note/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="异类深呼吸">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">mongodb复制集</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2014-11-10T11:19:07+08:00">
+                2014-11-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/note/categories/DB/" itemprop="url" rel="index">
+                    <span itemprop="name">DB</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p><a href="http://www.mongodb.org/" target="_blank" rel="noopener">官方站点</a><br>在大数据的时代，传统的关系型数据库要能更高的服务必须要解决高并发读写、海量数据高效存储、高可扩展性和高可用性这些难题。不过就是因为这些问题Nosql诞生了。</p>
+<a id="more"></a>
+<p>NOSQL有这些优势：</p>
+<ul>
+<li>大数据量，可以通过廉价服务器存储大量的数据，轻松摆脱传统mysql单表存储量级限制。</li>
+<li>高扩展性，Nosql去掉了关系数据库的关系型特性，很容易横向扩展，摆脱了以往老是纵向扩展的诟病。</li>
+<li>高性能，Nosql通过简单的key-value方式获取数据，非常快速。还有NoSQL的Cache是记录级的，是一种细粒度的Cache，所以NoSQL在这个层面上来说就要性能高很多。</li>
+<li>灵活的数据模型，NoSQL无需事先为要存储的数据建立字段，随时可以存储自定义的数据格式。而在关系数据库里，增删字段是一件非常麻烦的事情。如果是非常大数据量的表，增加字段简直就是一个噩梦。</li>
+<li>高可用，NoSQL在不太影响性能的情况，就可以方便的实现高可用的架构。比如mongodb通过mongos、mongo分片就可以快速配置出高可用配置。</li>
+</ul>
+<p>在nosql数据库里，大部分的查询都是键值对（key、value）的方式。MongoDB是一个介于关系数据库和非关系数据库之间的产品，是非关系数据库当中最像关系数据库的。支持类似于面向对象的查询语言，几乎可以实现类似关系数据库单表查询的绝大部分功能，而且还支持对数据建立索引。所以这个非常方便，我们可以用sql操作MongoDB，从关系型数据库迁移过来，开发人员学习成本会大大减少。如果再对底层的sql API做一层封装，开发基本可以感觉不到mongodb和关系型数据库的区别。</p>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>1.yum 源安装</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">cat &gt;&gt; /etc/yum.repos.d/mongodb-enterprise.repo &lt;&lt; EOF</span><br><span class="line">[mongodb-enterprise]</span><br><span class="line"><span class="attribute">name</span>=MongoDB Enterprise Repository</span><br><span class="line"><span class="attribute">baseurl</span>=https://repo.mongodb.com/yum/redhat/$releasever/mongodb-enterprise/stable/$basearch/</span><br><span class="line"><span class="attribute">gpgcheck</span>=0</span><br><span class="line"><span class="attribute">enabled</span>=1</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"><span class="comment"># 官方源中提供了如下的 RPM 包</span></span><br><span class="line">- mongodb-enterprise.x86_64     		基础包</span><br><span class="line">- mongodb-enterprise-mongos.x86_64		包含daemon程序和一些相关配置文件和脚本</span><br><span class="line">- mongodb-enterprise-server.x86_64 		只包含daemon程序</span><br><span class="line">- mongodb-enterprise-shell.x86_64		mongo shell</span><br><span class="line">- mongodb-enterprise-tools.x86_64		相关的一些工具</span><br><span class="line"></span><br><span class="line"><span class="comment"># yum 安装即可</span></span><br><span class="line">yum install -y <span class="attribute">--enablerepo</span>=mongodb-enterprise mongodb-enterprise-2.6.5</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动</span></span><br><span class="line">service mongod start</span><br><span class="line">chkconfig mongod on</span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置</span></span><br><span class="line">通过RPM安装的包，默认的存储 </span><br><span class="line">-  /var/lib/mongo		存储instance的数据</span><br><span class="line">-  /var/log/mongodb		日志存放位置</span><br><span class="line">- /etc/mongodb.conf		配置文件</span><br><span class="line">- /etc/init.d/mongod		启动脚本</span><br></pre></td></tr></table></figure>
+<p>2.源码包安装</p>
+<figure class="highlight dos"><table><tr><td class="code"><pre><span class="line">curl -O http://downloads.mongodb.org/linux/mongodb-linux-x86_64-<span class="number">2</span>.<span class="number">6</span>.<span class="number">4</span>.tgz | tar zxf -</span><br><span class="line"><span class="built_in">mkdir</span> -p mongodb</span><br><span class="line">cp -R -n mongodb-linux-x86_64-<span class="number">2</span>.<span class="number">6</span>.<span class="number">4</span>/ mongodb</span><br><span class="line">export <span class="built_in">PATH</span>=&lt;mongodb-install-directory&gt;/bin:$<span class="built_in">PATH</span></span><br><span class="line">mongod --dbpath &lt;<span class="built_in">path</span> to data directory&gt;</span><br></pre></td></tr></table></figure>
+<h1 id="客户端连接"><a href="#客户端连接" class="headerlink" title="客户端连接"></a>客户端连接</h1><p>1.syntax:    mongo <a href="host:port/dbname" target="_blank" rel="noopener">host:port/dbname</a></p>
+<figure class="highlight x86asm"><table><tr><td class="code"><pre><span class="line">mongo		默认连接本地<span class="keyword">test</span>库</span><br><span class="line">mongo <span class="number">127.0</span><span class="meta">.0</span><span class="meta">.1</span>:<span class="number">27017</span>/admin</span><br></pre></td></tr></table></figure>
+<p>2.停止服务</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">service mongod stop</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> use admin</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> db.shutdownServer()</span></span><br></pre></td></tr></table></figure>
+<h1 id="复制集"><a href="#复制集" class="headerlink" title="复制集"></a>复制集</h1><p><code>副本集</code> 也或者叫 <code>复制集</code> 是主从模式的一种形式，但是 NoSQL 的产生就是为了解决大数据量、高扩展性、高性能、灵活数据模型、高可用性。但是光通过主从模式的架构远远达不到上面几点，由此 MongoDB 设计了 <code>副本集</code> 和 <code>分片</code> 的功能。</p>
+<p>mongoDB官方已经 <strong>不建议使用主从模式了</strong>，替代方案是采用副本集的模式，详细情况查看 <a href="http://docs.mongodb.org/master/core/master-slave/" target="_blank" rel="noopener">官方的话</a></p>
+<p>原理：<br>mongodb复制集主节点负责处理客户端的请求，其他的都是从节点，负责映射主节点的数据。主节点记录所有的操作。从节点定期轮训主节点获得这些操作，而后对自己的数据副本执行这些操作。从节点执行了主节点的相同的操作，所以从节点就可以保持与主节点的数据同步。</p>
+<p>主从之间是通过一个日志来存储写操作的，这个日志就是oplog。它是一个固定长度的 capped collection，位于 local 数据库中，用于记录复制集(replica set)操作日志，对于64位 mongodb ，默认的占用了 5% 磁盘空间，oplog 大小可以启动 mongodb 时指定 mongod –plogSize 指定</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">repset:PRIMARY&gt; use local</span><br><span class="line">switched to db local</span><br><span class="line">repset:PRIMARY&gt; show collections</span><br><span class="line">me</span><br><span class="line">oplog.rs</span><br><span class="line">replset.minvalid</span><br><span class="line">startup_log</span><br><span class="line">system.indexes</span><br><span class="line">system.replset</span><br><span class="line">repset:PRIMARY&gt; db<span class="selector-class">.oplog</span><span class="selector-class">.rs</span><span class="selector-class">.find</span>()</span><br><span class="line">&#123; <span class="string">"ts"</span> : Timestamp(<span class="number">1416312406</span>, <span class="number">1</span>), <span class="string">"h"</span> : NumberLong(<span class="number">0</span>), <span class="string">"v"</span> : <span class="number">2</span>, <span class="string">"op"</span> : <span class="string">"n"</span>, <span class="string">"ns"</span> : <span class="string">""</span>, <span class="string">"o"</span> : &#123; <span class="string">"msg"</span> : <span class="string">"initiating set"</span> &#125; &#125;</span><br><span class="line">&#123; <span class="string">"ts"</span> : Timestamp(<span class="number">1416315116</span>, <span class="number">1</span>), <span class="string">"h"</span> : NumberLong(<span class="string">"-7269003673399721967"</span>), <span class="string">"v"</span> : <span class="number">2</span>, <span class="string">"op"</span> : <span class="string">"i"</span>, <span class="string">"ns"</span> : <span class="string">"test.testdb"</span>, <span class="string">"o"</span> : &#123; <span class="string">"_id"</span> : ObjectId(<span class="string">"546b40eba1f9ba55ca18ecb7"</span>), <span class="string">"test1"</span> : <span class="string">"testval1"</span> &#125; &#125;</span><br><span class="line">&#123; <span class="string">"ts"</span> : Timestamp(<span class="number">1416329687</span>, <span class="number">1</span>), <span class="string">"h"</span> : NumberLong(<span class="string">"902176275869766644"</span>), <span class="string">"v"</span> : <span class="number">2</span>, <span class="string">"op"</span> : <span class="string">"n"</span>, <span class="string">"ns"</span> : <span class="string">""</span>, <span class="string">"o"</span> : &#123; <span class="string">"msg"</span> : <span class="string">"Reconfig set"</span>, <span class="string">"version"</span> : <span class="number">2</span> &#125; &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>ts: 某个时间的时间戳</li>
+<li>op: 操作类型，i：insert；d：delete；u：update</li>
+<li>ns: 命名空间，操作的collection name</li>
+<li>o: document 内容</li>
+</ul>
+<h2 id="LAB"><a href="#LAB" class="headerlink" title="LAB"></a>LAB</h2><p>节点: 172.16.105.128</p>
+<figure class="highlight subunit"><table><tr><td class="code"><pre><span class="line">[root@node128 bin]# ./mongod --dbpath /data/mongodbtest/repset/data/ --replSet repset</span><br><span class="line">[root@node129 bin]# ./mongod --dbpath /data/mongodbtest/replset/data/ --replSet repset</span><br><span class="line">[root@node130 bin]# ./mongod --dbpath /data/mongodbtest/replset/data/ --replSet repset</span><br><span class="line"></span><br><span class="line">初始化部分信息如下：</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:26:47.283<span class="string">+0800</span> [initandlisten] MongoDB starting : pid=1383 port=27017 dbpath=/data/mongodbtest/rep/data/ 64-bit host=node128</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:26:47.283<span class="string">+0800</span> [initandlisten] db version v2.6.4</span><br><span class="line">...</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:26:47.283<span class="string">+0800</span> [initandlisten] allocator: tcmalloc</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:26:47.283<span class="string">+0800</span> [initandlisten] options: &#123; replication: &#123; replSet: "repset" &#125;, storage: &#123; dbPath: "/data/mongodbtest/rep/data/" &#125; &#125;</span><br><span class="line">...</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:26:47.434<span class="string">+0800</span> [rsStart] replSet can't get local.system.replset config from self or any seed (EMPTYCONFIG)</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:26:47.434<span class="string">+0800</span> [rsStart] replSet info you may need to run replSetInitiate -- rs.initiate() in the shell -- if that is not already done</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>此时三台机器并没有角色之分，副本及也没有初始化，根据规划，128作为主节点，129，130作为副本及的从节点</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">[root@node128 ~]# ./mongo 127.0.0.1</span><br><span class="line">MongoDB shell version: 2.6.5</span><br><span class="line">connecting <span class="keyword">to</span>: test</span><br><span class="line">&gt; use admin</span><br><span class="line">switched <span class="keyword">to</span> db admin</span><br><span class="line">&gt; show dbs</span><br><span class="line">admin  (empty)</span><br><span class="line">local  0.078GB</span><br><span class="line">&gt;<span class="built_in"> config </span>= &#123;_id:<span class="string">"repset"</span>, members:[&#123;_id:0,host:<span class="string">"172.16.105.128:27017"</span>&#125;,&#123;_id:1,host:<span class="string">"172.16.105.129:27017"</span>&#125;,&#123;_id:2,host:<span class="string">"172.16.105.130:27017"</span>&#125;]&#125;</span><br><span class="line">&#123;</span><br><span class="line">	<span class="string">"_id"</span> : <span class="string">"repset"</span>,</span><br><span class="line">	<span class="string">"members"</span> : [</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="string">"_id"</span> : 0,</span><br><span class="line">			<span class="string">"host"</span> : <span class="string">"172.16.105.128:27017"</span></span><br><span class="line">		&#125;,</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="string">"_id"</span> : 1,</span><br><span class="line">			<span class="string">"host"</span> : <span class="string">"172.16.105.129:27017"</span></span><br><span class="line">		&#125;,</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="string">"_id"</span> : 2,</span><br><span class="line">			<span class="string">"host"</span> : <span class="string">"172.16.105.130:27017"</span></span><br><span class="line">		&#125;</span><br><span class="line">	]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&gt; rs.initiate(config)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="string">"info"</span> : <span class="string">"Config now saved locally.  Should come online in about a minute."</span>,</span><br><span class="line">	<span class="string">"ok"</span> : 1</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此时，可以看到一旦初始化完成的 node128 节点上，可以看到一些输出类似如下</p>
+<figure class="highlight subunit"><table><tr><td class="code"><pre><span class="line">...</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:03.848<span class="string">+0800</span> [conn1] replSet replSetInitiate admin command received from client</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:03.855<span class="string">+0800</span> [conn1] replSet replSetInitiate config object parses ok, 3 members specified</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:03.900<span class="string">+0800</span> [conn1] replSet replSetInitiate all members seem up</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:03.900<span class="string">+0800</span> [conn1] ******</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:03.900<span class="string">+0800</span> [conn1] creating replication oplog of size: 990MB...</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:03.900<span class="string">+0800</span> [FileAllocator] allocating new datafile /data/mongodbtest/rep/data/local.1, filling with zeroes...</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:03.905<span class="string">+0800</span> [FileAllocator] done allocating datafile /data/mongodbtest/rep/data/local.1, size: 1024MB,  took 0.004 secs</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:03.908<span class="string">+0800</span> [conn1] ******</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:03.908<span class="string">+0800</span> [conn1] replSet info saving a newer config version to local.system.replset: &#123; _id: "repset", version: 1, members: [ &#123; _id: 0, host: "172.16.105.128:27017" &#125;, &#123; _id: 1, host: "172.16.105.129:27017" &#125;, &#123; _id: 2, host: "172.16.105.130:27017" &#125; ] &#125;</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:03.914<span class="string">+0800</span> [conn1] build index on: local.system.replset properties: &#123; v: 1, key: &#123; _id: 1 &#125;, name: "_id_", ns: "local.system.replset" &#125;</span><br><span class="line"></span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:03.915<span class="string">+0800</span> [conn1] replSet replSetInitiate config now saved locally.  Should come online in about a minute.</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:04.829<span class="string">+0800</span> [rsStart] replSet I am 172.16.105.128:27017</span><br><span class="line"></span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:04.837<span class="string">+0800</span> [rsStart] replSet STARTUP2</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:04.840<span class="string">+0800</span> [rsSync] replSet SECONDARY</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:04.845<span class="string">+0800</span> [rsMgr] replSet can't see a majority, will not try to elect self</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:06.832<span class="string">+0800</span> [rsHealthPoll] replSet member 172.16.105.129:27017 is up</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:06.833<span class="string">+0800</span> [rsHealthPoll] replSet member 172.16.105.130:27017 is up</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:06.834<span class="string">+0800</span> [rsMgr] replSet info electSelf 0</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:06.835<span class="string">+0800</span> [rsMgr] replSet couldn't elect self, only received 1 votes</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:06.836<span class="string">+0800</span> [rsMgr] replSet info electSelf 0</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:06.837<span class="string">+0800</span> [rsMgr] replSet couldn't elect self, only received 1 votes</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:07.612<span class="string">+0800</span> [initandlisten] connection accepted from 172.16.105.130:51773 #2 (2 connections now open)</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:07.613<span class="string">+0800</span> [conn2] end connection 172.16.105.130:51773 (1 connection now open)</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:07.613<span class="string">+0800</span> [initandlisten] connection accepted from 172.16.105.130:51774 #3 (3 connections now open)</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:07.673<span class="string">+0800</span> [initandlisten] connection accepted from 172.16.105.129:56952 #4 (3 connections now open)</span><br><span class="line"></span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:08.834<span class="string">+0800</span> [rsHealthPoll] replSet member 172.16.105.129:27017 is now in state STARTUP2</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:08.835<span class="string">+0800</span> [rsHealthPoll] replset info 172.16.105.130:27017 thinks that we are down</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:08.835<span class="string">+0800</span> [rsHealthPoll] replSet member 172.16.105.130:27017 is now in state STARTUP2</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:08.837<span class="string">+0800</span> [rsMgr] not electing self, 172.16.105.130:27017 would veto with 'I don't think 172.16.105.128:27017 is electable'</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:08.841<span class="string">+0800</span> [rsMgr] not electing self, 172.16.105.130:27017 would veto with 'I don't think 172.16.105.128:27017 is electable'</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:14.839<span class="string">+0800</span> [rsMgr] replSet info electSelf 0</span><br><span class="line"></span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:14.856<span class="string">+0800</span> [rsMgr] replSet PRIMARY</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:21.703<span class="string">+0800</span> [conn5] end connection 172.16.105.129:56953 (2 connections now open)</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:21.704<span class="string">+0800</span> [initandlisten] connection accepted from 172.16.105.129:56956 #6 (3 connections now open)</span><br><span class="line">...</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:23.719<span class="string">+0800</span> [initandlisten] connection accepted from 172.16.105.129:56958 #11 (5 connections now open)</span><br><span class="line">...</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:24.847<span class="string">+0800</span> [rsHealthPoll] replSet member 172.16.105.129:27017 is now in state SECONDARY</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:24.848<span class="string">+0800</span> [rsHealthPoll] replSet member 172.16.105.130:27017 is now in state SECONDARY</span><br><span class="line">...</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:25.677<span class="string">+0800</span> [slaveTracking] build index on: local.slaves properties: &#123; v: 1, key: &#123; _id: 1 &#125;, name: "_id_", ns: "local.slaves" &#125;</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:25.677<span class="string">+0800</span> [slaveTracking] 	 added index to empty collection</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:47.616<span class="string">+0800</span> [clientcursormon] mem (MB) res:37 virt:2934</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:47.616<span class="string">+0800</span> [clientcursormon]  mapped (incl journal view):2208</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:47.616<span class="string">+0800</span> [clientcursormon]  connections:7</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:47.616<span class="string">+0800</span> [clientcursormon]  replication threads:32</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:51.740<span class="string">+0800</span> [conn6] end connection 172.16.105.129:56956 (6 connections now open)</span><br><span class="line">2014<span class="string">-11</span><span class="string">-07</span>T11:52:51.741<span class="string">+0800</span> [initandlisten] connection accepted from 172.16.105.129:56962 #16 (7 connections now open)</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>此时查看集群状态,已经可以看到终端提示符已经变成了 PRIMARY，身份已经成为主</p>
+<figure class="highlight gcode"><table><tr><td class="code"><pre><span class="line">&gt; rs.status<span class="comment">()</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="string">"set"</span> : <span class="string">"repset"</span>,</span><br><span class="line">	<span class="string">"date"</span> : ISODate<span class="comment">("2014-11-07T04:08:15Z")</span>,</span><br><span class="line">	<span class="string">"myState"</span> : <span class="number">1</span>,</span><br><span class="line">	<span class="string">"members"</span> : [</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="string">"_id"</span> : <span class="number">0</span>,</span><br><span class="line">			<span class="string">"name"</span> : <span class="string">"172.16.105.128:27017"</span>,</span><br><span class="line">			<span class="string">"health"</span> : <span class="number">1</span>,</span><br><span class="line">			<span class="string">"state"</span> : <span class="number">1</span>,</span><br><span class="line">			<span class="string">"stateStr"</span> : <span class="string">"PRIMARY"</span>,</span><br><span class="line">			<span class="string">"uptime"</span> : <span class="number">2488</span>,</span><br><span class="line">			<span class="string">"optime"</span> : Timestamp<span class="comment">(1415332323, 1)</span>,</span><br><span class="line">			<span class="string">"optimeDate"</span> : ISODate<span class="comment">("2014-11-07T03:52:03Z")</span>,</span><br><span class="line">			<span class="string">"electionTime"</span> : Timestamp<span class="comment">(1415332334, 1)</span>,</span><br><span class="line">			<span class="string">"electionDate"</span> : ISODate<span class="comment">("2014-11-07T03:52:14Z")</span>,</span><br><span class="line">			<span class="string">"self"</span> : true</span><br><span class="line">		&#125;,</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="string">"_id"</span> : <span class="number">1</span>,</span><br><span class="line">			<span class="string">"name"</span> : <span class="string">"172.16.105.129:27017"</span>,</span><br><span class="line">			<span class="string">"health"</span> : <span class="number">1</span>,</span><br><span class="line">			<span class="string">"state"</span> : <span class="number">2</span>,</span><br><span class="line">			<span class="string">"stateStr"</span> : <span class="string">"SECONDARY"</span>,</span><br><span class="line">			<span class="string">"uptime"</span> : <span class="number">969</span>,</span><br><span class="line">			<span class="string">"optime"</span> : Timestamp<span class="comment">(1415332323, 1)</span>,</span><br><span class="line">			<span class="string">"optimeDate"</span> : ISODate<span class="comment">("2014-11-07T03:52:03Z")</span>,</span><br><span class="line">			<span class="string">"lastHeartbeat"</span> : ISODate<span class="comment">("2014-11-07T04:08:15Z")</span>,</span><br><span class="line">			<span class="string">"lastHeartbeatRecv"</span> : ISODate<span class="comment">("2014-11-07T04:08:14Z")</span>,</span><br><span class="line">			<span class="string">"pingMs"</span> : <span class="number">0</span>,</span><br><span class="line">			<span class="string">"syncingTo"</span> : <span class="string">"172.16.105.128:27017"</span></span><br><span class="line">		&#125;,</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="string">"_id"</span> : <span class="number">2</span>,</span><br><span class="line">			<span class="string">"name"</span> : <span class="string">"172.16.105.130:27017"</span>,</span><br><span class="line">			<span class="string">"health"</span> : <span class="number">1</span>,</span><br><span class="line">			<span class="string">"state"</span> : <span class="number">2</span>,</span><br><span class="line">			<span class="string">"stateStr"</span> : <span class="string">"SECONDARY"</span>,</span><br><span class="line">			<span class="string">"uptime"</span> : <span class="number">969</span>,</span><br><span class="line">			<span class="string">"optime"</span> : Timestamp<span class="comment">(1415332323, 1)</span>,</span><br><span class="line">			<span class="string">"optimeDate"</span> : ISODate<span class="comment">("2014-11-07T03:52:03Z")</span>,</span><br><span class="line">			<span class="string">"lastHeartbeat"</span> : ISODate<span class="comment">("2014-11-07T04:08:15Z")</span>,</span><br><span class="line">			<span class="string">"lastHeartbeatRecv"</span> : ISODate<span class="comment">("2014-11-07T04:08:14Z")</span>,</span><br><span class="line">			<span class="string">"pingMs"</span> : <span class="number">0</span>,</span><br><span class="line">			<span class="string">"syncingTo"</span> : <span class="string">"172.16.105.128:27017"</span></span><br><span class="line">		&#125;</span><br><span class="line">	],</span><br><span class="line">	<span class="string">"ok"</span> : <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line">repset:PRIMARY&gt;</span><br></pre></td></tr></table></figure>
+<p>复制集的配置</p>
+<blockquote>
+<p>配置保存在local 中</p>
+</blockquote>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">repset:PRIMARY&gt; use local</span><br><span class="line">switched to db local</span><br><span class="line">repset:PRIMARY&gt; show collections</span><br><span class="line">me</span><br><span class="line">oplog.rs</span><br><span class="line">replset.minvalid</span><br><span class="line">startup_log</span><br><span class="line">system.indexes</span><br><span class="line">system.replset</span><br><span class="line">repset:PRIMARY&gt; db<span class="selector-class">.system</span><span class="selector-class">.replset</span><span class="selector-class">.find</span>()</span><br><span class="line">&#123; <span class="string">"_id"</span> : <span class="string">"repset"</span>, <span class="string">"version"</span> : <span class="number">2</span>, <span class="string">"members"</span> : [ &#123; <span class="string">"_id"</span> : <span class="number">0</span>, <span class="string">"host"</span> : <span class="string">"172.16.105.128:27017"</span>, <span class="string">"priority"</span> : <span class="number">2</span> &#125;, &#123; <span class="string">"_id"</span> : <span class="number">1</span>, <span class="string">"host"</span> : <span class="string">"172.16.105.129:27017"</span>, <span class="string">"priority"</span> : <span class="number">3</span> &#125; ] &#125;</span><br></pre></td></tr></table></figure>
+<h1 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h1><p>1.主节点插入数据</p>
+<figure class="highlight stata"><table><tr><td class="code"><pre><span class="line">repset:PRIMARY&gt; <span class="keyword">use</span> <span class="keyword">test</span></span><br><span class="line">switched to <span class="keyword">db</span> <span class="keyword">test</span></span><br><span class="line"></span><br><span class="line">repset:PRIMARY&gt; show dbs</span><br><span class="line">admin  (empty)</span><br><span class="line"><span class="keyword">local</span>  1.078GB</span><br><span class="line"></span><br><span class="line">repset:PRIMARY&gt; <span class="keyword">db</span>.testdb.insert(&#123;<span class="string">"test1"</span>:<span class="string">"testval1"</span>&#125;)</span><br><span class="line">WriteResult(&#123; <span class="string">"nInserted"</span> : 1 &#125;)</span><br><span class="line"></span><br><span class="line">repset:PRIMARY&gt; show dbs</span><br><span class="line">admin  (empty)</span><br><span class="line"><span class="keyword">local</span>  1.078GB</span><br><span class="line"><span class="keyword">test</span>   0.078GB</span><br></pre></td></tr></table></figure>
+<p>2.从节点进行查询数据</p>
+<figure class="highlight stata"><table><tr><td class="code"><pre><span class="line">repset:SECONDARY&gt; show dbs</span><br><span class="line">admin  (empty)</span><br><span class="line"><span class="keyword">local</span>  1.078GB</span><br><span class="line"><span class="keyword">test</span>   0.078GB</span><br><span class="line"></span><br><span class="line">repset:SECONDARY&gt; <span class="keyword">use</span> <span class="keyword">test</span></span><br><span class="line">switched to <span class="keyword">db</span> <span class="keyword">test</span></span><br><span class="line"></span><br><span class="line">repset:SECONDARY&gt; show tables</span><br><span class="line">2014-11-07T12:15:20.724+0800 <span class="keyword">error</span>: &#123; <span class="string">"$err"</span> : <span class="string">"not master and slaveOk=false"</span>, <span class="string">"code"</span> : 13435 &#125; at src/mongo/<span class="keyword">shell</span>/<span class="keyword">query</span>.js:131</span><br><span class="line"><span class="comment">//默认的只有主节点进行读写数据，从节点只能同步数据，但是不能读</span></span><br><span class="line"></span><br><span class="line">repset:SECONDARY&gt; <span class="keyword">db</span>.getMongo().setSlaveOk()</span><br><span class="line"><span class="comment">//赋读的权限</span></span><br><span class="line"></span><br><span class="line">epset:SECONDARY&gt; <span class="keyword">use</span> <span class="keyword">test</span></span><br><span class="line">switched to <span class="keyword">db</span> <span class="keyword">test</span></span><br><span class="line"></span><br><span class="line">repset:SECONDARY&gt; show tables</span><br><span class="line">system.indexes</span><br><span class="line">testdb</span><br><span class="line"></span><br><span class="line">repset:SECONDARY&gt; <span class="keyword">db</span>.testdb.find()</span><br><span class="line">&#123; <span class="string">"_id"</span> : ObjectId(<span class="string">"545c473769632a6132b03cf7"</span>), <span class="string">"test1"</span> : <span class="string">"testval1"</span> &#125;</span><br></pre></td></tr></table></figure>
+<h1 id="故障转移"><a href="#故障转移" class="headerlink" title="故障转移"></a>故障转移</h1><figure class="highlight dns"><table><tr><td class="code"><pre><span class="line"><span class="number">2014</span>-<span class="number">11-07T12:32</span>:<span class="number">30.107+0800</span> [rsHealthPoll] warning: Failed to connect to <span class="number">172.16.105.128</span>:<span class="number">27017</span>, reason: errno:<span class="number">111</span> Connection refused</span><br><span class="line"><span class="number">2014</span>-<span class="number">11-07T12:32</span>:<span class="number">30.108+0800</span> [rsHealthPoll] warning: Failed to connect to <span class="number">172.16.105.128</span>:<span class="number">27017</span>, reason: errno:<span class="number">111</span> Connection refused</span><br><span class="line"><span class="number">2014</span>-<span class="number">11-07T12:32</span>:<span class="number">30.108+0800</span> [rsHealthPoll] couldn't connect to <span class="number">172.16.105.128</span>:<span class="number">27017</span>: couldn't connect to server <span class="number">172.16.105.128</span>:<span class="number">27017</span> (<span class="number">172.16.105.128</span>) failed, connection attempt failed</span><br><span class="line"></span><br><span class="line"><span class="number">2014</span>-<span class="number">11-07T12:32</span>:<span class="number">49.205+0800</span> [rsHealthPoll] replset info <span class="number">172.16.105.128</span>:<span class="number">27017</span> heartbeat failed, retrying</span><br></pre></td></tr></table></figure>
+<p>此时查看副本集状态</p>
+<figure class="highlight groovy"><table><tr><td class="code"><pre><span class="line"><span class="string">repset:</span>SECONDARY&gt; rs.status()</span><br><span class="line">&#123;</span><br><span class="line">	<span class="string">"set"</span> : <span class="string">"repset"</span>,</span><br><span class="line">	<span class="string">"date"</span> : ISODate(<span class="string">"2014-11-07T04:35:13Z"</span>),</span><br><span class="line">	<span class="string">"myState"</span> : <span class="number">2</span>,</span><br><span class="line">	<span class="string">"syncingTo"</span> : <span class="string">"172.16.105.130:27017"</span>,</span><br><span class="line">	<span class="string">"members"</span> : [</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="string">"_id"</span> : <span class="number">0</span>,</span><br><span class="line">			<span class="string">"name"</span> : <span class="string">"172.16.105.128:27017"</span>,</span><br><span class="line">			<span class="string">"health"</span> : <span class="number">0</span>,</span><br><span class="line">			<span class="string">"state"</span> : <span class="number">8</span>,</span><br><span class="line">			<span class="string">"stateStr"</span> : <span class="string">"(not reachable/healthy)"</span>,		<span class="comment">//已经为不可达</span></span><br><span class="line">			<span class="string">"uptime"</span> : <span class="number">0</span>,</span><br><span class="line">			<span class="string">"optime"</span> : Timestamp(<span class="number">1415333687</span>, <span class="number">1</span>),</span><br><span class="line">			<span class="string">"optimeDate"</span> : ISODate(<span class="string">"2014-11-07T04:14:47Z"</span>),</span><br><span class="line">			<span class="string">"lastHeartbeat"</span> : ISODate(<span class="string">"2014-11-07T04:35:12Z"</span>),</span><br><span class="line">			<span class="string">"lastHeartbeatRecv"</span> : ISODate(<span class="string">"2014-11-07T04:31:36Z"</span>),</span><br><span class="line">			<span class="string">"pingMs"</span> : <span class="number">0</span></span><br><span class="line">		&#125;,</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="string">"_id"</span> : <span class="number">1</span>,</span><br><span class="line">			<span class="string">"name"</span> : <span class="string">"172.16.105.129:27017"</span>,</span><br><span class="line">			<span class="string">"health"</span> : <span class="number">1</span>,</span><br><span class="line">			<span class="string">"state"</span> : <span class="number">2</span>,</span><br><span class="line">			<span class="string">"stateStr"</span> : <span class="string">"SECONDARY"</span>,</span><br><span class="line">			<span class="string">"uptime"</span> : <span class="number">3267</span>,</span><br><span class="line">			<span class="string">"optime"</span> : Timestamp(<span class="number">1415333687</span>, <span class="number">1</span>),</span><br><span class="line">			<span class="string">"optimeDate"</span> : ISODate(<span class="string">"2014-11-07T04:14:47Z"</span>),</span><br><span class="line">			<span class="string">"self"</span> : <span class="literal">true</span></span><br><span class="line">		&#125;,</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="string">"_id"</span> : <span class="number">2</span>,</span><br><span class="line">			<span class="string">"name"</span> : <span class="string">"172.16.105.130:27017"</span>,</span><br><span class="line">			<span class="string">"health"</span> : <span class="number">1</span>,</span><br><span class="line">			<span class="string">"state"</span> : <span class="number">1</span>,</span><br><span class="line">			<span class="string">"stateStr"</span> : <span class="string">"PRIMARY"</span>,		<span class="comment">//切换为主</span></span><br><span class="line">			<span class="string">"uptime"</span> : <span class="number">2586</span>,</span><br><span class="line">			<span class="string">"optime"</span> : Timestamp(<span class="number">1415333687</span>, <span class="number">1</span>),</span><br><span class="line">			<span class="string">"optimeDate"</span> : ISODate(<span class="string">"2014-11-07T04:14:47Z"</span>),</span><br><span class="line">			<span class="string">"lastHeartbeat"</span> : ISODate(<span class="string">"2014-11-07T04:35:12Z"</span>),</span><br><span class="line">			<span class="string">"lastHeartbeatRecv"</span> : ISODate(<span class="string">"2014-11-07T04:35:12Z"</span>),</span><br><span class="line">			<span class="string">"pingMs"</span> : <span class="number">0</span>,</span><br><span class="line">			<span class="string">"electionTime"</span> : Timestamp(<span class="number">1415334702</span>, <span class="number">1</span>),</span><br><span class="line">			<span class="string">"electionDate"</span> : ISODate(<span class="string">"2014-11-07T04:31:42Z"</span>)</span><br><span class="line">		&#125;</span><br><span class="line">	],</span><br><span class="line">	<span class="string">"ok"</span> : <span class="number">1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>恢复的时候出现了一个错误，停止mongodb前台进程的时候，再次启动出现报错</p>
+<figure class="highlight groovy"><table><tr><td class="code"><pre><span class="line"><span class="number">2014</span><span class="number">-11</span><span class="number">-07</span><span class="string">T12:</span><span class="number">38</span>:<span class="number">05.458</span>+<span class="number">0800</span> [initandlisten] <span class="string">recover :</span> no journal files present, no recovery needed</span><br><span class="line"><span class="number">2014</span><span class="number">-11</span><span class="number">-07</span><span class="string">T12:</span><span class="number">38</span>:<span class="number">05.458</span>+<span class="number">0800</span> [initandlisten] <span class="string">ERROR:</span> Insufficient free space <span class="keyword">for</span> journal files</span><br><span class="line"><span class="number">2014</span><span class="number">-11</span><span class="number">-07</span><span class="string">T12:</span><span class="number">38</span>:<span class="number">05.459</span>+<span class="number">0800</span> [initandlisten] Please make at least <span class="number">3379</span>MB available <span class="keyword">in</span> <span class="regexp">/data/</span>mongodbtest<span class="regexp">/rep/</span>data/journal or use --smallfiles</span><br><span class="line"></span><br><span class="line"><span class="comment">//出现这个故障提示，磁盘空间不足了，所以导致，可手动关闭该功能，默认功能开启</span></span><br></pre></td></tr></table></figure>
+<h1 id="读写分离"><a href="#读写分离" class="headerlink" title="读写分离"></a>读写分离</h1><p>常规写操作来说并没有读操作多，所以一台主节点负责写，多台副本节点负责读</p>
+<ul>
+<li>1.设置读写分离需要先在副本节点SECONDARY 设置 setSlaveOk。</li>
+<li>2.在程序中设置读操作连接为副本节点SECONDARY即可</li>
+</ul>
+<h1 id="状态机"><a href="#状态机" class="headerlink" title="状态机"></a>状态机</h1><p><a href="http://docs.mongodb.org/manual/reference/replica-states/" target="_blank" rel="noopener">官方解释</a>，自己简单的翻译过来，翻译水平有限，错误之处还望指正</p>
+<table>
+<thead>
+<tr>
+<th>Number</th>
+<th>Name</th>
+<th>State Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>STARTUP</td>
+<td>Cannot vote. All members start up in this state. The mongod parses the replica set configuration document while in STARTUP.</td>
+</tr>
+<tr>
+<td>1</td>
+<td>PRIMARY</td>
+<td>Can vote. The primary is the only member to accept write operations.</td>
+</tr>
+<tr>
+<td>2</td>
+<td>SECONDARY</td>
+<td>Can vote. The secondary replicates the data store.</td>
+</tr>
+<tr>
+<td>3</td>
+<td>RECOVERING</td>
+<td>Can vote. Members either perform startup self-checks, or transition from completing a rollback or resync.</td>
+</tr>
+<tr>
+<td>4</td>
+<td>FATAL</td>
+<td>Cannot vote. Has encountered an unrecoverable error.</td>
+</tr>
+<tr>
+<td>5</td>
+<td>STARTUP2</td>
+<td>Cannot vote. Forks replication and election threads before becoming a secondary.</td>
+</tr>
+<tr>
+<td>6</td>
+<td>UNKNOWN</td>
+<td>Cannot vote. Has never connected to the replica set.</td>
+</tr>
+<tr>
+<td>7</td>
+<td>ARBITER</td>
+<td>Can vote. Arbiters do not replicate data and exist solely to participate in elections.</td>
+</tr>
+<tr>
+<td>8</td>
+<td>DOWN</td>
+<td>Cannot vote. Is not accessible to the set.</td>
+</tr>
+<tr>
+<td>9</td>
+<td>ROLLBACK</td>
+<td>Can vote. Performs a rollback.</td>
+</tr>
+<tr>
+<td>10</td>
+<td>REMOVED</td>
+<td>Cannot vote. Was once in the replica set but has now been removed.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="核心状态"><a href="#核心状态" class="headerlink" title="核心状态"></a>核心状态</h2><ul>
+<li><p>PRIMARY<br>处于该状态接受写操作，同一时间内副本集中有且只有一个 <code>PRIMARY</code>， <code>PRIMARY</code> 状态可以由 <code>SECONDARY</code> 经过投票选举而来，并且 <code>PRIMARY</code> 具有选举权</p>
+</li>
+<li><p>SECONDARY<br>处于此状态的成员会从 <code>PRIMARY</code> 同步数据且可以接受读操作，当 <code>PRIMARY</code> 不可达的时候 <code>SECONDARY</code> 将会投票选举一个新 <code>PRIMARY</code></p>
+</li>
+<li><p>ARBITER<br>仲裁节点，处在此状态下的成员既不能从 <code>PRIMARY</code> 复制数据，也不能进行写操作，只能进行投票；复制集中应该有一个成员处于仲裁状态从而避免了副本集中具有偶数成员的情况，副本集中最多只能有一个仲裁者的存在</p>
+</li>
+</ul>
+<p>关于成员的设置信息，详情<a href="http://docs.mongodb.org/manual/core/replica-set-members/#replica-set-members" target="_blank" rel="noopener">Replica Set Members</a></p>
+<h2 id="初始化状态"><a href="#初始化状态" class="headerlink" title="初始化状态"></a>初始化状态</h2><ul>
+<li><p>STARTUP<br>每个成员一套副本启动的启动状态。mongod然后加载该成员的复制设置配置,和转换 <code>STARTUP2</code> 成员的状态。此时不能参与投票</p>
+</li>
+<li><p>STARTUP2<br>主程序读取完配置信息之后很快进入此状态，此期间，成员创建线程来处理内部成员复制操作，而后过渡到 <code>:replstate:RECOVERING</code> 状态； 初始化同步期间，成员们传输数据和建立索引，此期间一直保持 <code>:replstate:STARTUP2</code>  状态，这个期间，成员也是不能投票的</p>
+</li>
+<li><p>RECOVERING<br>成员没有准备进行读操作的时候保持这个状态，这个状态期间会进行常规操作，并不一定会反映出异常状态，并且这个时候有资格进行投票，但是没有资格成为 <code>PRIMARY</code>。在启动期间,通过 <code>RECOVERING</code> 过渡到 <code>STARTUP2</code> 之后,才可以成为 <code>SECONDARY</code>；在正常操作期间,如果 <code>SECONDARY</code> 落后的其他成员复制集,它可能需要重新同步与其他集。而重新同步,成员进入 <code>RECOVERING</code> 状态。；每当副本集代替 <code>PRIMARY</code> 的选举中,旧的 <code>PRIMARY</code> 数据和包含的文档没有及时同步到 <code>SECONDARY</code> 。在这种情况下，这些成员需要回滚重新写入同步。回滚时成员将会 <code>RECOVERING</code> 状态。</p>
+</li>
+</ul>
+<h2 id="错误状态"><a href="#错误状态" class="headerlink" title="错误状态"></a>错误状态</h2><ul>
+<li><p>FATAL<br>成员,遇到一个不可恢复的错误进入死亡状态。成员在这种状态需要管理员干预。</p>
+</li>
+<li><p>UNKNOWN<br>成员从来没有连接状态信息到副本集都处于未知状态。</p>
+</li>
+<li><p>DOWN<br>成员和主的连接中断，进入此状态</p>
+</li>
+<li><p>REMOVED<br>成员从集合移除的时候的状态，会在 log 里记录一条 <code>replSet REMOVED</code> 的信息</p>
+</li>
+<li><p>ROLLBACK<br>当 <code>SECONDARY</code> 从 <code>PAIMARY</code> 进行回滚进行写操作的时候，就进入了此状态</p>
+</li>
+</ul>
+<p><--- 未完待续="" ---=""> </---></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/note/tags/mongodb复制集/" rel="tag"># mongodb复制集</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/note/django开发环境（二）.html" rel="next" title="django开发环境（二）">
+                <i class="fa fa-chevron-left"></i> django开发环境（二）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/note/django开发环境部署-三.html" rel="prev" title="django开发环境部署(三)">
+                django开发环境部署(三) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">宋大明明</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/note/archives/">
+              
+                  <span class="site-state-item-count">78</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装"><span class="nav-number">2.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#客户端连接"><span class="nav-number">3.</span> <span class="nav-text">客户端连接</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#复制集"><span class="nav-number">4.</span> <span class="nav-text">复制集</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#LAB"><span class="nav-number">4.1.</span> <span class="nav-text">LAB</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#测试"><span class="nav-number">5.</span> <span class="nav-text">测试</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#故障转移"><span class="nav-number">6.</span> <span class="nav-text">故障转移</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#读写分离"><span class="nav-number">7.</span> <span class="nav-text">读写分离</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#状态机"><span class="nav-number">8.</span> <span class="nav-text">状态机</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#核心状态"><span class="nav-number">8.1.</span> <span class="nav-text">核心状态</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#初始化状态"><span class="nav-number">8.2.</span> <span class="nav-text">初始化状态</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#错误状态"><span class="nav-number">8.3.</span> <span class="nav-text">错误状态</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2014 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">宋大明明</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/note/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/note/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/note/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

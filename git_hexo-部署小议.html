@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/note/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/note/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/note/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/note/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/note/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/note/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/note/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="github,coding,gitcafe," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="“为自己的目标努力着，全身心投入一件事情的时候，就不再整天想睡懒觉，不再熬夜看偶像，也不用刻意去想怎样好好生活，删掉那些原以为离不开的东西，然后觉得，这才是生活原本的样子啊。” ​​​​—— 德卡先生的信箱">
+<meta name="keywords" content="github,coding,gitcafe">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hexo 部署小议">
+<meta property="og:url" content="http://mingmings.org/note/git_hexo-部署小议.html">
+<meta property="og:site_name" content="异类深呼吸">
+<meta property="og:description" content="“为自己的目标努力着，全身心投入一件事情的时候，就不再整天想睡懒觉，不再熬夜看偶像，也不用刻意去想怎样好好生活，删掉那些原以为离不开的东西，然后觉得，这才是生活原本的样子啊。” ​​​​—— 德卡先生的信箱">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://mingmings.qiniudn.com/git_coding-1.jpg">
+<meta property="og:image" content="http://mingmings.qiniudn.com/git_coding-3.jpg">
+<meta property="og:image" content="http://mingmings.qiniudn.com/git_coding-4.jpg">
+<meta property="og:image" content="http://mingmings.qiniudn.com/git_coding-5.jpg">
+<meta property="og:image" content="http://mingmings.qiniudn.com/git_coding-6.jpg">
+<meta property="og:updated_time" content="2017-03-04T06:53:28.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="hexo 部署小议">
+<meta name="twitter:description" content="“为自己的目标努力着，全身心投入一件事情的时候，就不再整天想睡懒觉，不再熬夜看偶像，也不用刻意去想怎样好好生活，删掉那些原以为离不开的东西，然后觉得，这才是生活原本的样子啊。” ​​​​—— 德卡先生的信箱">
+<meta name="twitter:image" content="http://mingmings.qiniudn.com/git_coding-1.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/note/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://mingmings.org/note/git_hexo-部署小议.html"/>
+
+
+
+
+
+  <title>hexo 部署小议 | 异类深呼吸</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-55424732-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?fe4164c60a9dd0e73810fa0243796a5d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/note/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">异类深呼吸</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/note/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/note/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/note/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/note/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://mingmings.org/note/note/git_hexo-部署小议.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="宋大明明">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/note/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="异类深呼吸">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">hexo 部署小议</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-03T17:33:27+08:00">
+                2017-03-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/note/categories/github/" itemprop="url" rel="index">
+                    <span itemprop="name">github</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><blockquote class="blockquote-center">“为自己的目标努力着，全身心投入一件事情的时候，就不再整天想睡懒觉，不再熬夜看偶像，也不用刻意去想怎样好好生活，删掉那些原以为离不开的东西，然后觉得，这才是生活原本的样子啊。” ​​​​—— 德卡先生的信箱</blockquote><br><a id="more"></a></p>
+<p>&emsp;&emsp;之前 hexo 或者其他的静态博客部署的问题，最先开始都是部署到 github 上，但github 在国内这种网络环境下偶尔总有点膈应，之所以想在 Coding(之前的 GitCafe)上再部署一份，是出于两个原因考虑：一是为了百度搜索爬虫能抓取自己博客上的内容，因为Github 屏蔽了百度爬虫，部署在国内才能被抓取到；二是为了国内访问加速，部署之后国内访问走 Coding，国外访问走 Github。这样既实现了访问速度的提升，内容的抓取，又能实现内容和代码两个地方备份，何乐而不为呢。</p>
+<p>&emsp;&emsp;简单了解下，coding 上部署 hexo 这类静态博客有两种方式来部署。第一种是 pages 服务的方式，操作简单，可绑定自己的域名；第二种是演示方式，操作比较复杂，要想自动部署还需要配置 webhook，并且必须升级会员才能绑定自定义域名。所以选择用 pages 方式。</p>
+<h3 id="1-1-准备-coding-上的仓库"><a href="#1-1-准备-coding-上的仓库" class="headerlink" title="1.1 准备 coding 上的仓库"></a>1.1 准备 coding 上的仓库</h3><blockquote>
+<p>和<code>GitHub Pages</code>相同，<code>Coding Pages</code>也分<code>用户站(用户页)</code>和<code>项目站(项目页)</code>。</p>
+<ul>
+<li>用户站需要创建一个和用户名完全相同的项目，一个用户名下只能有一个，创建好后在其 <code>coding-pages</code> 分支(这里和 GitHub 不同，GitHub 的用户站是 <code>master</code> 分支)下部署 html 页面后即可通过 <code>username.coding.me</code> 访问。</li>
+<li>项目站可在任意项目中开启，也是部署 html 页面到 <code>coding-pages</code> 分支，然后可以通过 <code>username.coding.me/projectname</code> 访问。</li>
+</ul>
+</blockquote>
+<p>1、coding 上注册账号，记住个性后缀，待会很用到<br><img src="http://mingmings.qiniudn.com/git_coding-1.jpg" width="300" height="325"></p>
+<p>2、上传机器的 SSH 公钥到 coding，这里不再赘述</p>
+<p>3、测试连接,是否能看到 success 返回<br><figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">$ ssh -T git@git<span class="selector-class">.coding</span><span class="selector-class">.net</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="1-2-推送内容到-coding"><a href="#1-2-推送内容到-coding" class="headerlink" title="1.2 推送内容到 coding"></a>1.2 推送内容到 coding</h3><p>1、编辑配置文件，增加推送到 coding</p>
+<blockquote>
+<p>这里 hexo 怎么生成内容前文有，这里编辑<code>站点配置</code>文件</p>
+</blockquote>
+<figure class="highlight dts"><table><tr><td class="code"><pre><span class="line"><span class="meta"># 在部署这里增加成如下样式</span></span><br><span class="line"><span class="symbol">deploy:</span></span><br><span class="line"><span class="symbol">  type:</span> git</span><br><span class="line"><span class="symbol">  repo:</span></span><br><span class="line"><span class="symbol">    github:</span> git@github.com:mingmings/note.git,gh-pages</span><br><span class="line"><span class="symbol">    coding:</span> git@git.coding.net:mingmingsong/mingmingsong.git,coding-pages</span><br><span class="line">	</span><br><span class="line"><span class="meta"># 开始部署</span></span><br><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>2、 启用 coding-pages 的功能<br><img src="http://mingmings.qiniudn.com/git_coding-3.jpg" width="300" height="325"><br>后台页面上启用 pages 服务，coding 官方文档写的很清楚 <code>user page</code> 和 <code>project page</code> 的区别，我这里因为用的是 <code>coding-pages</code> 和 <code>gh-pages</code> 分支，所以我用的其实是 project-pages 的形式。所以我的访问应该是 <code>&lt;username&gt;.coding.me/&lt;project&gt;</code></p>
+<p><img src="http://mingmings.qiniudn.com/git_coding-4.jpg" width="300" height="325"></p>
+<p><img src="http://mingmings.qiniudn.com/git_coding-5.jpg" width="300" height="325"></p>
+<h3 id="1-3-链路优化"><a href="#1-3-链路优化" class="headerlink" title="1.3 链路优化"></a>1.3 链路优化</h3><blockquote>
+<p>这里已经推送到了 coding，那么接下来就想实现上面说到的国内访问 coding，国外访问就访问 github，这样不同的链路访问都能获得相对理想的速度。因为每次更新博客更新都会同时推送到 coding 和 github，内容完全一致</p>
+</blockquote>
+<p>1、这里就必须使用 dns 解析了</p>
+<blockquote>
+<p>这里多数人用 dnspod，我之前买域名是从万网购买的，所以直接从万网的后台来设置 dns 解析，原理相同</p>
+</blockquote>
+<p><img src="http://mingmings.qiniudn.com/git_coding-6.jpg" width="300" height="325"><br>核心就是这里的链路类型，不同的线路指向不同的类型，这里 <code>dnspod</code> 和 <code>万网</code>以及其他可以提供域名解析的提供商应该都会有这个提供。到这里整个部署到 coding 就算完成了</p>
+<h3 id="1-4-以子目录形式部署-blog"><a href="#1-4-以子目录形式部署-blog" class="headerlink" title="1.4 以子目录形式部署 blog"></a>1.4 以子目录形式部署 blog</h3><blockquote>
+<p>我的 blog，无论是在之前 github 上还是现在的 coding 上，发觉别人访问我的域名<code>mingmings.org</code> 都是一个静态主页，我的 blog 其实是在 <code>mingmings.org/note</code> 下，blog 看似是在子目录中</p>
+</blockquote>
+<p>这里其实原理是混用了 <code>user-pages</code> 和 <code>project-pages</code>，这里稍微解释下，原理和 github 是相同的</p>
+<ul>
+<li><code>user-pages</code> 的仓库，根据 coding 的规定，user-pages 的仓库名必须是 <code>&lt;username&gt;.coding.me</code>，这个规则同样适用 github，只不过 github 的 <code>user-pages</code> 的名是 <code>&lt;username&gt;.github.io</code>，所以访问地址应该是 <code>&lt;username&gt;.coding.me</code>，我绑定域名 <code>mingmings.org</code>，相当于我整个站的首页</li>
+<li>mingmings.org/note 因为不是一个域名，只是相当于子目录，所以指向了 <code>project-pages</code> 的仓库，这里 coding 没有对 project 的仓库名称做限制，所以可以随便起，我这里就是 <code>note.git</code> 但是分支可以是 <code>master</code> 和 <code>coding-pages</code>，因为 github 上要求的 <code>project-pages</code> 的分支必须是 <code>gh-pages</code> ，所以我习惯这里也就沿用了 <code>coding-pages</code> 分支，相当于我整个站下的 note，所以访问域名因为上面域名的绑定这里就成了 <code>mingmings.org/note</code>。</li>
+</ul>
+<figure class="highlight dts"><table><tr><td class="code"><pre><span class="line"><span class="meta"># 所以到这里应该理解配置文件格式为什么后面的分支是这样</span></span><br><span class="line"><span class="symbol">deploy:</span></span><br><span class="line"><span class="symbol">  type:</span> git</span><br><span class="line"><span class="symbol">  repo:</span></span><br><span class="line"><span class="symbol">    github:</span> git@github.com:mingmings/note.git,gh-pages</span><br><span class="line"><span class="symbol">    coding:</span> git@git.coding.net:mingmingsong/mingmingsong.git,coding-pages</span><br></pre></td></tr></table></figure>
+<p>到了这，完整的同时部署到 coding 和 github 上就完成了，并能根据线路优化访问，收工~</p>
+<p>&emsp;&emsp;</p>
+<blockquote>
+<p>参考阅读</p>
+<ul>
+<li><a href="https://coding.net/help/doc/pages/index.html" target="_blank" rel="noopener">Coding Pages</a></li>
+<li><a href="https://coding.net/help/doc/pages/getting-started.html" target="_blank" rel="noopener">开始使用 Coding Pages</a></li>
+<li><a href="http://shomy.top/2016/03/03/hexo-in-coding-github/" target="_blank" rel="noopener">hexo同时部署到coding(gitcafe)和github</a></li>
+<li><a href="https://segmentfault.com/a/1190000002900848" target="_blank" rel="noopener">在 Coding 上搭建 Hexo 个人博客！</a></li>
+</ul>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/note/tags/github/" rel="tag"># github</a>
+          
+            <a href="/note/tags/coding/" rel="tag"># coding</a>
+          
+            <a href="/note/tags/gitcafe/" rel="tag"># gitcafe</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/note/git_多说评论增加-UA.html" rel="next" title="hexo 博客的第三方功能">
+                <i class="fa fa-chevron-left"></i> hexo 博客的第三方功能
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/note/django-分页.html" rel="prev" title="django 分页">
+                django 分页 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">宋大明明</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/note/archives/">
+              
+                  <span class="site-state-item-count">78</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-准备-coding-上的仓库"><span class="nav-number">1.</span> <span class="nav-text">1.1 准备 coding 上的仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-推送内容到-coding"><span class="nav-number">2.</span> <span class="nav-text">1.2 推送内容到 coding</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-链路优化"><span class="nav-number">3.</span> <span class="nav-text">1.3 链路优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-以子目录形式部署-blog"><span class="nav-number">4.</span> <span class="nav-text">1.4 以子目录形式部署 blog</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2014 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">宋大明明</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/note/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/note/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/note/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/note/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/note/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/note/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/note/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/note/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/note/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/note/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="github,gitlab,webhooks," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="这世界上没有什么一步登天的幸福，你唯一可以创造未来的方式，就是脚踏实地向前走。">
+<meta name="keywords" content="github,gitlab,webhooks">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GitHub &#x2F; GitLab 的 Webhooks 进行网站自动化部署">
+<meta property="og:url" content="http://mingmings.org/note/git_GitHub-GitLab-的-Webhooks-进行网站自动化部署.html">
+<meta property="og:site_name" content="异类深呼吸">
+<meta property="og:description" content="这世界上没有什么一步登天的幸福，你唯一可以创造未来的方式，就是脚踏实地向前走。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://mingmings.qiniudn.com/gitgit_webhooks.png">
+<meta property="og:image" content="http://mingmings.qiniudn.com/gitadd_hooks.png">
+<meta property="og:image" content="http://mingmings.qiniudn.com/githooks_request.png">
+<meta property="og:image" content="http://mingmings.qiniudn.com/githooks_resault.png">
+<meta property="og:image" content="http://mingmings.qiniudn.com/gitresault.png">
+<meta property="og:updated_time" content="2017-02-17T07:56:03.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="GitHub &#x2F; GitLab 的 Webhooks 进行网站自动化部署">
+<meta name="twitter:description" content="这世界上没有什么一步登天的幸福，你唯一可以创造未来的方式，就是脚踏实地向前走。">
+<meta name="twitter:image" content="http://mingmings.qiniudn.com/gitgit_webhooks.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/note/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://mingmings.org/note/git_GitHub-GitLab-的-Webhooks-进行网站自动化部署.html"/>
+
+
+
+
+
+  <title>GitHub / GitLab 的 Webhooks 进行网站自动化部署 | 异类深呼吸</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-55424732-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?fe4164c60a9dd0e73810fa0243796a5d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/note/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">异类深呼吸</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/note/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/note/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/note/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/note/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://mingmings.org/note/note/git_GitHub-GitLab-的-Webhooks-进行网站自动化部署.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="宋大明明">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/note/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="异类深呼吸">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">GitHub / GitLab 的 Webhooks 进行网站自动化部署</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-09-06T15:51:22+08:00">
+                2015-09-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/note/categories/github/" itemprop="url" rel="index">
+                    <span itemprop="name">github</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><blockquote class="blockquote-center">这世界上没有什么一步登天的幸福，你唯一可以创造未来的方式，就是脚踏实地向前走。</blockquote><br><a id="more"></a></p>
+<p>一直没写这个东西，今天阅兵完第一天上班，整天处于神游状态，想想还是弄点啥，把这个折腾出来然后更新博客还是可以的，最终做到的效果就是，每当有新的 <code>commit push</code> 到 <code>master</code> 分支的时候，就自动在服务器上进行 <code>git pull</code> 拉取最新的代码，来更新我的博客</p>
+<h2 id="一、web-hooks"><a href="#一、web-hooks" class="headerlink" title="一、web hooks"></a>一、web hooks</h2><h4 id="1-1-过程"><a href="#1-1-过程" class="headerlink" title="1.1 过程"></a>1.1 过程</h4><p><img src="http://mingmings.qiniudn.com/gitgit_webhooks.png" alt="流程"><br>可以看到使用了 <code>webhooks</code> 之后明显省去了上机器手动 PULL 的过程</p>
+<h4 id="1-2-脚本"><a href="#1-2-脚本" class="headerlink" title="1.2 脚本"></a>1.2 脚本</h4><blockquote>
+<p>这个脚本的目的在于能够处理 github/gitlab 因 push event 产生的一个 HTTP <code>POST</code> 请求，而后触发一系列操作，在我这个场景里，就是 pull 代码即可，当然也可以完成其他事情</p>
+</blockquote>
+<p>我是 PHP 的脚本来完成的，本身不会 PHP，花了点时间弄这个脚本，主要机器上跑的 <code>LNMP</code> 的架构，所以 PHP 省事，不用安装其他东西，而且找了很多网上的脚本已不能用了，看了看 github 发送 post 请求的参数在变化了，所以如果不可用，请根据 github 官方的 <code>request</code> 里的内容来修改脚本，当然组合可以很多，有人用 <code>nginx + lua</code> 的，还有 <code>flask</code> 的，还有 <code>nodejs</code> 的，当然了，只要能处理 POST 请求，无所谓哪种，看个人喜好而已。</p>
+<p>脚本如下：<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?php</span></span></span><br><span class="line"><span class="php"><span class="comment">// Set Variables</span></span></span><br><span class="line"><span class="php">$LOG_FILE           = dirname(<span class="keyword">__FILE__</span>).<span class="string">'&lt;/path/log/hook_result.log&gt;'</span>;</span></span><br><span class="line"><span class="php">$LOCAL_ROOT         = <span class="string">"&lt;/path/blog?"</span>;</span></span><br><span class="line"><span class="php">$LOCAL_REPO_NAME    = <span class="string">"&lt;repo_name&gt;"</span>;</span></span><br><span class="line"><span class="php">$LOCAL_REPO         = <span class="string">"&#123;$LOCAL_ROOT&#125;/&#123;$LOCAL_REPO_NAME&#125;"</span>;</span></span><br><span class="line"><span class="php">$REMOTE_REPO        = <span class="string">"git@github.com:&lt;username&gt;/&lt;username&gt;.github.io.git"</span>;</span></span><br><span class="line"><span class="php">$BRANCH             = <span class="string">"master"</span>;</span></span><br><span class="line"><span class="php"></span></span><br><span class="line"><span class="php"><span class="comment">// json decode info from Github</span></span></span><br><span class="line"><span class="php">$info = json_decode(file_get_contents(<span class="string">"php://input"</span>), <span class="keyword">true</span>);</span></span><br><span class="line"><span class="php">$hooks_username = $info[<span class="string">'commits'</span>][<span class="number">0</span>][<span class="string">'author'</span>][<span class="string">'username'</span>];</span></span><br><span class="line"><span class="php"></span></span><br><span class="line"><span class="php"><span class="comment">// 验证来源</span></span></span><br><span class="line"><span class="php"><span class="keyword">if</span> ($hooks_username == <span class="string">'&lt;username&gt;'</span>) &#123;</span></span><br><span class="line"><span class="php">    <span class="keyword">echo</span> <span class="string">"ok"</span>;</span></span><br><span class="line"><span class="php">    <span class="comment">// 判断本地仓库是否存在，并且分支匹配</span></span></span><br><span class="line"><span class="php">    $branch = explode(<span class="string">'/'</span>, $info[<span class="string">'ref'</span>]);</span></span><br><span class="line"><span class="php">    <span class="keyword">if</span>( is_dir($LOCAL_REPO.<span class="string">'/.git'</span>) &amp;&amp; $branch[<span class="number">2</span>] == $BRANCH ) &#123;</span></span><br><span class="line"><span class="php"></span></span><br><span class="line"><span class="php">        <span class="comment">//exec command</span></span></span><br><span class="line"><span class="php">        $pull_cmd = <span class="string">"cd &#123;$LOCAL_REPO&#125; &amp;&amp; sudo git pull"</span>;</span></span><br><span class="line"><span class="php">        exec($pull_cmd, $array);</span></span><br><span class="line"><span class="php">        print_r($array);</span></span><br><span class="line"><span class="php"></span></span><br><span class="line"><span class="php">        <span class="comment">//write log</span></span></span><br><span class="line"><span class="php">        file_put_contents($LOG_FILE, date(<span class="string">"[Y-m-d H:i:s]"</span>).<span class="string">" success pull: "</span>.$_SERVER[<span class="string">'REMOTE_ADDR'</span>].<span class="string">"\n"</span>, FILE_APPEND|LOCK_EX);</span></span><br><span class="line"><span class="php">    &#125;</span></span><br><span class="line"><span class="php"></span></span><br><span class="line"><span class="php">&#125; <span class="keyword">else</span> &#123;</span></span><br><span class="line"><span class="php">        <span class="keyword">echo</span> <span class="string">"not ok"</span>;</span></span><br><span class="line"><span class="php">        <span class="comment">// If the repo does not exist, then clone it into the parent directory</span></span></span><br><span class="line"><span class="php">        $clone_cmd = <span class="string">"cd &#123;$LOCAL_ROOT&#125; &amp;&amp; sudo git clone &#123;$REMOTE_REPO&#125;"</span>;</span></span><br><span class="line"><span class="php">        exec($clone_cmd);</span></span><br><span class="line"><span class="php">        file_put_contents($LOG_FILE, date(<span class="string">"[Y-m-d H:i:s]"</span>).<span class="string">" invalid access: "</span>.$_SERVER[<span class="string">'REMOTE_ADDR'</span>].<span class="string">"\n"</span>, FILE_APPEND|LOCK_EX);</span></span><br><span class="line"><span class="php">&#125;</span></span><br><span class="line"><span class="php"></span></span><br><span class="line"><span class="php"><span class="meta">?&gt;</span></span></span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>请将 <code>&lt;&gt;</code> 里的内容修改为自己的实际路径，另外，因为我 PHP 进程启动的用户是不能去执行 <code>git pull</code> 的，请放开 PHP 配置文件里的 <code>disable_function</code> 以及检查是否有权限进行同步，否则报错，在 <code>github response</code> 上没法看到，纠结了很久</p>
+</blockquote>
+<p>另外，请保证这个 PHP 文件能被访问到，如 <code>http://x.x.x.x./test_hooks.php</code> 这个请求地址待会就是我们要通过 github 发送 POST 请求的地址</p>
+<h4 id="1-3-github-设置"><a href="#1-3-github-设置" class="headerlink" title="1.3 github 设置"></a>1.3 github 设置</h4><p>1、项目里新增一个 <code>webhooks</code><br><img src="http://mingmings.qiniudn.com/gitadd_hooks.png" alt="add hooks"></p>
+<p>2、查看 http request<br><img src="http://mingmings.qiniudn.com/githooks_request.png" alt="request"></p>
+<p>3、每次发送请求得到的 response<br><img src="http://mingmings.qiniudn.com/githooks_resault.png" alt="resault"></p>
+<blockquote>
+<p>到此，每次像 github 中推送更新就可以完成整个 webhooks 的流程</p>
+</blockquote>
+<p>每次推送更新查看服务器日志,有如下的日志表示推送成功<br><figure class="highlight accesslog"><table><tr><td class="code"><pre><span class="line"><span class="number">192.30.252.41</span> - - <span class="string">[11/Sep/2015:10:10:16 +0800]</span> <span class="string">"<span class="keyword">POST</span> /test_hooks.php HTTP/1.1"</span> <span class="number">200</span> <span class="number">5</span> <span class="string">"-"</span> <span class="string">"GitHub-Hookshot/66235e3"</span> -</span><br></pre></td></tr></table></figure></p>
+<p>然后可以查看 github 上的 webhooks 日志，这里的信息是刚才上面的 PHP 定义的</p>
+<p><img src="http://mingmings.qiniudn.com/gitresault.png" alt="result"></p>
+<p>&emsp;&emsp;</p>
+<blockquote>
+<p>参考阅读</p>
+<ul>
+<li><a href="https://developer.github.com/webhooks/" target="_blank" rel="noopener">GitHub Developer</a></li>
+<li><a href="https://help.github.com/articles/about-webhooks/" target="_blank" rel="noopener">About webhooks</a></li>
+<li><a href="http://www.wufuli.com/2924.html" target="_blank" rel="noopener">wufuli.com 的博客</a></li>
+<li><a href="http://ued.ctrip.com/blog/?p=3646" target="_blank" rel="noopener">携程设计委员会</a></li>
+<li><a href="http://xiaocong.github.io/blog/2013/03/20/team-collaboration-with-github/" target="_blank" rel="noopener">博客 - 葱丝瓣酱</a></li>
+<li><a href="http://blog.xmost.com/2015/06/use-github-webhooks-to-deploy-hexo/" target="_blank" rel="noopener">博客 - 过儿</a></li>
+<li><a href="http://www.lovelucy.info/auto-deploy-website-by-webhooks-of-github-and-gitlab.html" target="_blank" rel="noopener">尘埃落定</a></li>
+<li><a href="http://blog.manaten.net/entry/573" target="_blank" rel="noopener">MANA - DOT</a></li>
+</ul>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/note/tags/github/" rel="tag"># github</a>
+          
+            <a href="/note/tags/gitlab/" rel="tag"># gitlab</a>
+          
+            <a href="/note/tags/webhooks/" rel="tag"># webhooks</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/note/zabbix-报警之微信报警.html" rel="next" title="zabbix 报警之微信报警">
+                <i class="fa fa-chevron-left"></i> zabbix 报警之微信报警
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/note/健身_健身补剂百科.html" rel="prev" title="健身补剂百科">
+                健身补剂百科 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">宋大明明</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/note/archives/">
+              
+                  <span class="site-state-item-count">78</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、web-hooks"><span class="nav-number">1.</span> <span class="nav-text">一、web hooks</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-过程"><span class="nav-number">1.0.1.</span> <span class="nav-text">1.1 过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-脚本"><span class="nav-number">1.0.2.</span> <span class="nav-text">1.2 脚本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-github-设置"><span class="nav-number">1.0.3.</span> <span class="nav-text">1.3 github 设置</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2014 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">宋大明明</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/note/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/note/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/note/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

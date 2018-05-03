@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/note/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/note/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/note/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/note/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/note/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/note/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/note/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="redis 持久化," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="按照之前学习路线，数据的备份和恢复，所以对于 redis 这一块就会涉及到数据的保存、备份、恢复，那么自然就到了持久化（persistence）这里，并且之所以 redis 性能强劲很大程度上是因为将所有数据保保存在内存中的缘故，部分内容摘抄《redis 入门指南》和 解密Redis持久化">
+<meta name="keywords" content="redis 持久化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redis 持久化">
+<meta property="og:url" content="http://mingmings.org/note/db_redis-持久化.html">
+<meta property="og:site_name" content="异类深呼吸">
+<meta property="og:description" content="按照之前学习路线，数据的备份和恢复，所以对于 redis 这一块就会涉及到数据的保存、备份、恢复，那么自然就到了持久化（persistence）这里，并且之所以 redis 性能强劲很大程度上是因为将所有数据保保存在内存中的缘故，部分内容摘抄《redis 入门指南》和 解密Redis持久化">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://mingmings.qiniudn.com/redis/redis_buffer.png">
+<meta property="og:updated_time" content="2017-04-22T07:03:56.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="redis 持久化">
+<meta name="twitter:description" content="按照之前学习路线，数据的备份和恢复，所以对于 redis 这一块就会涉及到数据的保存、备份、恢复，那么自然就到了持久化（persistence）这里，并且之所以 redis 性能强劲很大程度上是因为将所有数据保保存在内存中的缘故，部分内容摘抄《redis 入门指南》和 解密Redis持久化">
+<meta name="twitter:image" content="http://mingmings.qiniudn.com/redis/redis_buffer.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/note/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://mingmings.org/note/db_redis-持久化.html"/>
+
+
+
+
+
+  <title>redis 持久化 | 异类深呼吸</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-55424732-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?fe4164c60a9dd0e73810fa0243796a5d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/note/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">异类深呼吸</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/note/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/note/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/note/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/note/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://mingmings.org/note/note/db_redis-持久化.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="宋大明明">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/note/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="异类深呼吸">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">redis 持久化</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-05-31T00:21:59+08:00">
+                2015-05-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/note/categories/DB/" itemprop="url" rel="index">
+                    <span itemprop="name">DB</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>按照之前学习路线，数据的备份和恢复，所以对于 redis 这一块就会涉及到数据的保存、备份、恢复，那么自然就到了持久化（persistence）这里，并且之所以 redis 性能强劲很大程度上是因为将所有数据保保存在内存中的缘故，部分内容摘抄《redis 入门指南》和 <a href="http://blog.nosqlfan.com/html/3813.html" target="_blank" rel="noopener">解密Redis持久化</a><br><a id="more"></a><br>所谓持久化，简单来讲就是将数据放到断电后数据不会丢失的设备中。也就是我们通常理解的硬盘上。redis 支持两种方式的持久化，一种是 RDB 方式，一种是 AOF 方式。</p>
+<h2 id="一、数据写操作"><a href="#一、数据写操作" class="headerlink" title="一、数据写操作"></a>一、数据写操作</h2><h4 id="1-1-redis-写数据流程"><a href="#1-1-redis-写数据流程" class="headerlink" title="1.1 redis 写数据流程"></a>1.1 redis 写数据流程</h4><blockquote>
+<p>在理解持久化之前需要了解数据在 redis 里写入磁盘的过程</p>
+</blockquote>
+<ul>
+<li>1、客户端向服务端发送写操作（数据在客户端的内存中）</li>
+<li>2、数据库服务端接收到写请求的数据（数据在服务端的内存中）</li>
+<li>3、服务端调用 <code>write(2)</code> 这个系统调用，将数据往磁盘上写（数据在系统内存的缓冲区中）</li>
+<li>4、操作系统将缓冲区中的数据转移到磁盘控制器上（数据在磁盘缓存中）</li>
+<li>5、磁盘控制器将数据写到磁盘的物理介质中（数据真正落到磁盘上）</li>
+</ul>
+<h2 id="二、RDB"><a href="#二、RDB" class="headerlink" title="二、RDB"></a>二、RDB</h2><h4 id="2-1-快照原理"><a href="#2-1-快照原理" class="headerlink" title="2.1 快照原理"></a>2.1 快照原理</h4><ul>
+<li>redis 使用 fork 命令的 <code>copy on write</code> 机制，复制一份当前进程（父进程）的副本（子进程），子进程循环所有数据，将数据写入 RBD 文件</li>
+<li>父进程继续接受并处理客户端发来的命令，而子进程开始将内存的数据存储写入硬盘的临时文件</li>
+<li>当子进程写入完所有数据后会通过原子性 <code>rename</code> 系统调用将临时文件替换旧的 RDB 文件，到这里一次快照结束</li>
+</ul>
+<blockquote>
+<p>RBD 明显的不足就是一旦数据库出现 crash 之类的，RDB 里保存的数据可能不是最新的，从上次 RDB 到 redis 停机这段时间的数据可能会丢失</p>
+</blockquote>
+<h4 id="2-2-快照配置"><a href="#2-2-快照配置" class="headerlink" title="2.2 快照配置"></a>2.2 快照配置</h4><p>RDB 方式持久化是通过快照（snapshotting）完成。当符合条件时候 redis 会将内存中的数据进行快照并存储在硬盘上。快照条件可以由用户配置文件制定，配置文件有两个参数，时间和改动的键。并且 RDB 是 redis 默认采用的持久化的方式</p>
+<figure class="highlight clean"><table><tr><td class="code"><pre><span class="line">################################ SNAPSHOTTING  #################################</span><br><span class="line">#</span><br><span class="line"># Save the DB on disk:</span><br><span class="line">#</span><br><span class="line">#   save &lt;seconds&gt; &lt;changes&gt;</span><br><span class="line">#</span><br><span class="line">#   Will save the DB <span class="keyword">if</span> both the given number <span class="keyword">of</span> seconds and the given</span><br><span class="line">#   number <span class="keyword">of</span> write operations against the DB occurred.</span><br><span class="line">#</span><br><span class="line">#   In the example below the behaviour will be to save:</span><br><span class="line">#   after <span class="number">900</span> sec (<span class="number">15</span> min) <span class="keyword">if</span> at least <span class="number">1</span> key changed</span><br><span class="line">#   after <span class="number">300</span> sec (<span class="number">5</span> min) <span class="keyword">if</span> at least <span class="number">10</span> keys changed</span><br><span class="line">#   after <span class="number">60</span> sec <span class="keyword">if</span> at least <span class="number">10000</span> keys changed</span><br><span class="line">#</span><br><span class="line">#   Note: you can disable saving at all commenting all the <span class="string">"save"</span> lines.</span><br><span class="line"></span><br><span class="line">save <span class="number">900</span> <span class="number">1</span></span><br><span class="line">save <span class="number">300</span> <span class="number">10</span></span><br><span class="line">save <span class="number">60</span> <span class="number">10000</span></span><br><span class="line"></span><br><span class="line"># 开启 LZF 压缩</span><br><span class="line">rdbcompression yes</span><br><span class="line"></span><br><span class="line"># 版本 <span class="number">5</span> 的 RDB 会在文件尾部带上一个 CRC64 校验，但是会使得文件格式变得负责和牺牲一部分性能</span><br><span class="line">rdbchecksum yes</span><br><span class="line"></span><br><span class="line"># 文件名</span><br><span class="line">dbfilename dump.rdb</span><br><span class="line"></span><br><span class="line"># 指定 rdb 文件目录</span><br><span class="line">dir ./</span><br></pre></td></tr></table></figure>
+<ul>
+<li>主体就是 <code>时间</code> 和 <code>改变的键</code></li>
+<li>多个 save 之间是 <code>或</code> 的关系</li>
+<li>快照保存在 <code>dump.rdb</code> 文件中，可以通过配置 <code>dir</code> 和 <code>dirfilename</code> 分别指定 <code>快照文件的存储路径</code> 和 <code>文件名</code></li>
+<li>除了自动快照，可以手动执行 <code>SAVE</code> 和 <code>BGSAVE</code> 命令让 redis 执行快照</li>
+<li>一旦 redis 异常退出，就会丢失最后一次快照以后更改的所有数据</li>
+</ul>
+<blockquote>
+<p>这里值得注意的是</p>
+</blockquote>
+<ul>
+<li><code>SAVE</code> 命令会阻塞 redis 服务器进程，直到 RDB 文件创建完成为止，阻塞期间，服务器不能处理任何请求命令</li>
+<li><code>BGSAVE</code> 会 fork 一个子进程，然后子进程负责创建 RDB 文件，父进程继续处理命令请求</li>
+<li>当 redis 处于 <code>BGSAVE</code> 期间，对 <code>SAVE</code>、<code>BGSAVE</code>、<code>BGREWRITEAOF</code> 这三个命令的处理方式和平时期间有所不同<ul>
+<li>在此期间，客户端发送的 <code>SAVE</code> 命令会被拒绝，防止二者产生竞争条件</li>
+<li>在此期间，客户端发送的 <code>BGSAVE</code> 命令也会被拒绝，防止二者产生竞争条件</li>
+<li>在此期间，客户端发送的 <code>BGREWRITEAOF</code> 会被延迟到命令执行完成之后执行</li>
+<li>如果 <code>BGREWRITEAOF</code> 命令正在执行，那么客户端发送的 <code>BGSAVE</code> 命令会被服务器拒绝</li>
+</ul>
+</li>
+</ul>
+<h2 id="三、AOF"><a href="#三、AOF" class="headerlink" title="三、AOF"></a>三、AOF</h2><h4 id="3-1-原理"><a href="#3-1-原理" class="headerlink" title="3.1 原理"></a>3.1 原理</h4><p>AOF 即 <code>Append Only File</code>，即追加写入的日志文件，并且 AOF 是可识别的纯文本文件</p>
+<p>AOF机制的实现比较复杂，简单理解一下就是<br><code>append</code> - <code>fsync</code> - <code>rewrite</code></p>
+<ul>
+<li>开启 aof 后，命令的写命令都会先追加到服务器的 <code>aof_buf</code> 缓冲区末尾</li>
+<li>fsync 是把 <code>aof_buf</code> 缓存区的数据写入 aof 文件中</li>
+<li>rewrite 是将写操作合并，比如 set aa 1; set aa 2; 两个操作应该写成一个操作 set aa 2;</li>
+</ul>
+<p>实现机制：</p>
+<ul>
+<li><p>Redis 将数据库做个快照，遍历所有数据库，将数据库中的数据还原为跟客户端发送来的指令的协议格式的字符串，然后 Redis 新建一个临时文件将这些快照数据保存，待快照程序结束后通过原子性 <code>rename</code> 系统调用将临时文件名修改为正常的 aof 文件</p>
+</li>
+<li><p>由于在快照进行的过程中可能存在新增的命令修改了数据库中的数据，则在快照程序结束后需要将新修改的数据 fsync 到 <code>aof buf</code> 以及 AOF 文件中。这样就支持了实时的持久化，至于何时 fsync ，这个是通过参数 <code>appendfsync</code> 控制</p>
+</li>
+<li><p>当 aof 文件到达一定大小的时候，redis 就会读取数据库关于 list 的值，会在后台单独启动一个子进程进行 <code>aof_rewrite</code> 重写操作；并且为了重写过程中，数据库又继续增加写命令，所以设置了一个 <code>rewrite_buf</code>，缓冲区在后台重写子进程启动时启用。也就是当 redis 接受到一个写命令的时候，会有如下的操作<br><img src="http://mingmings.qiniudn.com/redis/redis_buffer.png" alt="redis_buffer"></p>
+<ul>
+<li>执行客户端发来的命令</li>
+<li>将执行后的写命令追加到 <code>aof_buf</code> 中</li>
+<li>开启 rewrite 子进程，将写命令追加到 <code>aof_rewrite_buf</code> 中</li>
+</ul>
+</li>
+<li><p>子进程完成重写的工作之后，会通知父进程完成重写，此时父进程会完成以下的事情</p>
+<ul>
+<li>将 <code>aof_rewrite_buf</code> 内容写入到新的 aof 文件中，这时候 aof 文件保存的数据库状态和服务器当前的状态保持一致</li>
+<li>对新的 aof 文件进行改名，覆盖现有的 aof 文件，完成新旧 aof 文件替换</li>
+<li>同时这也是 <code>BGRERITEAOF</code> 的工作原理</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-2-AOF-配置"><a href="#3-2-AOF-配置" class="headerlink" title="3.2 AOF 配置"></a>3.2 AOF 配置</h4><figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 是否开启 aof 持久化，默认开启 RDB 持久化</span></span><br><span class="line"><span class="attribute">appendonly</span> <span class="literal">yes</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># aof 保存的文件名</span></span><br><span class="line">appendfilename appendonly.aof</span><br><span class="line"></span><br><span class="line"><span class="comment"># aof 会将记录保存在文件中，由于系统缓存机制，数据没有真正的写入磁盘而是写入缓存，系统默认情况下每 30s 写入磁盘，但是如果这 30s 之内系统异常退出，则数据就会丢失，所以多久时间同步一次缓存到磁盘由下面参数控制，也就是同步缓存时机</span></span><br><span class="line">appendfsync &#123; <span class="attribute">everysec</span> | always | <span class="literal">no</span> &#125;</span><br><span class="line">	- redis 自身默认是 everysec，即每秒</span><br><span class="line">	- always 表示每执行写入都会执行同步，最安全，也是最慢</span><br><span class="line">	- <span class="literal">no</span> 不主动进行同步，即按照操作系统默认的 <span class="number">30s</span> 方式来</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 这个配置项是设置在 rewrite 的时候是否对新的写操作进行 fsync。no 表示进行 fsync，yes 表示不进行。默认是设置为 no。如果在 rewrite 过程中，不会对 aof 文件进行 fsync，这样对磁盘的写入操作不会快速的摆动磁头，减少了寻道时间，让 rewrite 可以快速的完成，但这样同时增加了风险，因为生成 aof 的时间可能会比较长的。如果在这过程中 os crash，部分 aof 数据还在 page cache 里，但还未写入到 disk 上则会丢失。</span></span><br><span class="line"><span class="literal">no</span>-appendfsync-<span class="literal">on</span>-rewrite <span class="literal">no</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 由于记录命令到 aof，所以自然 aof 会显得越来越冗余庞大，所以一定时间之后重写 aof 来使得可以优化 aof 大小</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 表示当前 aof 文件大小超过上次重写的 aof 大小的百分之多少会再次进行重写，如果之前没有重写过，则以启动时的 aof 文件大小为依据</span></span><br><span class="line">auto-aof-rewrite-percentage <span class="number">100</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 限制了允许重写的最小 aof 文件大小</span></span><br><span class="line">auto-aof-rewrite-min-size 64mb</span><br></pre></td></tr></table></figure>
+<h2 id="四、关于-RBD-和-AOF-比较"><a href="#四、关于-RBD-和-AOF-比较" class="headerlink" title="四、关于 RBD 和 AOF 比较"></a>四、关于 RBD 和 AOF 比较</h2><ul>
+<li>如果同时开启 AOF 和 RDB 持久化，那么 redis 会优先使用 AOF 文件来还原数据，只有 AOF 关闭时候，redis 才会使用 RDB 持久化</li>
+</ul>
+<blockquote>
+<p>参考阅读</p>
+<ul>
+<li><a href="http://redisbook.readthedocs.org/en/latest/internal/aof.html" target="_blank" rel="noopener">redis 持久化</a></li>
+<li><a href="http://redis.io/topics/persistence" target="_blank" rel="noopener">官方文档</a></li>
+<li><a href="http://www.redis.cn/topics/persistence.html" target="_blank" rel="noopener">中文文档</a></li>
+<li><a href="https://raw.githubusercontent.com/antirez/redis/2.8/redis.conf" target="_blank" rel="noopener">官方配置文件</a></li>
+<li><a href="http://www.cnblogs.com/yjf512/archive/2012/03/06/2382733.html" target="_blank" rel="noopener">Redis持久化之大数据服务暂停问题</a></li>
+<li><a href="http://blog.csdn.net/acceptedxukai/article/details/18136903" target="_blank" rel="noopener">Redis数据持久化机制AOF原理分析一</a></li>
+<li><a href="https://github.com/redisbook/book/blob/master/redis-aof.md" target="_blank" rel="noopener">AOF分析</a></li>
+<li><a href="http://blog.nosqlfan.com/html/3813.html" target="_blank" rel="noopener">解密 redis 持久化</a></li>
+</ul>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/note/tags/redis-持久化/" rel="tag"># redis 持久化</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/note/db_redis-常见问题集锦.html" rel="next" title="redis 常见问题集锦">
+                <i class="fa fa-chevron-left"></i> redis 常见问题集锦
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/note/Python的优雅技巧.html" rel="prev" title="Python 的优雅技巧">
+                Python 的优雅技巧 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">宋大明明</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/note/archives/">
+              
+                  <span class="site-state-item-count">78</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、数据写操作"><span class="nav-number">1.</span> <span class="nav-text">一、数据写操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-redis-写数据流程"><span class="nav-number">1.0.1.</span> <span class="nav-text">1.1 redis 写数据流程</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、RDB"><span class="nav-number">2.</span> <span class="nav-text">二、RDB</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-快照原理"><span class="nav-number">2.0.1.</span> <span class="nav-text">2.1 快照原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-快照配置"><span class="nav-number">2.0.2.</span> <span class="nav-text">2.2 快照配置</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、AOF"><span class="nav-number">3.</span> <span class="nav-text">三、AOF</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-原理"><span class="nav-number">3.0.1.</span> <span class="nav-text">3.1 原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-AOF-配置"><span class="nav-number">3.0.2.</span> <span class="nav-text">3.2 AOF 配置</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、关于-RBD-和-AOF-比较"><span class="nav-number">4.</span> <span class="nav-text">四、关于 RBD 和 AOF 比较</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2014 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">宋大明明</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/note/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/note/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/note/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

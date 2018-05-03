@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/note/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/note/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/note/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/note/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/note/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/note/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/note/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="django,uwsgi," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="善，总是以蜗牛的速度前进。然而无论多么艰难，我们始终不该放弃内心深处对善良的追求。  python 自带的轻量级的 web 服务器只能是用来本地测试，到了生产环境必须使用更为强大的 web 服务器，这里我使用的是 nginx，那么 python 应用要和 nginx 进行交互就必须利用一个桥梁和 nginx 通信，这里截取 51CTO 开发频道 python 应用部署部分内容，python 的应用">
+<meta name="keywords" content="django,uwsgi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="django开发环境部署(四)">
+<meta property="og:url" content="http://mingmings.org/note/django开发环境部署-四.html">
+<meta property="og:site_name" content="异类深呼吸">
+<meta property="og:description" content="善，总是以蜗牛的速度前进。然而无论多么艰难，我们始终不该放弃内心深处对善良的追求。  python 自带的轻量级的 web 服务器只能是用来本地测试，到了生产环境必须使用更为强大的 web 服务器，这里我使用的是 nginx，那么 python 应用要和 nginx 进行交互就必须利用一个桥梁和 nginx 通信，这里截取 51CTO 开发频道 python 应用部署部分内容，python 的应用">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2015-07-14T10:23:27.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="django开发环境部署(四)">
+<meta name="twitter:description" content="善，总是以蜗牛的速度前进。然而无论多么艰难，我们始终不该放弃内心深处对善良的追求。  python 自带的轻量级的 web 服务器只能是用来本地测试，到了生产环境必须使用更为强大的 web 服务器，这里我使用的是 nginx，那么 python 应用要和 nginx 进行交互就必须利用一个桥梁和 nginx 通信，这里截取 51CTO 开发频道 python 应用部署部分内容，python 的应用">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/note/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://mingmings.org/note/django开发环境部署-四.html"/>
+
+
+
+
+
+  <title>django开发环境部署(四) | 异类深呼吸</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-55424732-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?fe4164c60a9dd0e73810fa0243796a5d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/note/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">异类深呼吸</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/note/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/note/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/note/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/note/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://mingmings.org/note/note/django开发环境部署-四.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="宋大明明">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/note/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="异类深呼吸">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">django开发环境部署(四)</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2014-11-12T09:49:07+08:00">
+                2014-11-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/note/categories/django/" itemprop="url" rel="index">
+                    <span itemprop="name">django</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote class="blockquote-center">善，总是以蜗牛的速度前进。然而无论多么艰难，我们始终不该放弃内心深处对善良的追求。</blockquote>
+
+<p>python 自带的轻量级的 web 服务器只能是用来本地测试，到了生产环境必须使用更为强大的 web 服务器，这里我使用的是 nginx，那么 python 应用要和 nginx 进行交互就必须利用一个桥梁和 nginx 通信，这里截取 51CTO 开发频道 python 应用部署部分内容，python 的应用部署比php略显麻烦，<br><a id="more"></a><br>常见的部署方法有：</p>
+<ul>
+<li>fcgi：用spawn-fcgi或者框架自带的工具对各个project分别生成监听进程，然后和http服务通信</li>
+<li>wsgi：利用http服务的mod_wsgi模块来跑各个project。</li>
+</ul>
+<p>无论哪种都很麻烦，apache的mod_wsgi配置起来很麻烦，内存占用还大，如果要加上nginx作为静态页面的服务器那就更麻烦了；我的应用基本上到后来都是是各个project各自为战，且不说管理上的混乱，这样对负载也是不利的，空闲的project和繁忙的project同样需要占用内存。</p>
+<h2 id="一、uwsgi"><a href="#一、uwsgi" class="headerlink" title="一、uwsgi"></a>一、uwsgi</h2><blockquote>
+<p>这里开始真的混乱了好久，一直没分清uwsgi，uWSGI</p>
+</blockquote>
+<ul>
+<li><p>WSGI is the Web Server Gateway Interface. It is a specification for web servers and application servers to communicate with web applications (though it can also be used for more than that)，翻译过来大致是：WSGI是一种Web服务器网关接口。它是一个Web服务器与应用服务器通信的一种规范</p>
+</li>
+<li><p>关于WSGI看这里：<a href="http://wsgi.readthedocs.org/en/latest/" target="_blank" rel="noopener">WSGI</a></p>
+</li>
+<li><p>关于uwsgi看这里：<a href="http://uwsgi-docs.readthedocs.org/en/latest/Protocol.html" target="_blank" rel="noopener">uwsgi</a></p>
+</li>
+<li><p>uWSGI：是一个Web服务器，它实现了WSGI协议、uwsgi、http等协议。Nginx中HttpUwsgiModule的作用是与uWSGI服务器进行交换</p>
+</li>
+<li><p>uwsgi：于WSGI一样是一种通信协议，而uWSGI是实现了uwsgi和WSGI两种协议的Web服务器。</p>
+</li>
+<li><p>uwsgi协议是一个uWSGI服务器自有的协议，它用于定义传输信息的类型，每一个uwsgi packet前4byte为传输信息类型描述，它与WSGI相比是两样东西。</p>
+</li>
+</ul>
+<p>2.uwsgi据说改进性能之后大约是fcgi协议的10倍那么快，有个比较见下图：</p>
+<pre><code>#django的安装前几篇文章也有，这里再centos下安装pip也很简单，uwsgi也可以通过pip来安装 
+yum -y install libevent-devel python-devel 
+yum -y install python-pip pip install uwsgi 
+
+#测试uwsgi是否能独立启动 
+#本地创建一个test.py文件，内容如下 
+def application(env, start_response): 
+ start_response(&apos;200 OK&apos;, [(&apos;Content-Type&apos;,&apos;text/html&apos;)]) 
+ return &quot;Hello World&quot; 
+
+#独立启动uwsgi，测试是否可以成功 
+uwsgi --http :8001 --wsgi-file test.py 
+ \\这条命令打开了本地8001端口进行监听，http访问即可看到Hello World，表明独立启动uwsgi成功 
+</code></pre><p>2.uWSGI的主要特点如下：</p>
+<ul>
+<li>超快的性能</li>
+<li>低内存占用（实测为apache2的mod_wsgi的一半左右）</li>
+<li>多app管理</li>
+<li>详尽的日志功能（可以用来分析app性能和瓶颈）</li>
+<li>高度可定制（内存大小限制，服务一定次数后重启等）</li>
+</ul>
+<p>部署环境中nginx作为前端响应web请求和处理静态请求，其余非静态请求通过uwsgi传递给django。安装参考了<a href="http://django-china.cn/topic/101/#top" target="_blank" rel="noopener">Django中国社区的这篇文章</a></p>
+<h2 id="二、uwsgi-nginx-django"><a href="#二、uwsgi-nginx-django" class="headerlink" title="二、uwsgi + nginx + django"></a>二、uwsgi + nginx + django</h2><h3 id="2-1-系统环境"><a href="#2-1-系统环境" class="headerlink" title="2.1 系统环境"></a>2.1 系统环境</h3><figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">Distribution : CentOS 6.5 minimal </span><br><span class="line">uwsgi version : 2.0.4 </span><br><span class="line">Python version : 2.7</span><br><span class="line">Web<span class="built_in"> Server </span>: Nginx 1.6 </span><br><span class="line">Init<span class="built_in"> system </span>: sysvinit</span><br></pre></td></tr></table></figure>
+<h3 id="2-2-安装uwsgi，测试uwsgi"><a href="#2-2-安装uwsgi，测试uwsgi" class="headerlink" title="2.2 安装uwsgi，测试uwsgi"></a>2.2 安装uwsgi，测试uwsgi</h3><blockquote>
+<p>django 的安装前几篇文章也有，这里再 centos 下安装 pip 也很简单，uwsgi 也可以通过 pip 来安装 </p>
+</blockquote>
+<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line">yum -y install libevent-devel python-devel libxml2-devel</span><br><span class="line">yum -y install python-pip </span><br><span class="line">pip install uwsgi </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#测试uwsgi是否能独立启动 </span></span><br><span class="line"><span class="comment">#本地创建一个test.py文件，内容如下 </span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">application</span><span class="params">(env, start_response)</span></span>: </span><br><span class="line">    start_response(<span class="string">'200 OK'</span>, [(<span class="string">'Content-Type'</span>,<span class="string">'text/html'</span>)]) </span><br><span class="line">    <span class="keyword">return</span> <span class="string">"Hello World"</span> </span><br><span class="line"></span><br><span class="line"><span class="comment">#独立启动uwsgi，测试是否可以成功 </span></span><br><span class="line">uwsgi --http <span class="symbol">:</span><span class="number">8001</span> --wsgi-file test.py </span><br><span class="line"> \\这条命令打开了本地<span class="number">8001</span>端口进行监听，http访问即可看到Hello World，表明独立启动uwsgi成功</span><br></pre></td></tr></table></figure>
+<h3 id="2-3-配置-django-连接-uwsgi"><a href="#2-3-配置-django-连接-uwsgi" class="headerlink" title="2.3 配置 django 连接 uwsgi"></a>2.3 配置 django 连接 uwsgi</h3><p>1.新建一个 django project，runserver 测试正常启动即可，然后确定关闭django程序关闭</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> tree testpro/ -L 1 <span class="comment">#注意这里的层级结构</span></span></span><br><span class="line">testpro/</span><br><span class="line">├── django_socket.xml    </span><br><span class="line">├── django_wsgi.py</span><br><span class="line">├── manage.py</span><br><span class="line">└── testpro    #目录</span><br><span class="line"></span><br><span class="line">1 directory, 3 files</span><br></pre></td></tr></table></figure>
+<p>2.新建 uwsgi 配置文件</p>
+<blockquote>
+<p>这里要注意，python 2.7版本，如果是 python 2.6，则会报错</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python </span></span><br><span class="line"><span class="comment"># coding: utf-8 </span></span><br><span class="line"><span class="keyword">import</span> os </span><br><span class="line"><span class="keyword">import</span> sys </span><br><span class="line"><span class="comment"># 将系统的编码设置为UTF8 </span></span><br><span class="line">reload(sys) </span><br><span class="line">sys.setdefaultencoding(<span class="string">'utf8'</span>) </span><br><span class="line">os.environ.setdefault(<span class="string">"DJANGO_SETTINGS_MODULE"</span>, <span class="string">"tryfirst.settings"</span>) </span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> django.core.handlers.wsgi </span><br><span class="line"><span class="keyword">import</span> WSGIHandler application = WSGIHandler() </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#os.environ.setdefault("DJANGO_SETTINGS_MODULE", "testpro.settings")</span></span><br><span class="line"><span class="comment">#import django.core.handlers.wsgi</span></span><br><span class="line"><span class="comment">#application = django.core.handlers.wsgi.WSGIHandler()</span></span><br></pre></td></tr></table></figure>
+<p>2.这时候利用 uwsgi 启动服务，访问 8000 端口是否能看到 django 应用的界面</p>
+<figure class="highlight jboss-cli"><table><tr><td class="code"><pre><span class="line">uwsgi <span class="params">--http</span> <span class="function">:8000</span> <span class="params">--chdir</span> <span class="string">/home/src/sites/mysite</span> <span class="params">--module</span> django_wsgi.py</span><br><span class="line"></span><br><span class="line">注意 chdir 路径是我本地的 django 项目测试地址</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>到了这里成功的话利用 uwsgi 单独启动 django 应用就没有问题了，下一步让uwsgi 和 nginx 实现通信，作为桥梁，就可以实现我们的目的了</p>
+</blockquote>
+<h3 id="2-4-uwsgi-的一些参数和调优建议"><a href="#2-4-uwsgi-的一些参数和调优建议" class="headerlink" title="2.4 uwsgi 的一些参数和调优建议"></a>2.4 uwsgi 的一些参数和调优建议</h3><blockquote>
+<p>详细介绍请查看参考阅读 uwsgi</p>
+</blockquote>
+<figure class="highlight tap"><table><tr><td class="code"><pre><span class="line"><span class="comment">#并发四个线程 </span></span><br><span class="line">uwsgi -s :9090 -w mysite -p<span class="number"> 4 </span></span><br><span class="line"></span><br><span class="line"><span class="comment">#主控线程+4个线程 </span></span><br><span class="line">uwsgi -s :9090 -w mysite -M -p<span class="number"> 4 </span></span><br><span class="line"></span><br><span class="line"><span class="comment">#执行超过30s的client直接放弃 </span></span><br><span class="line">uwsgi -s :9090 -w mysite -M -p<span class="number"> 4 </span>-t<span class="number"> 30 </span></span><br><span class="line"></span><br><span class="line"><span class="comment">#限制内存空间 </span></span><br><span class="line">uwsgi -s :9090 -w mysite -M -p<span class="number"> 4 </span>-t<span class="number"> 30 </span>--limit-as<span class="number"> 128 </span></span><br><span class="line"></span><br><span class="line"><span class="comment">#服务超过10000个request自动respawn </span></span><br><span class="line">uwsgi -s :9090 -w mysite -M -p<span class="number"> 4 </span>-t<span class="number"> 30 </span>--limit-as<span class="number"> 128 </span>-R<span class="number"> 10000 </span></span><br><span class="line"></span><br><span class="line"><span class="comment">#后台运行 </span></span><br><span class="line">uwsgi -s :9090 -w mysite -M -p<span class="number"> 4 </span>-t<span class="number"> 30 </span>--limit-as<span class="number"> 128 </span>-R<span class="number"> 10000 </span>-d uwsgi.log</span><br></pre></td></tr></table></figure>
+<h3 id="2-5-配置-uwsgi-连接-nginx"><a href="#2-5-配置-uwsgi-连接-nginx" class="headerlink" title="2.5 配置 uwsgi 连接 nginx"></a>2.5 配置 uwsgi 连接 nginx</h3><blockquote>
+<p>安装 nginx，这里略，上面是通过命令行启动 uwsgi，线上肯定是使用配置文件。我们让 nginx 和 uwsgi 通信使用 socket 来进行通讯，所以注意使用的通信端口没有被其他程序占用即可</p>
+</blockquote>
+<p>1、新建 django_socket.xml，内容如下<br><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">uwsgi</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="name">socket</span>&gt;</span>:8000<span class="tag">&lt;/<span class="name">socket</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="name">chdir</span>&gt;</span>/home/src/sites/mysite/<span class="tag">&lt;/<span class="name">chdir</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="name">module</span>&gt;</span>django_wsgi<span class="tag">&lt;/<span class="name">module</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="name">processes</span>&gt;</span>4<span class="tag">&lt;/<span class="name">processes</span>&gt;</span> <span class="comment">&lt;!-- 进程数 --&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="name">daemonize</span>&gt;</span>uwsgi.log<span class="tag">&lt;/<span class="name">daemonize</span>&gt;</span> </span><br><span class="line"><span class="tag">&lt;/<span class="name">uwsgi</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>2、nginx核心配置如下</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line"></span><br><span class="line">    listen   80;</span><br><span class="line">    server_name 192.168.122.136;</span><br><span class="line">    access_log /home/ms/mysite/access.log;</span><br><span class="line">    error_log /home/ms/mysite/error.log;</span><br><span class="line"></span><br><span class="line">    location / &#123;</span><br><span class="line">     include uwsgi_params;    #这个模块编译好</span><br><span class="line">     uwsgi_pass 127.0.0.1:8000;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    #error_page  404  /404.html;</span><br><span class="line"></span><br><span class="line">    # redirect<span class="built_in"> server </span><span class="builtin-name">error</span> pages <span class="keyword">to</span> the static<span class="built_in"> page </span>/50x.html</span><br><span class="line">    #</span><br><span class="line">    error_page   500 502 503 504  /50x.html;</span><br><span class="line">        location = /50x.html &#123;</span><br><span class="line">        root   html;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">#    location /static/ &#123;</span></span><br><span class="line"><span class="comment">#        alias  /home/work/src/sites/testdjango1/testdjango/collectedstatic/;</span></span><br><span class="line"><span class="comment">#        index  index.html index.htm;</span></span><br><span class="line"><span class="comment">#    &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#    location /media/ &#123;</span></span><br><span class="line"><span class="comment">#        alias  /home/work/src/sites/testdjango1/testdjango/public/media/;</span></span><br><span class="line"><span class="comment">#    &#125;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>3、启动 nginx，以配置文件方式启动 uwsgi，检查端口和进程是否能正常</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">nginx -s reload </span><br><span class="line">uwsgi -x <span class="regexp">/home/</span>src<span class="regexp">/sites/my</span>site<span class="regexp">/django_socket.xml</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>全部正常之后就可以尝试访问 nginx 的域名 80 端口进行访问，看是否能看到django 运行的页面了，查看日志，也能看到 uwsgi 接受到了请求</p>
+</blockquote>
+<h2 id="三、uwsgi-的启动关闭脚本"><a href="#三、uwsgi-的启动关闭脚本" class="headerlink" title="三、uwsgi 的启动关闭脚本"></a>三、uwsgi 的启动关闭脚本</h2><blockquote>
+<p>这部分是可选的，但是一旦投入线上使用，每次都使用命令行很显然是不切实际的，所以编写成类似于独立启动的服务脚本，方便启动和关闭 uwsgi，稍后补上</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">稍后补上</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>参考阅读</p>
+<ul>
+<li><a href="http://projects.unbit.it/uwsgi/wiki/WikiStart" target="_blank" rel="noopener">uWSGI projext</a></li>
+<li><a href="https://github.com/unbit/uwsgi" target="_blank" rel="noopener">uwsgi github</a></li>
+<li><a href="http://uwsgi-docs.readthedocs.org/en/latest/Options.html" target="_blank" rel="noopener">uWSGI Options</a></li>
+</ul>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/note/tags/django/" rel="tag"># django</a>
+          
+            <a href="/note/tags/uwsgi/" rel="tag"># uwsgi</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/note/django开发环境部署-三.html" rel="next" title="django开发环境部署(三)">
+                <i class="fa fa-chevron-left"></i> django开发环境部署(三)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/note/db_mongodb复制集的管理.html" rel="prev" title="mongodb复制集的管理">
+                mongodb复制集的管理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">宋大明明</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/note/archives/">
+              
+                  <span class="site-state-item-count">78</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、uwsgi"><span class="nav-number">1.</span> <span class="nav-text">一、uwsgi</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、uwsgi-nginx-django"><span class="nav-number">2.</span> <span class="nav-text">二、uwsgi + nginx + django</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-系统环境"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 系统环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-安装uwsgi，测试uwsgi"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 安装uwsgi，测试uwsgi</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-配置-django-连接-uwsgi"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 配置 django 连接 uwsgi</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-uwsgi-的一些参数和调优建议"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 uwsgi 的一些参数和调优建议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-配置-uwsgi-连接-nginx"><span class="nav-number">2.5.</span> <span class="nav-text">2.5 配置 uwsgi 连接 nginx</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、uwsgi-的启动关闭脚本"><span class="nav-number">3.</span> <span class="nav-text">三、uwsgi 的启动关闭脚本</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2014 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">宋大明明</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/note/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/note/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/note/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/note/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/note/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/note/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/note/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/note/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/note/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/note/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="zabbix 微信报警," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="你只有先上轨道，才能追上那些在前面的理想生活。不是谁都能体面地倔强着生活，但谁都可以用坚持和努力，实现自己的那份倔强">
+<meta name="keywords" content="zabbix 微信报警">
+<meta property="og:type" content="article">
+<meta property="og:title" content="zabbix 报警之微信报警">
+<meta property="og:url" content="http://mingmings.org/note/zabbix-报警之微信报警.html">
+<meta property="og:site_name" content="异类深呼吸">
+<meta property="og:description" content="你只有先上轨道，才能追上那些在前面的理想生活。不是谁都能体面地倔强着生活，但谁都可以用坚持和努力，实现自己的那份倔强">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://mingmings.qiniudn.com/wechat/新增成员.jpg">
+<meta property="og:image" content="http://mingmings.qiniudn.com/wechat/新建app.jpg">
+<meta property="og:image" content="http://mingmings.qiniudn.com/wechat/设置监控管理员.jpg">
+<meta property="og:updated_time" content="2017-02-17T07:56:31.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="zabbix 报警之微信报警">
+<meta name="twitter:description" content="你只有先上轨道，才能追上那些在前面的理想生活。不是谁都能体面地倔强着生活，但谁都可以用坚持和努力，实现自己的那份倔强">
+<meta name="twitter:image" content="http://mingmings.qiniudn.com/wechat/新增成员.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/note/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://mingmings.org/note/zabbix-报警之微信报警.html"/>
+
+
+
+
+
+  <title>zabbix 报警之微信报警 | 异类深呼吸</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-55424732-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?fe4164c60a9dd0e73810fa0243796a5d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/note/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">异类深呼吸</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/note/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/note/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/note/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/note/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://mingmings.org/note/note/zabbix-报警之微信报警.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="宋大明明">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/note/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="异类深呼吸">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">zabbix 报警之微信报警</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-08-25T18:27:04+08:00">
+                2015-08-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/note/categories/zabbix/" itemprop="url" rel="index">
+                    <span itemprop="name">zabbix</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><blockquote class="blockquote-center">你只有先上轨道，才能追上那些在前面的理想生活。不是谁都能体面地倔强着生活，但谁都可以用坚持和努力，实现自己的那份倔强</blockquote><br><a id="more"></a></p>
+<p>日常都是短信和邮件的报警，虽然已经可以满足需求，但是对于现在微信这么流行的情况下能用微信报警自然更方便，更加迅速和实时，毕竟现在微信基本上天天都会使用，而且流量现在也比较便宜</p>
+<h2 id="一、微信设置"><a href="#一、微信设置" class="headerlink" title="一、微信设置"></a>一、微信设置</h2><h3 id="1-1-微信号介绍"><a href="#1-1-微信号介绍" class="headerlink" title="1.1 微信号介绍"></a>1.1 微信号介绍</h3><p>看 <a href="https://mp.weixin.qq.com/" target="_blank" rel="noopener">微信·公众平台</a> 首页介绍也看到微信·公众平台 有三种类型</p>
+<ul>
+<li><p>服务号</p>
+<ul>
+<li>公众平台服务号，是公众平台的一种帐号类型，旨在为用户提供服务。</li>
+<li>1个月（自然月）内仅可以发送4条群发消息。</li>
+<li>发给订阅用户（粉丝）的消息，会显示在对方的聊天列表中。相对应微信的首页。</li>
+<li>服务号会在订阅用户（粉丝）的通讯录中。通讯录中有一个服务号的文件夹，点开可以查看所有服务号。</li>
+<li>服务号可申请自定义菜单。</li>
+</ul>
+</li>
+<li><p>订阅号</p>
+<ul>
+<li>公众平台订阅号，是公众平台的一种帐号类型，旨在为用户提供信息。</li>
+<li>每天（24小时内）可以发送1条群发消息。</li>
+<li>发给订阅用户（粉丝）的消息，将会显示在对方的“订阅号”文件夹中。点击两次才可以打开。</li>
+<li>在订阅用户（粉丝）的通讯录中，订阅号将被放入订阅号文件夹中。</li>
+</ul>
+</li>
+<li><p>企业号</p>
+<ul>
+<li>企业号适用于企业与员工或上下游供应链之间的沟通。</li>
+<li>企业可以主动发消息给员工，消息量不受限制。</li>
+<li>企业号出现在微信会话列表首层，在通讯录中有单独的分类。</li>
+<li>可以自定义菜单。</li>
+<li>拥有多个子号。</li>
+</ul>
+</li>
+</ul>
+<p>5、更加关注与安全，需要双方认证。</p>
+<p>关于三种类型账号的区别，可自行查看相关仔细说明，就监控而言，订阅号和企业号都能满足需求，但是企业号限制更少，发送消息更加方便，限制更少，外加上个人可以申请一个关注者 50 人限制的企业体验号，免费的哟，对于监控人员而言，这已经是足够了，所以后续都以 微信企业号来进行讲述 zabbix + 微信企业号 报警的步骤。</p>
+<h3 id="1-2-开通企业微信号"><a href="#1-2-开通企业微信号" class="headerlink" title="1.2 开通企业微信号"></a>1.2 开通企业微信号</h3><p>根据提示进行注册，注意有些选项已经提示很清楚了，一旦设置就不能修改，所以填写这些选项之前想清楚，其他按照提示即可</p>
+<h2 id="二、设置报警"><a href="#二、设置报警" class="headerlink" title="二、设置报警"></a>二、设置报警</h2><h3 id="2-1-设置企业微信号"><a href="#2-1-设置企业微信号" class="headerlink" title="2.1 设置企业微信号"></a>2.1 设置企业微信号</h3><p>配置 zabbix 完成微信报警之前得先对企业号进行一点设置</p>
+<p>1、申请完成<br>这里唯独要注意的选择 【团队】</p>
+<p>2、邮箱激活<br>3、扫描二维码登录<br>4、新建一个组织架构<br>这里我新建了一个【运维组】,新增一名成员，作为报警成员。设置完成之后用户本身即可通过二维码进行扫码关注，双方验证通过，即可<br><img src="http://mingmings.qiniudn.com/wechat/新增成员.jpg" alt="新增监控成员"></p>
+<p>5、新建一个应用，用作监控，获取应用 id<br><img src="http://mingmings.qiniudn.com/wechat/新建app.jpg" alt="新建一个app"></p>
+<p>6、指定该应用的管理员，获取 corpid、sceret<br><img src="http://mingmings.qiniudn.com/wechat/设置监控管理员.jpg" alt="指定管理员"></p>
+<p>这里有几个参数后面是需要的，应用的 id、corpid、sceret，下面开始操刀动手</p>
+<h3 id="2-2-发送微信消息"><a href="#2-2-发送微信消息" class="headerlink" title="2.2 发送微信消息"></a>2.2 发送微信消息</h3><ul>
+<li><a href="http://qydev.weixin.qq.com/wiki/index.php?title=%E9%A6%96%E9%A1%B5" target="_blank" rel="noopener">微信·企业号开发文档</a></li>
+<li><a href="https://qy.weixin.qq.com/cgi-bin/debug" target="_blank" rel="noopener">微信·企业号 接口调试工具</a></li>
+</ul>
+<p>通过文档和提供的调试工具，可以看到玩法，首先得获取 token ，然后才能进行下一步，目前的功能只需要实现发送微信消息即可，那么先获取 token，再对特定的人发送微信消息即可完成</p>
+<p>1、获取 token，网友 <a href="http://www.anbooks.cn/topic/4145905736700.html" target="_blank" rel="noopener">安安</a> 已经给出了怎么去获取 token 的步骤和方法和脚本，token 是一个有有效时间的密钥用于后续操作认证。</p>
+<ul>
+<li>Https请求方式:POST</li>
+<li>URL:<a href="https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=ACCESS_TOKEN" target="_blank" rel="noopener">https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=ACCESS_TOKEN</a></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>必须</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>access_token</td>
+<td>是</td>
+<td>调用接口凭证</td>
+</tr>
+</tbody>
+</table>
+<p>安安给出的获取 access_token 如下，后期脚本也是在这个基础上进行扩充</p>
+<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"><span class="comment">#blog: www.anbooks.cn</span></span><br><span class="line"> </span><br><span class="line">import sys</span><br><span class="line">import urllib</span><br><span class="line">import urllib2</span><br><span class="line">import time</span><br><span class="line">import json</span><br><span class="line">from optparse import OptionParser</span><br><span class="line"> </span><br><span class="line">reload(sys)</span><br><span class="line">sys.setdefaultencoding(<span class="string">'utf-8'</span>)</span><br><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Token</span>(<span class="title">object</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(<span class="keyword">self</span>, corpid, corpsecret)</span></span><span class="symbol">:</span></span><br><span class="line">        <span class="keyword">self</span>.baseurl = <span class="string">'https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=&#123;0&#125;&amp;corpsecret=&#123;1&#125;'</span>.format(corpid, corpsecret)</span><br><span class="line">        <span class="keyword">self</span>.expire_time = sys.maxint</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_token</span><span class="params">(<span class="keyword">self</span>)</span></span><span class="symbol">:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">self</span>.expire_time &gt; time.time()<span class="symbol">:</span></span><br><span class="line">            request = urllib2.Request(<span class="keyword">self</span>.baseurl)</span><br><span class="line">            response = urllib2.urlopen(request)</span><br><span class="line">            ret = response.read().strip()</span><br><span class="line">            ret = json.loads(ret)</span><br><span class="line">            <span class="keyword">if</span> <span class="string">'errcode'</span> <span class="keyword">in</span> ret.keys()<span class="symbol">:</span></span><br><span class="line">                print <span class="meta">&gt;&gt; </span>ret[<span class="string">'errmsg'</span>],sys.stderr</span><br><span class="line">                sys.exit(<span class="number">1</span>)</span><br><span class="line">            <span class="keyword">self</span>.expire_time = time.time() + ret[<span class="string">'expires_in'</span>]</span><br><span class="line">            <span class="keyword">self</span>.access_token = ret[<span class="string">'access_token'</span>]</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">self</span>.access_token</span><br></pre></td></tr></table></figure>
+<p>2、发送 text</p>
+<blockquote>
+<p>微信·企业号还支持发送其他类型的信息等，对于监控而言，发送 text 已经足够</p>
+</blockquote>
+<p>post 数据根据文档的例子</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">   <span class="attr">"touser"</span>: <span class="string">"UserID1|UserID2|UserID3"</span>,</span><br><span class="line">   <span class="attr">"toparty"</span>: <span class="string">" PartyID1 | PartyID2 "</span>,</span><br><span class="line">   <span class="attr">"totag"</span>: <span class="string">" TagID1 | TagID2 "</span>,</span><br><span class="line">   <span class="attr">"msgtype"</span>: <span class="string">"text"</span>,</span><br><span class="line">   <span class="attr">"agentid"</span>: <span class="string">"1"</span>,</span><br><span class="line">   <span class="attr">"text"</span>: &#123;</span><br><span class="line">       <span class="attr">"content"</span>: <span class="string">"Holiday Request For Pony(http://xxxxx)"</span></span><br><span class="line">   &#125;,</span><br><span class="line">   <span class="attr">"safe"</span>:<span class="string">"0"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="三、微信企业号功能"><a href="#三、微信企业号功能" class="headerlink" title="三、微信企业号功能"></a>三、微信企业号功能</h2><h3 id="3-1-企业号消息服务"><a href="#3-1-企业号消息服务" class="headerlink" title="3.1 企业号消息服务"></a>3.1 企业号消息服务</h3><p>在系统公告中看到企业号的一些帮助信息，觉得企业微信号功能还是很强大的，比如这个企业号消息服务，官方已经有详细的说明，这里不在赘述，开通请看这里 <a href="https://qy.weixin.qq.com/cgi-bin/home#notice/2" target="_blank" rel="noopener">开通微信企业号消息服务</a> 可以非常方便不是好友的情况下实现发送非常定制化的消息，并且可以自己定制发送的人的级别等等，非常多的定制规则 <a href="https://qy.weixin.qq.com/cgi-bin/home#notice/3" target="_blank" rel="noopener">不加好友进行聊天</a></p>
+<h3 id="3-2-企业号第三方应用"><a href="#3-2-企业号第三方应用" class="headerlink" title="3.2 企业号第三方应用"></a>3.2 企业号第三方应用</h3><p>企业微信一开始就开放了 <a href="https://qy.weixin.qq.com/cgi-bin/3rd_loginpage" target="_blank" rel="noopener">第三方应用平台</a> ,其中官方的 <a href="https://qy.weixin.qq.com/cgi-bin/home#notice/4" target="_blank" rel="noopener">详细介绍</a> 也写的比较清楚，这里用到的最明显的就是和 RTX 进行双向同步，可以利用微信直接回复 RTX 消息，需要安装一个插件 <a href="http://rtx.qq.com/rtx/download/fit-detail/rtxfd_31/index.shtml" target="_blank" rel="noopener">RTX微信企业号插件下载</a></p>
+<p>目前更多的功能我也没用到，更多的功能请自行查看系统公告，里面官方的说明写的也很详细</p>
+<p>&emsp;&emsp;</p>
+<blockquote>
+<p>参考阅读</p>
+<ul>
+<li><a href="http://opslinux.com/2015/02/15/%E5%AE%9E%E7%8E%B0%E5%BE%AE%E4%BF%A1%E6%8A%A5%E8%AD%A6/" target="_blank" rel="noopener">斌哥 微信报警</a></li>
+<li><a href="http://blog.csdn.net/u011744758/article/details/45363125" target="_blank" rel="noopener">小东的专栏</a></li>
+<li><a href="http://yangrong.blog.51cto.com/6945369/1688079" target="_blank" rel="noopener">杨容 微信报警</a></li>
+<li><a href="http://www.anbooks.cn/topic/4145905736700.html" target="_blank" rel="noopener">安安 运维者</a></li>
+<li><a href="http://qydev.weixin.qq.com/wiki/index.php?title=%E9%A6%96%E9%A1%B5" target="_blank" rel="noopener">微信·企业号 开发文档</a></li>
+<li><a href="https://qy.weixin.qq.com/cgi-bin/debug" target="_blank" rel="noopener">微信·企业号 接口调试工具</a></li>
+<li><a href="https://qy.weixin.qq.com/cgi-bin/home#notice" target="_blank" rel="noopener">微信·企业号 系统公告</a></li>
+<li><a href="http://mp.weixin.qq.com/debug/" target="_blank" rel="noopener">微信·公众平台 接口调试工具</a></li>
+<li><a href="http://mp.weixin.qq.com/wiki/home/index.html" target="_blank" rel="noopener">微信·公众平台 开发文档</a></li>
+</ul>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/note/tags/zabbix-微信报警/" rel="tag"># zabbix 微信报警</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/note/python-web-程序的几种部署方式.html" rel="next" title="python web 程序的几种部署方式解读">
+                <i class="fa fa-chevron-left"></i> python web 程序的几种部署方式解读
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/note/git_GitHub-GitLab-的-Webhooks-进行网站自动化部署.html" rel="prev" title="GitHub / GitLab 的 Webhooks 进行网站自动化部署">
+                GitHub / GitLab 的 Webhooks 进行网站自动化部署 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">宋大明明</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/note/archives/">
+              
+                  <span class="site-state-item-count">78</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、微信设置"><span class="nav-number">1.</span> <span class="nav-text">一、微信设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-微信号介绍"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 微信号介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-开通企业微信号"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 开通企业微信号</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、设置报警"><span class="nav-number">2.</span> <span class="nav-text">二、设置报警</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-设置企业微信号"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 设置企业微信号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-发送微信消息"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 发送微信消息</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、微信企业号功能"><span class="nav-number">3.</span> <span class="nav-text">三、微信企业号功能</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-企业号消息服务"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 企业号消息服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-企业号第三方应用"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 企业号第三方应用</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2014 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">宋大明明</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/note/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/note/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/note/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

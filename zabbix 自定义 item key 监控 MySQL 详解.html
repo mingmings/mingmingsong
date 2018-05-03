@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/note/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/note/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/note/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/note/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/note/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/note/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/note/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="zabbix 自定义 key,zabbix mysql," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="人生在世，最可耻的事情，莫过于你明明有公平的机会实现梦想，却因自己的不努力而错失，然后回头告诉所有人，它一文不值  其实这个用到频率还是蛮多的，但是一直没有机会去写，这次重新弄了一次，在同事的帮助下明白了更多的东西，所以打算从头写个详细的过程，争取一次性说个明白，key 的关键性不用多说，key 的灵活性决定你可以监控的内容">
+<meta name="keywords" content="zabbix 自定义 key,zabbix mysql">
+<meta property="og:type" content="article">
+<meta property="og:title" content="zabbix 自定义 item key 监控 MySQL 详解">
+<meta property="og:url" content="http://mingmings.org/note/zabbix 自定义 item key 监控 MySQL 详解.html">
+<meta property="og:site_name" content="异类深呼吸">
+<meta property="og:description" content="人生在世，最可耻的事情，莫过于你明明有公平的机会实现梦想，却因自己的不努力而错失，然后回头告诉所有人，它一文不值  其实这个用到频率还是蛮多的，但是一直没有机会去写，这次重新弄了一次，在同事的帮助下明白了更多的东西，所以打算从头写个详细的过程，争取一次性说个明白，key 的关键性不用多说，key 的灵活性决定你可以监控的内容">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://mingmings.qiniudn.com/zabbix/zabbix%20item%20key.png">
+<meta property="og:image" content="http://mingmings.qiniudn.com/zabbix/custom%20mysql%20item%20key.png">
+<meta property="og:image" content="http://mingmings.qiniudn.com/zabbix/zabbix%20custom%20item%20Macro.jpg">
+<meta property="og:updated_time" content="2015-07-17T03:21:06.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="zabbix 自定义 item key 监控 MySQL 详解">
+<meta name="twitter:description" content="人生在世，最可耻的事情，莫过于你明明有公平的机会实现梦想，却因自己的不努力而错失，然后回头告诉所有人，它一文不值  其实这个用到频率还是蛮多的，但是一直没有机会去写，这次重新弄了一次，在同事的帮助下明白了更多的东西，所以打算从头写个详细的过程，争取一次性说个明白，key 的关键性不用多说，key 的灵活性决定你可以监控的内容">
+<meta name="twitter:image" content="http://mingmings.qiniudn.com/zabbix/zabbix%20item%20key.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/note/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://mingmings.org/note/zabbix 自定义 item key 监控 MySQL 详解.html"/>
+
+
+
+
+
+  <title>zabbix 自定义 item key 监控 MySQL 详解 | 异类深呼吸</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-55424732-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?fe4164c60a9dd0e73810fa0243796a5d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/note/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">异类深呼吸</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/note/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/note/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/note/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/note/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://mingmings.org/note/note/zabbix 自定义 item key 监控 MySQL 详解.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="宋大明明">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/note/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="异类深呼吸">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">zabbix 自定义 item key 监控 MySQL 详解</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-07-15T11:46:41+08:00">
+                2015-07-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/note/categories/zabbix/" itemprop="url" rel="index">
+                    <span itemprop="name">zabbix</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote class="blockquote-center">人生在世，最可耻的事情，莫过于你明明有公平的机会实现梦想，却因自己的不努力而错失，然后回头告诉所有人，它一文不值</blockquote>
+
+<p>其实这个用到频率还是蛮多的，但是一直没有机会去写，这次重新弄了一次，在同事的帮助下明白了更多的东西，所以打算从头写个详细的过程，争取一次性说个明白，key 的关键性不用多说，key 的灵活性决定你可以监控的内容<br><a id="more"></a></p>
+<h2 id="一、item-key"><a href="#一、item-key" class="headerlink" title="一、item key"></a>一、item key</h2><h3 id="1-1-介绍"><a href="#1-1-介绍" class="headerlink" title="1.1 介绍"></a>1.1 介绍</h3><blockquote>
+<p>A flexible parameter is a parameter which accepts an argument. For example, in vfs.fs.size[<em>] the asterisk symbol ‘</em>‘ indicates a flexible parameter. ‘*’ is any string that will be passed as an argument to the parameter.</p>
+</blockquote>
+<p>大致的意思是 key 是一种灵活的，可以接受参数形式的一种参数形式。例如,在<code>vfs.fs</code>。大小 [<em>] 星号 “</em>” 符号表示一个灵活的参数。‘*’ 是任何字符串,将作为参数传递给参数。正确定义示例:</p>
+<ul>
+<li>vfs.fs.size[/]</li>
+<li>vfs.fs.size[/opt]</li>
+</ul>
+<h3 id="1-2-格式"><a href="#1-2-格式" class="headerlink" title="1.2 格式"></a>1.2 格式</h3><p>给出官方的一个简易图<br><img src="http://mingmings.qiniudn.com/zabbix/zabbix%20item%20key.png" alt="zabbix item key"></p>
+<p>所以看出构造 key 的关键在于 parameters，所以自定义 key 关键在于构造这这个 parameters。下面的内容都会从一个详细的实例构造一个自定义的 key 监控 mysql 的状态</p>
+<h3 id="1-3-抓取数据脚本"><a href="#1-3-抓取数据脚本" class="headerlink" title="1.3 抓取数据脚本"></a>1.3 抓取数据脚本</h3><blockquote>
+<p>数据的抓取是基本引用，没有数据的传递后面都是虚的，所以这是自定义 key 的底层核心就是脚本了</p>
+</blockquote>
+<p>新增 agent 端关于监控 mysql 的 <code>userparameter_mysql.conf</code> 文件，存放到 <code>${zabbix_conf_path}/zabbix_agentd.d/下</code>，整个目录结构如下：</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">├── scripts</span><br><span class="line">│   └── check_mysql.sh</span><br><span class="line">├── zabbix_agentd.conf</span><br><span class="line">└── zabbix_agentd.d</span><br><span class="line">    ├── userparameter_mysql.conf</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">mysql=<span class="string">"/usr/local/mysql/bin/mysql"</span></span><br><span class="line">mysqladmin=<span class="string">"/usr/local/mysql/bin/mysqladmin"</span></span><br><span class="line">zabbix_sender=<span class="string">"/usr/bin/zabbix_sender"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义位置参数,可以从 server 传递</span></span><br><span class="line">MYSQL_USER=<span class="variable">$2</span></span><br><span class="line">MYSQL_PASSWORD=<span class="variable">$3</span></span><br><span class="line">MYSQL_PORT=<span class="variable">$4</span></span><br><span class="line">var=<span class="variable">$5</span></span><br><span class="line">MYSQL_Host=<span class="string">"127.0.0.1"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果 server 端没有传递用户名和口令过来就赋值</span></span><br><span class="line">[ <span class="string">"<span class="variable">$&#123;MYSQL_USER&#125;</span>"</span>     = <span class="string">''</span> ] &amp;&amp;  MYSQL_USER=用户名</span><br><span class="line">[ <span class="string">"<span class="variable">$&#123;MYSQL_PASSWORD&#125;</span>"</span> = <span class="string">''</span> ] &amp;&amp;  MYSQL_PASSWORD=口令</span><br><span class="line"><span class="keyword">if</span> [ ! -x <span class="string">"<span class="variable">$mysql</span>"</span> ];<span class="keyword">then</span></span><br><span class="line">    rpm -q mysql &amp;&amp; mysql=`<span class="built_in">which</span> mysql` || <span class="built_in">exit</span> 1</span><br><span class="line">    mysqladmin=`<span class="built_in">which</span> mysqladmin`</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line">mysqlclient=<span class="string">"<span class="variable">$&#123;mysql&#125;</span> -u<span class="variable">$&#123;MYSQL_USER&#125;</span> -p<span class="variable">$&#123;MYSQL_PASSWORD&#125;</span> -h<span class="variable">$&#123;MYSQL_Host&#125;</span> -P<span class="variable">$&#123;MYSQL_PORT&#125;</span>"</span></span><br><span class="line">Zabbix_Server=$(awk -F<span class="string">","</span> <span class="string">'/Server=/ &#123;print $2&#125;'</span> /etc/zabbix/zabbix_agentd.conf|egrep -v <span class="string">"(^$)"</span>)</span><br><span class="line">Hostname=$(egrep <span class="string">"\bHostname=\b"</span> /etc/zabbix/zabbix_agentd.conf|awk -F<span class="string">"="</span> <span class="string">'&#123;print $2&#125;'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 函数的值作为zabbix 的 item 项的 key</span></span><br><span class="line"><span class="keyword">function</span> status &#123;</span><br><span class="line">    [ <span class="string">"<span class="variable">$&#123;var&#125;</span>"</span> = <span class="string">''</span> ] &amp;&amp; <span class="built_in">echo</span> <span class="string">""</span>|| <span class="variable">$mysqlclient</span> -e <span class="string">'show status'</span>|grep -v Variable_name|grep <span class="string">"\b<span class="variable">$&#123;var&#125;</span>\b"</span>|awk <span class="string">'&#123;print $2&#125;'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span>  ping &#123;</span><br><span class="line">    <span class="variable">$mysqladmin</span> -u<span class="variable">$&#123;MYSQL_USER&#125;</span> -p<span class="variable">$&#123;MYSQL_PASSWORD&#125;</span> -h<span class="variable">$&#123;MYSQL_Host&#125;</span> -P<span class="variable">$&#123;MYSQL_PORT&#125;</span> ping|grep alive|wc -l</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">function</span> version &#123;</span><br><span class="line">    <span class="variable">$&#123;mysql&#125;</span>  -V | cut -f6 -d<span class="string">" "</span> | sed <span class="string">'s/,//'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> slave_delay &#123;</span><br><span class="line">    info=$(<span class="variable">$mysqlclient</span> -e <span class="string">"show slave status\G;"</span> | grep -E <span class="string">"Seconds_Behind_Master"</span> | awk <span class="string">'&#123;print $2&#125;'</span>)</span><br><span class="line">    <span class="keyword">if</span> [[ <span class="variable">$info</span> =~ [0-9]+ ]]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="variable">$info</span></span><br><span class="line">        <span class="built_in">exit</span> 0</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line"><span class="comment">#            $&#123;mysql&#125; -u$&#123;MYSQL_USER&#125; -p$&#123;MYSQL_PASSWORD&#125; -h$&#123;MYSQL_Host&#125;  -e "show slave status\G;" | grep "Seconds_Behind_Master" | cut -d':' -f 2|sed "s/^ //g"</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">"-1"</span></span><br><span class="line">        <span class="built_in">exit</span> 1</span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">function</span> slave_running_status &#123;</span><br><span class="line">        status=$(<span class="variable">$mysqlclient</span> -e <span class="string">"show slave status\G;"</span>)</span><br><span class="line">        <span class="keyword">if</span> [ <span class="string">"<span class="variable">$&#123;status&#125;</span>"</span> == <span class="string">""</span> ];<span class="keyword">then</span></span><br><span class="line">            <span class="built_in">echo</span> 0</span><br><span class="line">        <span class="keyword">fi</span></span><br><span class="line">        Slave_IO_Running=<span class="string">"<span class="variable">$($mysqlclient -e "show slave status\G;" | grep "\bSlave_IO_Running\b"|column -t|awk '&#123;print $2&#125;'| tr 'A-Z' 'a-z')</span>"</span></span><br><span class="line">        Slave_SQL_Running=<span class="string">"<span class="variable">$($mysqlclient -e "show slave status\G;" | grep "\bSlave_SQL_Running\b"|column -t|awk '&#123;print $2&#125;'| tr 'A-Z' 'a-z')</span>"</span></span><br><span class="line">        Slave_Last_IO_Error=$(<span class="variable">$mysqlclient</span> -e <span class="string">"show slave status\G;"</span> | grep -E <span class="string">"\bLast_IO_Error\b"</span>|column -t|sed <span class="string">"s/Last_IO_Error://g"</span>)</span><br><span class="line">        Slave_Last_SQL_Error=$(<span class="variable">$mysqlclient</span> -e <span class="string">"show slave status\G;"</span> | grep -E <span class="string">"\bLast_SQL_Error\b"</span>|column -t|sed <span class="string">"s/Last_SQL_Error://g"</span>)</span><br><span class="line">        Slave_Last_IO_Error_Timestamp=$(<span class="variable">$mysqlclient</span> -e <span class="string">"show slave status\G;"</span>  |column -t| grep -E <span class="string">"\bLast_IO_Error_Timestamp\b"</span>)</span><br><span class="line">        Slave_Last_SQL_Error_Timestamp=$(<span class="variable">$mysqlclient</span> -e <span class="string">"show slave status\G;"</span> |column -t| grep -E <span class="string">"\bLast_SQL_Error_Timestamp\b"</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> [ <span class="string">"<span class="variable">$&#123;Slave_Last_IO_Error&#125;</span>"</span> != <span class="string">""</span> -o <span class="string">"<span class="variable">$&#123;Slave_Last_SQL_Error&#125;</span>"</span> != <span class="string">""</span> ];<span class="keyword">then</span></span><br><span class="line"><span class="comment">#            msg="Slave_Last_IO_Error_Timestamp:=== $&#123;Slave_Last_IO_Error_Timestamp&#125;\n Slave_Last_IO_Error:=== "$&#123;Slave_Last_IO_Error&#125;"\n$&#123;Slave_Last_SQL_Error_Timestamp&#125;\nSlave_Last_SQL_Error:=== "$&#123;Slave_Last_SQL_Error&#125;""</span></span><br><span class="line"><span class="comment">#            $&#123;zabbix_sender&#125; -z $&#123;Zabbix_Server&#125; -p 10051 -s "$&#123;Hostname&#125;" -k mysql_slave_error -o "$&#123;msg&#125;" -vv</span></span><br><span class="line">            <span class="built_in">echo</span> 4</span><br><span class="line">        <span class="keyword">elif</span>    [ <span class="string">"<span class="variable">$&#123;Slave_IO_Running&#125;</span>"</span>  != <span class="string">"yes"</span> -a <span class="string">"<span class="variable">$&#123;Slave_SQL_Running&#125;</span>"</span> != <span class="string">"yes"</span> ];<span class="keyword">then</span></span><br><span class="line">            <span class="built_in">echo</span> 3</span><br><span class="line">        <span class="keyword">elif</span>  [ <span class="string">"<span class="variable">$&#123;Slave_IO_Running&#125;</span>"</span>  == <span class="string">"no"</span> ];<span class="keyword">then</span></span><br><span class="line">            <span class="built_in">echo</span> 2</span><br><span class="line">        <span class="keyword">elif</span>  [ <span class="string">"<span class="variable">$&#123;Slave_SQL_Running&#125;</span>"</span> == <span class="string">"no"</span> ];<span class="keyword">then</span></span><br><span class="line">            <span class="built_in">echo</span> 1</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="built_in">echo</span> 0</span><br><span class="line">        <span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="function"><span class="title">help</span></span>() &#123;</span><br><span class="line">	<span class="built_in">echo</span> <span class="string">"usage: <span class="variable">$0</span> [status VAR|ping|version|slave_delay|slave_running_status] USER PASS PORT"</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">case</span> <span class="string">"<span class="variable">$1</span>"</span> <span class="keyword">in</span></span><br><span class="line">    status)</span><br><span class="line">        status</span><br><span class="line">        ;;</span><br><span class="line">    ping)</span><br><span class="line">        ping</span><br><span class="line">        ;;</span><br><span class="line">    version)</span><br><span class="line">        version</span><br><span class="line">        ;;</span><br><span class="line">    slave_delay)</span><br><span class="line">        slave_delay</span><br><span class="line">        ;;</span><br><span class="line">    slave_running_status)</span><br><span class="line">        slave_running_status</span><br><span class="line">        ;;</span><br><span class="line">    *)</span><br><span class="line">    <span class="built_in">help</span>;;</span><br><span class="line"><span class="keyword">esac</span></span><br></pre></td></tr></table></figure>
+<p>这个脚本不难看懂，核心在于抓出来几个数据可以作为 zabbix 的 key，这样 zabbix server 在配置的时候可以使用这几个 key 拿到我们想要的所有结果，mysql 性能参数基本都在 status 中。</p>
+<p>另外这个脚本来自松爷的 github 上的脚本改动而来，并且我这里在配置的时候，将 MySQL 的用户名和口令其实可以不放在脚本里，待会配置 templates 的时候可以传递，这样不同的 agentd 其实都可以不保存账号口令，安全性的话会好一点，所以要求所有的 agentd 上的 MySQL 都有这个监控的用户和相同的口令。</p>
+<p>我们最好来验证脚本是否正确，再进行下一步<br><figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line"><span class="comment"># ./check_mysql.sh</span></span><br><span class="line">usage: ./check_mysql.sh [status VAR|ping|version|slave_delay|slave_running_status]<span class="built_in"> USER </span>PASS PORT</span><br><span class="line"></span><br><span class="line"><span class="comment"># ./check_mysql.sh ping 用户名 口令 3306</span></span><br><span class="line">1</span><br><span class="line"></span><br><span class="line"><span class="comment"># ./check_mysql.sh status 用户名 口令 3306 Questions</span></span><br><span class="line">2</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>再次注意这里传参格式，参考脚本中各个参数位置即可，status 需要额外提供一个参数</p>
+</blockquote>
+<h3 id="1-4-配置-userparameter"><a href="#1-4-配置-userparameter" class="headerlink" title="1.4 配置 userparameter"></a>1.4 配置 userparameter</h3><blockquote>
+<p>数据抓取的底层已经脚本可以搞定，下面来定义 zabbix 的 key，即 UserParameter</p>
+</blockquote>
+<p>首先对 userparameter 有个认识，详情需要查看官方文档了</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">cat /etc/zabbix/zabbix_agentd.d/userparameter_mysql.conf</span><br><span class="line"></span><br><span class="line"><span class="attribute">UserParameter</span>=mysql.status[*],/etc/zabbix/scripts/check_mysql.sh status <span class="variable">$1</span> <span class="variable">$2</span> <span class="variable">$3</span> <span class="variable">$4</span> <span class="variable">$5</span></span><br><span class="line"><span class="attribute">UserParameter</span>=mysql.slave_delay[*],/etc/zabbix/scripts/check_mysql.sh slave_delay <span class="variable">$1</span> <span class="variable">$2</span> <span class="variable">$3</span> <span class="variable">$4</span> <span class="variable">$5</span></span><br><span class="line"><span class="attribute">UserParameter</span>=mysql.slave_running_status[*],/etc/zabbix/scripts/check_mysql.sh slave_running_status <span class="variable">$1</span> <span class="variable">$2</span> <span class="variable">$3</span> <span class="variable">$4</span> <span class="variable">$5</span></span><br><span class="line"><span class="attribute">UserParameter</span>=mysql.ping[*],/etc/zabbix/scripts/check_mysql.sh<span class="built_in"> ping </span><span class="variable">$1</span> <span class="variable">$2</span> <span class="variable">$3</span> <span class="variable">$4</span> <span class="variable">$5</span></span><br><span class="line"><span class="comment">#UserParameter=mysql.versions[*],/etc/zabbix/scripts/check_mysql.sh version $1 $2 $3 $4 $5</span></span><br></pre></td></tr></table></figure>
+<p>这里需要注意的是各个位置参数根据脚本里传参的位置相互匹配，后面也就是 server 端也必须按照这个格式来进行传参才可以正常运行</p>
+<h3 id="1-5-验证数据抓取"><a href="#1-5-验证数据抓取" class="headerlink" title="1.5 验证数据抓取"></a>1.5 验证数据抓取</h3><blockquote>
+<p>这里这一步如果胸有成竹可以忽略，但是最好进行一下验证，否则配置模板那么长时间，结果最后还出错，挺麻烦的</p>
+</blockquote>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"># <span class="selector-tag">zabbix_get</span> <span class="selector-tag">-s</span> <span class="selector-attr">[mysql_server_ip]</span> <span class="selector-tag">-k</span> <span class="selector-tag">mysql</span><span class="selector-class">.status</span><span class="selector-attr">[用户名,口令,3306,Questions]</span></span><br><span class="line">2</span><br></pre></td></tr></table></figure>
+<p>这里的 [] 中传入的第一个参数对应脚本里 <code>$2</code></p>
+<h2 id="二、配置-templates"><a href="#二、配置-templates" class="headerlink" title="二、配置 templates"></a>二、配置 templates</h2><blockquote>
+<p>后端数据已验证完毕，接下来按照刚才的格式配置 templates 即可，唯一注意的可能就是需要设置一个 templates Macro</p>
+</blockquote>
+<p>这里给出一张根据这个脚本修改过的 templates 图，注意 key 部分，根据脚本将用户名和口令传给了 agentd，同样注意位置参数和脚本相互匹配<br><img src="http://mingmings.qiniudn.com/zabbix/custom%20mysql%20item%20key.png" alt="custom mysql item key"></p>
+<p>因为假设所有的 agentd 上都有相同的用户名和密码，所以设定 template Macro，用以集中管理密码，这样每台机器上完全可以不保存口令和密码<br><img src="http://mingmings.qiniudn.com/zabbix/zabbix%20custom%20item%20Macro.jpg" alt="template Macro"></p>
+<p>我目前是在每台机器上新建了一个监控用户，可以放在初始化脚本里<br><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">grant</span> <span class="keyword">replication</span> <span class="keyword">client</span> <span class="keyword">on</span> *.* <span class="keyword">to</span> <span class="string">'用户名'</span>@<span class="string">'127.0.0.1'</span> <span class="keyword">identified</span> <span class="keyword">by</span> <span class="string">'口令'</span>;</span><br></pre></td></tr></table></figure></p>
+<p>完成上面两个步骤之后，过一会查看 lasted data 数据部分是否会有数据，而且经过了这个之后，如果想增加监控项，脚本中可以无需改动，基本上性能指标数据都在脚本中 status 之后的参数里，可以根据个人喜好自行增减。这样一个完整的监控 mysql 的自定义 item 就全部完成</p>
+<p>这个思路可以引申到使用 zabbix agentd 监控的任何客户端中，就先写到这里</p>
+<p>&emsp;&emsp;</p>
+<blockquote>
+<p>参考阅读</p>
+<ul>
+<li><a href="https://www.zabbix.com/documentation/2.4/manual/config/items/item/key" target="_blank" rel="noopener">Zabbix Documentation 2.4 - Item key</a></li>
+</ul>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/note/tags/zabbix-自定义-key/" rel="tag"># zabbix 自定义 key</a>
+          
+            <a href="/note/tags/zabbix-mysql/" rel="tag"># zabbix mysql</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/note/grafana-template-setting.html" rel="next" title="grafana template setting">
+                <i class="fa fa-chevron-left"></i> grafana template setting
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/note/python-web-开发中常用的第三方库.html" rel="prev" title="python web 开发中常用的第三方库">
+                python web 开发中常用的第三方库 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">宋大明明</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/note/archives/">
+              
+                  <span class="site-state-item-count">78</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、item-key"><span class="nav-number">1.</span> <span class="nav-text">一、item key</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-介绍"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-格式"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-抓取数据脚本"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 抓取数据脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-配置-userparameter"><span class="nav-number">1.4.</span> <span class="nav-text">1.4 配置 userparameter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-5-验证数据抓取"><span class="nav-number">1.5.</span> <span class="nav-text">1.5 验证数据抓取</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、配置-templates"><span class="nav-number">2.</span> <span class="nav-text">二、配置 templates</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2014 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">宋大明明</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/note/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/note/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/note/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

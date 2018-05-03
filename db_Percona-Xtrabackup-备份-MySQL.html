@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/note/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/note/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/note/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/note/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/note/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/note/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/note/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="percona xtrabackup,MySQL 备份," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="之前用了 mysqldump 以及相关之类的工具进行 MySQL 备份，但是适用场景仅仅适合中小量的数据备份场景下，对于更大数据量，还是不太满足的，这时候就得需要备份神器 xtrabackup">
+<meta name="keywords" content="percona xtrabackup,MySQL 备份">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Percona Xtrabackup 备份 MySQL">
+<meta property="og:url" content="http://mingmings.org/note/db_Percona-Xtrabackup-备份-MySQL.html">
+<meta property="og:site_name" content="异类深呼吸">
+<meta property="og:description" content="之前用了 mysqldump 以及相关之类的工具进行 MySQL 备份，但是适用场景仅仅适合中小量的数据备份场景下，对于更大数据量，还是不太满足的，这时候就得需要备份神器 xtrabackup">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-04-22T15:48:57.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Percona Xtrabackup 备份 MySQL">
+<meta name="twitter:description" content="之前用了 mysqldump 以及相关之类的工具进行 MySQL 备份，但是适用场景仅仅适合中小量的数据备份场景下，对于更大数据量，还是不太满足的，这时候就得需要备份神器 xtrabackup">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/note/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://mingmings.org/note/db_Percona-Xtrabackup-备份-MySQL.html"/>
+
+
+
+
+
+  <title>Percona Xtrabackup 备份 MySQL | 异类深呼吸</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-55424732-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?fe4164c60a9dd0e73810fa0243796a5d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/note/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">异类深呼吸</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/note/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/note/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/note/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/note/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://mingmings.org/note/note/db_Percona-Xtrabackup-备份-MySQL.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="宋大明明">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/note/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="异类深呼吸">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Percona Xtrabackup 备份 MySQL</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-03-19T07:46:39+08:00">
+                2015-03-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/note/categories/DB/" itemprop="url" rel="index">
+                    <span itemprop="name">DB</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>之前用了 mysqldump 以及相关之类的工具进行 MySQL 备份，但是适用场景仅仅适合中小量的数据备份场景下，对于更大数据量，还是不太满足的，这时候就得需要备份神器 xtrabackup<br><a id="more"></a></p>
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><blockquote>
+<p>Percona XtraBackup 是开源免费的 MySQL 数据库热备份软件，它能对 InnoDB 和 XtraDB 存储引擎的数据库非阻塞地备份（对于 MyISAM 的备份同样需要加表锁）。XtraBackup 支持所有的 Percona Server、MySQL、MariaDB 和 Drizzle。</p>
+</blockquote>
+<p>主页: <a href="http://www.percona.com/software/percona-xtrabackup" target="_blank" rel="noopener">http://www.percona.com/software/percona-xtrabackup</a></p>
+<h2 id="1、XtraBackup-优势-："><a href="#1、XtraBackup-优势-：" class="headerlink" title="1、XtraBackup 优势 ："></a>1、XtraBackup 优势 ：</h2><ul>
+<li>备份过程快速、可靠</li>
+<li>备份过程不会打断正在执行的事务</li>
+<li>自动实现备份检验</li>
+<li>无需停止数据库进行 InnoDB 热备</li>
+<li>增量备份 MySQL</li>
+<li>流压缩到传输到其它服务器</li>
+<li>能比较容易地创建主从同步</li>
+<li>备份 MySQL 时不会增大服务器负载</li>
+<li>还原速度快</li>
+</ul>
+<blockquote>
+<p>但是因为同样是 MySQL 客户端工具，不支持离线备份</p>
+</blockquote>
+<h2 id="2、安装："><a href="#2、安装：" class="headerlink" title="2、安装："></a>2、安装：</h2><figure class="highlight subunit"><table><tr><td class="code"><pre><span class="line">wget http://www.percona.com/downloads/percona-release/redhat/0.1<span class="string">-3</span>/percona-release<span class="string">-0</span>.1<span class="string">-3</span>.noarch.rpm</span><br><span class="line">rpm -ivh percona-release<span class="string">-0</span>.1<span class="string">-3</span>.noarch.rpm</span><br><span class="line">yum install percona-xtrabackup -y</span><br></pre></td></tr></table></figure>
+<p>安装 XtraBackup 后，其实会有几个工具：</p>
+<ul>
+<li>innobackupex：这个是其实是下面三个工具的一个 perl 脚本封装，可以备份 <code>MyISAM</code>, <code>InnoDB</code>, <code>XtraDB</code> 引擎。但在处理 <code>MyISAM</code> 时需要加一个读锁。</li>
+<li>xtrabackup：一个由C编译而来的二进制文件，只能备份 <code>InnoDB</code> 和 <code>XtraDB</code> 数据。</li>
+<li>xbcrypt：用来加密或解密备份的数据。</li>
+<li>xbstream：用来解压或压缩 xbstream 格式的压缩文件。</li>
+</ul>
+<blockquote>
+<p>建议使用 perl 封装的 innobackupex 来作数据库备份，因为比较容易使用。所以下面只介绍innobackupex的使用。其它的使用参考: <a href="http://www.percona.com/doc/percona-xtrabackup/2.2/manual.html" target="_blank" rel="noopener">http://www.percona.com/doc/percona-xtrabackup/2.2/manual.html</a></p>
+</blockquote>
+<h2 id="3、备份与恢复"><a href="#3、备份与恢复" class="headerlink" title="3、备份与恢复"></a>3、备份与恢复</h2><h4 id="3-1-完全备份"><a href="#3-1-完全备份" class="headerlink" title="3.1 完全备份"></a>3.1 完全备份</h4><figure class="highlight brainfuck"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span> <span class="comment">innobackupex</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">user=用户名</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">password=密码</span>  <span class="comment">/backup/</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>使用 innobakupex 备份时，其会调用 xtrabackup 备份所有的 <code>InnoDB</code> 表，复制所有关于表结构定义的相关文件(.frm)、以及 <code>MyISAM</code>、<code>MERGE</code>、<code>CSV</code> 和 <code>ARCHIVE</code> 表的相关文件，同时还会备份触发器和数据库配置信息相关的文件。这些文件会被保存至一个以时间命令的目录中。</p>
+</blockquote>
+<p>在备份的同时，innobackupex 还会在备份目录中创建如下文件：</p>
+<ul>
+<li>xtrabackup_checkpoints —— 备份类型（如完全或增量）、备份状态（如是否已经为 <code>prepared</code> 状态）和 <code>LSN</code>(日志序列号)范围信息；</li>
+</ul>
+<blockquote>
+<p>每个 InnoDB 页(通常为 <code>16k</code> 大小)都会包含一个日志序列号，即 <code>LSN</code>。<code>LSN</code> 是整个数据库系统的系统版本号，每个页面相关的 <code>LSN</code> 能够表明此页面最近是如何发生改变的。</p>
+</blockquote>
+<ul>
+<li>xtrabackup_binlog_info —— mysql 服务器当前正在使用的二进制日志文件及至备份这一刻为止二进制日志事件的位置。</li>
+<li>xtrabackup_binlog_pos_innodb —— 二进制日志文件及用于 InnoDB 或 XtraDB 表的二进制日志文件的当前 position。</li>
+<li>xtrabackup_binary —— 备份中用到的 xtrabackup 的可执行文件；</li>
+<li>backup-my.cnf —— 备份命令用到的配置选项信息；</li>
+</ul>
+<p>在使用 innobackupex 进行备份时，还可以使用 <code>--no-timestamp</code> 选项来阻止命令自动创建一个以时间命名的目录；如此一来，innobackupex 命令将会创建一个 <code>BACKUP-DIR</code> 目录来存储备份数据。</p>
+<h4 id="3-2-准备-prepare-一个完全备份"><a href="#3-2-准备-prepare-一个完全备份" class="headerlink" title="3.2 准备 (prepare) 一个完全备份"></a>3.2 准备 (prepare) 一个完全备份</h4><p>一般情况下，在备份完成后，数据尚且不能用于恢复操作，因为备份的数据中可能会包含尚未提交的事务或已经提交但尚未同步至数据文件中的事务。因此，此时数据文件仍处理不一致状态。“准备”的主要作用正是通过回滚未提交的事务及同步已经提交的事务至数据文件也使得数据文件处于一致性状态。</p>
+<p>innobakupex 命令的 <code>--apply-log</code> 选项可用于实现上述功能。如下面的命令：</p>
+<figure class="highlight autoit"><table><tr><td class="code"><pre><span class="line"><span class="meta"># innobackupex --apply-log  /backup/BACKUP-DIR</span></span><br><span class="line"></span><br><span class="line">xtrabackup: starting <span class="built_in">shutdown</span> <span class="keyword">with</span> innodb_fast_shutdown = <span class="number">1</span></span><br><span class="line"><span class="number">150319</span>  <span class="number">7</span>:<span class="number">55</span>:<span class="number">52</span>  InnoDB: Starting <span class="built_in">shutdown</span>...</span><br><span class="line"><span class="number">150319</span>  <span class="number">7</span>:<span class="number">55</span>:<span class="number">52</span>  InnoDB: <span class="built_in">Shutdown</span> completed<span class="comment">; log sequence number 11452428</span></span><br><span class="line"><span class="number">150319</span> <span class="number">07</span>:<span class="number">55</span>:<span class="number">52</span>  innobackupex: completed OK!</span><br></pre></td></tr></table></figure>
+<p>在实现“准备”的过程中，innobackupex 通常还可以使用 <code>--use-memory</code> 选项来指定其可以使用的内存的大小，默认通常为 <code>100M</code>。如果有足够的内存可用，可以多划分一些内存给 <code>prepare</code> 的过程，以提高其完成速度。</p>
+<h4 id="3-3-从一个完全备份中恢复数据"><a href="#3-3-从一个完全备份中恢复数据" class="headerlink" title="3.3 从一个完全备份中恢复数据"></a>3.3 从一个完全备份中恢复数据</h4><blockquote>
+<p>恢复不用启动 MySQL</p>
+</blockquote>
+<p>innobackupex 命令的 <code>--copy-back</code> 选项用于执行恢复操作，其通过复制所有数据相关的文件至 mysql 服务器 <code>DATADIR</code> 目录中来执行恢复过程。innobackupex 通过 <code>backup-my.cnf</code> 来获取 <code>DATADIR</code> 目录的相关信息。</p>
+<figure class="highlight livecodeserver"><table><tr><td class="code"><pre><span class="line"><span class="comment"># innobackupex --copy-back  /backup/BACKUP-DIR</span></span><br><span class="line"></span><br><span class="line">innobackupex: Starting <span class="built_in">to</span> copy InnoDB <span class="built_in">log</span> <span class="built_in">files</span></span><br><span class="line">innobackupex: <span class="keyword">in</span> <span class="string">'/backup/2015-03-19_07-43-23'</span></span><br><span class="line">innobackupex: back <span class="built_in">to</span> original InnoDB <span class="built_in">log</span> <span class="built_in">directory</span> <span class="string">'/data/mysql'</span></span><br><span class="line">innobackupex: Copying <span class="string">'/backup/2015-03-19_07-43-23/ib_logfile1'</span> <span class="built_in">to</span> <span class="string">'/data/mysql'</span></span><br><span class="line">innobackupex: Copying <span class="string">'/backup/2015-03-19_07-43-23/ib_logfile0'</span> <span class="built_in">to</span> <span class="string">'/data/mysql'</span></span><br><span class="line">innobackupex: Finished copying back <span class="built_in">files</span>.</span><br><span class="line"></span><br><span class="line"><span class="number">150319</span> <span class="number">08</span>:<span class="number">00</span>:<span class="number">11</span>  innobackupex: completed OK!</span><br><span class="line"></span><br><span class="line"><span class="comment"># 后续工作</span></span><br><span class="line"><span class="comment"># chown -R mysql.mysql /data/mysql</span></span><br></pre></td></tr></table></figure>
+<h4 id="3-4-增量备份"><a href="#3-4-增量备份" class="headerlink" title="3.4 增量备份"></a>3.4 增量备份</h4><blockquote>
+<p>每个 InnoDB 的页面都会包含一个 <code>LSN</code> 信息，每当相关的数据发生改变，相关的页面的 <code>LSN</code> 就会自动增长。这正是 InnoDB 表可以进行增量备份的基础，即 innobackupex 通过备份上次完全备份之后发生改变的页面来实现。</p>
+</blockquote>
+<figure class="highlight brainfuck"><table><tr><td class="code"><pre><span class="line"><span class="comment">#</span> <span class="comment">innobackupex</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">incremental</span> <span class="comment">/backup</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">incremental</span><span class="literal">-</span><span class="comment">basedir=BASEDIR</span></span><br></pre></td></tr></table></figure>
+<p>其中，<code>BASEDIR</code> 指的是完全备份所在的目录，此命令执行结束后，innobackupex 命令会在 <code>/backup</code> 目录中创建一个新的以时间命名的目录以存放所有的增量备份数据。另外，在执行过增量备份之后再一次进行增量备份时，其 <code>--incremental-basedir</code> 应该指向上一次的增量备份所在的目录。</p>
+<p>需要注意的是，增量备份仅能应用于 InnoDB 或 XtraDB 表，对于 MyISAM 表而言，执行增量备份时其实进行的是完全备份。</p>
+<h4 id="3-5-导入或导出单张表"><a href="#3-5-导入或导出单张表" class="headerlink" title="3.5 导入或导出单张表"></a>3.5 导入或导出单张表</h4><p>默认情况下，InnoDB 表不能通过直接复制表文件的方式在 mysql 服务器之间进行移植，即便使用了 <code>innodb_file_per_table</code> 选项。而使用 Xtrabackup 工具可以实现此种功能，不过，此时需要“导出”表的 mysql 服务器启用了 <code>innodb_file_per_table</code> 选项（严格来说，是要“导出”的表在其创建之前，mysql服务器就启用了 <code>innodb_file_per_table</code> 选项），并且“导入”表的服务器同时启用了 <code>innodb_file_per_table</code> 和 <code>innodb_expand_import</code> 选项。</p>
+<p>(1)“导出”表<br>导出表是在备份的 prepare 阶段进行的，因此，一旦完全备份完成，就可以在 prepare 过程中通过 <code>--export</code> 选项将某表导出了：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> innobackupex --apply-log --<span class="built_in">export</span> /backup/full_backup_dir</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>此命令会为每个 innodb 表的表空间创建一个以 <code>.exp</code> 结尾的文件，这些以 <code>.exp</code> 结尾的文件则可以用于导入至其它服务器。</p>
+</blockquote>
+<p>(2)“导入”表<br>要在 mysql 服务器上导入来自于其它服务器的某 innodb 表，需要先在当前服务器上创建一个跟原表表结构一致的表，而后才能实现将表导入：</p>
+<figure class="highlight gams"><table><tr><td class="code"><pre><span class="line">最好之前查看想要导入的服务器是否支持 innodb 每表一空间选项</span><br><span class="line">mysql&gt; show global <span class="keyword">variables</span> like <span class="comment">'innodb_file%'</span>;</span><br><span class="line"></span><br><span class="line"># 创建表，表结构必须一致，可以在原服务器上使用 &lt;show create <span class="keyword">table</span> 表名&gt;</span><br><span class="line">mysql&gt; CREATE <span class="keyword">TABLE</span> mytable <span class="comment">(...)  ENGINE=InnoDB</span>;</span><br><span class="line"></span><br><span class="line"># 然后将此表的表空间删除：</span><br><span class="line">mysql&gt; ALTER <span class="keyword">TABLE</span> 表名 DISCARD <span class="comment">TABLESPACE</span>;</span><br><span class="line"></span><br><span class="line"># 接下来，将来自于“导出”表的服务器的 mytable 表的 mytable.ibd 和 mytable.exp 文件复制到当前服务器的数据目录，然后使用如下命令将其“导入”：</span><br><span class="line">mysql&gt; ALTER <span class="keyword">TABLE</span> 表名 IMPORT <span class="comment">TABLESPACE</span>;</span><br></pre></td></tr></table></figure>
+<h4 id="3-6-压缩备份"><a href="#3-6-压缩备份" class="headerlink" title="3.6 压缩备份"></a>3.6 压缩备份</h4><p><----- 未完待续="" -----=""></-----></p>
+<h4 id="3-7-部分备份"><a href="#3-7-部分备份" class="headerlink" title="3.7 部分备份"></a>3.7 部分备份</h4><p>Xtrabackup 也可以实现部分备份，即只备份某个或某些指定的数据库或某数据库中的某个或某些表。但要使用此功能，必须启用 <code>innodb_file_per_table</code> 选项，即每张表保存为一个独立的文件。同时，其也不支持 <code>--stream</code> 选项，即不支持将数据通过管道传输给其它程序进行处理。</p>
+<p>此外，还原部分备份跟还原全部数据的备份也有所不同，即你不能通过简单地将 <code>prepared</code> 的部分备份使用 <code>--copy-back</code> 选项直接复制回数据目录，而是要通过导入表的方向来实现还原。当然，有些情况下，部分备份也可以直接通过 <code>--copy-back</code> 进行还原，但这种方式还原而来的数据多数会产生数据不一致的问题，因此，无论如何不推荐使用这种方式。</p>
+<p>(1)创建部分备份</p>
+<p>创建部分备份的方式有三种：正则表达式 <code>--include</code>, 枚举表文件 <code>--tables-file</code> 和列出要备份的数据库 <code>--databases</code>。</p>
+<p>(a)使用 <code>--include</code><br>使用 <code>--include</code> 时，要求为其指定要备份的表的完整名称，即形如 <code>databasename.tablename</code>，如：</p>
+<figure class="highlight autoit"><table><tr><td class="code"><pre><span class="line"><span class="meta"># innobackupex --<span class="meta-keyword">include</span>=<span class="string">'^mageedu[.]tb1'</span>  /path/to/backup</span></span><br></pre></td></tr></table></figure>
+<p>(b)使用 <code>--tables-file</code><br>此选项的参数需要是一个文件名，此文件中每行包含一个要备份的表的完整名称；如：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> <span class="built_in">echo</span> -e <span class="string">'mageedu.tb1\nmageedu.tb2'</span> &gt; /tmp/tables.txt</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> innobackupex --tables-file=/tmp/tables.txt  /backup</span></span><br></pre></td></tr></table></figure>
+<p>(c)使用 <code>--databases</code></p>
+<p>此选项接受的参数为数据名，如果要指定多个数据库，彼此间需要以空格隔开；同时，在指定某数据库时，也可以只指定其中的某张表。此外，此选项也可以接受一个文件为参数，文件中每一行为一个要备份的对象。如：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> innobackupex --databases=<span class="string">"mageedu testdb"</span>  /backup</span></span><br></pre></td></tr></table></figure>
+<p>(2)整理 <code>preparing</code> 部分备份</p>
+<p><code>prepare</code> 部分备份的过程类似于导出表的过程，要使用 <code>--export</code> 选项进行：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> innobackupex --apply-log --<span class="built_in">export</span>  /pat/to/partial/backup</span></span><br></pre></td></tr></table></figure>
+<p>此命令执行过程中，<code>innobackupex</code> 会调用 <code>xtrabackup</code> 命令从数据字典中移除缺失的表，因此，会显示出许多关于“表不存在”类的警告信息。同时，也会显示出为备份文件中存在的表创建 <code>.exp</code> 文件的相关信息。</p>
+<p>(3)还原部分备份</p>
+<p>还原部分备份的过程跟导入表的过程相同。当然，也可以通过直接复制 <code>prepared</code> 状态的备份直接至数据目录中实现还原，不要此时要求数据目录处于一致状态。</p>
+<h4 id="3-7-备份恢复遵循的步骤"><a href="#3-7-备份恢复遵循的步骤" class="headerlink" title="3.7 备份恢复遵循的步骤"></a>3.7 备份恢复遵循的步骤</h4><p>1、停止 MySQL 服务器<br>2、记录服务器配置和文件权限<br>3、讲备份恢复到 MySQL 数据目录：此步骤依赖具体的备份工具<br>4、改变配置和文件权限<br>5、以限制方式启动 MySQL 服务器，比如通过网络访问</p>
+<figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">skip-networking</span><br><span class="line">socket=/path/mysql-recovery.sock</span><br></pre></td></tr></table></figure>
+<p>6、载入额外的逻辑备份，而检查和重放二进制文件<br>7、检查已还原的数据<br>8、以完全访问模式重启服务器</p>
+<h3 id="更多阅读"><a href="#更多阅读" class="headerlink" title="更多阅读"></a>更多阅读</h3><ul>
+<li><a href="http://www.ttlsa.com/mysql/select-the-backup-mode-suitable-for-mysql/" target="_blank" rel="noopener">为 MySQL 选择合适的备份方式</a></li>
+<li><a href="http://www.drupal001.com/2014/02/percona-xtrabackup-mysql/" target="_blank" rel="noopener">Percona Xtrabackup备份mysql (完整备份与增量备份)</a></li>
+<li><a href="http://imysql.com/mysql_backup_and_recover" target="_blank" rel="noopener">MySQL 备份与恢复</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/note/tags/percona-xtrabackup/" rel="tag"># percona xtrabackup</a>
+          
+            <a href="/note/tags/MySQL-备份/" rel="tag"># MySQL 备份</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/note/db_MySQL-备份与恢复.html" rel="next" title="MySQL 备份与恢复">
+                <i class="fa fa-chevron-left"></i> MySQL 备份与恢复
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/note/db_MySQL-主从同步总结.html" rel="prev" title="MySQL 主从同步">
+                MySQL 主从同步 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">宋大明明</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/note/archives/">
+              
+                  <span class="site-state-item-count">78</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、XtraBackup-优势-："><span class="nav-number">1.1.</span> <span class="nav-text">1、XtraBackup 优势 ：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、安装："><span class="nav-number">1.2.</span> <span class="nav-text">2、安装：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、备份与恢复"><span class="nav-number">1.3.</span> <span class="nav-text">3、备份与恢复</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-完全备份"><span class="nav-number">1.3.0.1.</span> <span class="nav-text">3.1 完全备份</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-准备-prepare-一个完全备份"><span class="nav-number">1.3.0.2.</span> <span class="nav-text">3.2 准备 (prepare) 一个完全备份</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-从一个完全备份中恢复数据"><span class="nav-number">1.3.0.3.</span> <span class="nav-text">3.3 从一个完全备份中恢复数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-4-增量备份"><span class="nav-number">1.3.0.4.</span> <span class="nav-text">3.4 增量备份</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-5-导入或导出单张表"><span class="nav-number">1.3.0.5.</span> <span class="nav-text">3.5 导入或导出单张表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-6-压缩备份"><span class="nav-number">1.3.0.6.</span> <span class="nav-text">3.6 压缩备份</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-7-部分备份"><span class="nav-number">1.3.0.7.</span> <span class="nav-text">3.7 部分备份</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-7-备份恢复遵循的步骤"><span class="nav-number">1.3.0.8.</span> <span class="nav-text">3.7 备份恢复遵循的步骤</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#更多阅读"><span class="nav-number">1.3.1.</span> <span class="nav-text">更多阅读</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2014 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">宋大明明</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/note/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/note/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/note/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

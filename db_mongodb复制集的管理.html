@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/note/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/note/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/note/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/note/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/note/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/note/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/note/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="mongodb复制集," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="复制集部署是仅仅不够的，还需要深入了解以及管理，所以接着开始复制集的管理">
+<meta name="keywords" content="mongodb复制集">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mongodb复制集的管理">
+<meta property="og:url" content="http://mingmings.org/note/db_mongodb复制集的管理.html">
+<meta property="og:site_name" content="异类深呼吸">
+<meta property="og:description" content="复制集部署是仅仅不够的，还需要深入了解以及管理，所以接着开始复制集的管理">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-04-22T07:02:39.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="mongodb复制集的管理">
+<meta name="twitter:description" content="复制集部署是仅仅不够的，还需要深入了解以及管理，所以接着开始复制集的管理">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/note/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://mingmings.org/note/db_mongodb复制集的管理.html"/>
+
+
+
+
+
+  <title>mongodb复制集的管理 | 异类深呼吸</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-55424732-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?fe4164c60a9dd0e73810fa0243796a5d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/note/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">异类深呼吸</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/note/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/note/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/note/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/note/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://mingmings.org/note/note/db_mongodb复制集的管理.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="宋大明明">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/note/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="异类深呼吸">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">mongodb复制集的管理</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2014-11-19T10:21:48+08:00">
+                2014-11-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/note/categories/DB/" itemprop="url" rel="index">
+                    <span itemprop="name">DB</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>复制集部署是仅仅不够的，还需要深入了解以及管理，所以接着开始复制集的管理</p>
+<a id="more"></a>
+<p>认真的读完了这个哥们的文章 <a href="http://www.lanceyan.com/tech/mongodb_repset2.html" target="_blank" rel="noopener">Lanceyan</a>,基本思路也是按照这篇文章思路来写的，对这篇文章进行了转载</p>
+<h1 id="Bully-算法"><a href="#Bully-算法" class="headerlink" title="Bully 算法"></a>Bully 算法</h1><p>关于该算法，<a href="http://blog.nosqlfan.com/html/4139.html" target="_blank" rel="noopener">这里</a>有个中文的介绍</p>
+<p>Bully算法是一种协调者（主节点）竞选算法，主要思想是集群的每个成员都可以声明它是主节点并通知其他节点。别的节点可以选择接受这个声称或是拒绝并进入主节点竞争。被其他所有节点接受的节点才能成为主节点。节点按照一些属性来判断谁应该胜出。这个属性可以是一个静态ID，也可以是更新的度量像最近一次事务ID（最新的节点会胜出）。</p>
+<p>We use a consensus protocol to pick a primary. Exact details will be spared here but that basic process is:</p>
+<ul>
+<li>get maxLocalOpOrdinal from each server.</li>
+<li>if a majority of servers are not up (from this server’s POV), remain in Secondary mode and stop.</li>
+<li>if the last op time seems very old, stop and await human intervention.</li>
+<li>else, using a consensus protocol, pick the server with the highest maxLocalOpOrdinal as the Primary.</li>
+</ul>
+<hr>
+<ul>
+<li>得到每个服务器节点的最后操作时间戳。每个mongodb都有oplog机制会记录本机的操作，方便和主服务器进行对比数据是否同步还可以用于错误恢复。</li>
+<li>如果集群中大部分服务器down机了，保留活着的节点都为 secondary状态并停止，不选举了。</li>
+<li>如果集群中选举出来的主节点或者所有从节点最后一次同步时间看起来很旧了，停止选举等待人来操作。</li>
+<li>如果上面都没有问题就选择最后操作时间戳最新（保证数据是最新的）的服务器节点作为主节点。</li>
+</ul>
+<h1 id="选举触发条件"><a href="#选举触发条件" class="headerlink" title="选举触发条件"></a>选举触发条件</h1><blockquote>
+<p>只有特定的情况选举才能进行</p>
+</blockquote>
+<ul>
+<li>初始化一个副本集时。</li>
+<li>副本集和主节点断开连接，可能是网络问题。</li>
+<li>主节点down</li>
+</ul>
+<p><strong>选举还有个前提条件，参与选举的节点数量必须大于副本集总节点数量的一半，如果已经小于一半了所有节点保持只读状态，日志里将会出现 <code>can&#39;t see a majority of the set, relinquishing primary</code></strong></p>
+<h1 id="复制集管理"><a href="#复制集管理" class="headerlink" title="复制集管理"></a>复制集管理</h1><p>1.手动下架主节点</p>
+<blockquote>
+<p>db.adminCommand({replSetStepDown : 1})<br>db.adminCommand({replSetStepDown : 1, force : true})    强制</p>
+</blockquote>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">repset</span><span class="selector-pseudo">:PRIMARY</span>&gt; <span class="selector-tag">db</span><span class="selector-class">.adminCommand</span>(&#123;<span class="attribute">replSetStepDown </span>: <span class="number">1</span>&#125;)</span><br></pre></td></tr></table></figure>
+<p>node128上的控制台</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">2014<span class="selector-tag">-11-19T00</span><span class="selector-pseudo">:36</span><span class="selector-pseudo">:59.633+0800</span> <span class="selector-attr">[rsHealthPoll]</span> <span class="selector-tag">replSet</span> <span class="selector-tag">member</span> 172<span class="selector-class">.16</span><span class="selector-class">.105</span><span class="selector-class">.129</span><span class="selector-pseudo">:27017</span> <span class="selector-tag">is</span> <span class="selector-tag">now</span> <span class="selector-tag">in</span> <span class="selector-tag">state</span> <span class="selector-tag">SECONDARY</span></span><br><span class="line">2014<span class="selector-tag">-11-19T00</span><span class="selector-pseudo">:36</span><span class="selector-pseudo">:59.634+0800</span> <span class="selector-attr">[rsMgr]</span> <span class="selector-tag">replSet</span> <span class="selector-tag">info</span> <span class="selector-tag">electSelf</span> 0</span><br><span class="line">2014<span class="selector-tag">-11-19T00</span><span class="selector-pseudo">:37</span><span class="selector-pseudo">:02.924+0800</span> <span class="selector-attr">[rsMgr]</span> <span class="selector-tag">replSet</span> <span class="selector-tag">PRIMARY</span></span><br></pre></td></tr></table></figure>
+<p>node129上的控制台</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">2014<span class="selector-tag">-11-19T15</span><span class="selector-pseudo">:07</span><span class="selector-pseudo">:23.684+0800</span> <span class="selector-attr">[rsHealthPoll]</span> <span class="selector-tag">replSet</span> <span class="selector-tag">member</span> 172<span class="selector-class">.16</span><span class="selector-class">.105</span><span class="selector-class">.128</span><span class="selector-pseudo">:27017</span> <span class="selector-tag">is</span> <span class="selector-tag">now</span> <span class="selector-tag">in</span> <span class="selector-tag">state</span> <span class="selector-tag">PRIMARY</span></span><br><span class="line">2014<span class="selector-tag">-11-19T15</span><span class="selector-pseudo">:07</span><span class="selector-pseudo">:24.084+0800</span> <span class="selector-attr">[rsBackgroundSync]</span> <span class="selector-tag">replSet</span> <span class="selector-tag">syncing</span> <span class="selector-tag">to</span>: 172<span class="selector-class">.16</span><span class="selector-class">.105</span><span class="selector-class">.128</span><span class="selector-pseudo">:27017</span></span><br><span class="line">2014<span class="selector-tag">-11-19T15</span><span class="selector-pseudo">:07</span><span class="selector-pseudo">:24.094+0800</span> <span class="selector-attr">[rsBackgroundSync]</span> <span class="selector-tag">replset</span> <span class="selector-tag">setting</span> <span class="selector-tag">syncSourceFeedback</span> <span class="selector-tag">to</span> 172<span class="selector-class">.16</span><span class="selector-class">.105</span><span class="selector-class">.128</span><span class="selector-pseudo">:27017</span></span><br></pre></td></tr></table></figure>
+<p>2.设置优先级</p>
+<blockquote>
+<p>优先级为0不能成为 primary， 优先级由大到小，优先级i范围 0~1000（包含1000）</p>
+</blockquote>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">查看优先级，默认的优先级都为<span class="number">1</span>，不显示</span><br><span class="line">repse<span class="variable">t:PRIMARY</span>&gt; rs.<span class="keyword">conf</span>()</span><br><span class="line">&#123;</span><br><span class="line">	<span class="string">"_id"</span> : <span class="string">"repset"</span>,</span><br><span class="line">	<span class="string">"version"</span> : <span class="number">1</span>,</span><br><span class="line">	<span class="string">"members"</span> : [</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="string">"_id"</span> : <span class="number">0</span>,</span><br><span class="line">			<span class="string">"host"</span> : <span class="string">"172.16.105.128:27017"</span></span><br><span class="line">		&#125;,</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="string">"_id"</span> : <span class="number">1</span>,</span><br><span class="line">			<span class="string">"host"</span> : <span class="string">"172.16.105.129:27017"</span></span><br><span class="line">		&#125;</span><br><span class="line">	]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">repse<span class="variable">t:PRIMARY</span>&gt; cfg = rs.<span class="keyword">conf</span>()</span><br><span class="line">repse<span class="variable">t:PRIMARY</span>&gt; cfg.members[<span class="number">0</span>].priority = <span class="number">2</span></span><br><span class="line">repse<span class="variable">t:PRIMARY</span>&gt; cfg.members[<span class="number">1</span>].priority = <span class="number">3</span></span><br><span class="line">repse<span class="variable">t:PRIMARY</span>&gt; rs.reconfig(cfg)</span><br><span class="line">repse<span class="variable">t:SECONDARY</span>&gt; rs.<span class="keyword">conf</span>()</span><br><span class="line">&#123;</span><br><span class="line">	<span class="string">"_id"</span> : <span class="string">"repset"</span>,</span><br><span class="line">	<span class="string">"version"</span> : <span class="number">2</span>,</span><br><span class="line">	<span class="string">"members"</span> : [</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="string">"_id"</span> : <span class="number">0</span>,</span><br><span class="line">			<span class="string">"host"</span> : <span class="string">"172.16.105.128:27017"</span>,</span><br><span class="line">			<span class="string">"priority"</span> : <span class="number">2</span></span><br><span class="line">		&#125;,</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="string">"_id"</span> : <span class="number">1</span>,</span><br><span class="line">			<span class="string">"host"</span> : <span class="string">"172.16.105.129:27017"</span>,</span><br><span class="line">			<span class="string">"priority"</span> : <span class="number">3</span></span><br><span class="line">		&#125;</span><br><span class="line">	]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>根据优先级，所以不让一个节点成为主节点，那么就有这三种操作了</p>
+<ul>
+<li>使用rs.freeze(120)冻结指定的秒数不能选举成为主节点</li>
+<li>设置成为仲裁节点</li>
+<li>优先级低于所有副本集成员</li>
+</ul>
+<p>3.oplog 信息 </p>
+<figure class="highlight livecodeserver"><table><tr><td class="code"><pre><span class="line">repset:PRIMARY&gt; db.printReplicationInfo()</span><br><span class="line">configured oplog size:   <span class="number">990</span>MB			<span class="comment">	//日志大小</span></span><br><span class="line"><span class="built_in">log</span> <span class="built_in">length</span> <span class="built_in">start</span> <span class="built_in">to</span> <span class="keyword">end</span>: <span class="number">0</span><span class="built_in">secs</span> (<span class="number">0</span>hrs)		<span class="comment">	//oplog启用时间段</span></span><br><span class="line">oplog <span class="keyword">first</span> event <span class="built_in">time</span>:  Thu Nov <span class="number">20</span> <span class="number">2014</span> <span class="number">10</span>:<span class="number">17</span>:<span class="number">06</span> GMT+<span class="number">0800</span> (CST)	<span class="comment">	//第一个事务日志产生的时间</span></span><br><span class="line">oplog <span class="keyword">last</span> event <span class="built_in">time</span>:   Thu Nov <span class="number">20</span> <span class="number">2014</span> <span class="number">10</span>:<span class="number">17</span>:<span class="number">06</span> GMT+<span class="number">0800</span> (CST)	<span class="comment">	//最后一个事务日志产生的时间</span></span><br><span class="line">now:                     Thu Nov <span class="number">20</span> <span class="number">2014</span> <span class="number">10</span>:<span class="number">33</span>:<span class="number">34</span> GMT+<span class="number">0800</span> (CST)	<span class="comment">	//现在时间</span></span><br></pre></td></tr></table></figure>
+<p>oplog 只记录改变数据库现状的操作，查询操作不存储在 oplog 中</p>
+<h1 id="成员数量"><a href="#成员数量" class="headerlink" title="成员数量"></a>成员数量</h1><blockquote>
+<p>摘抄文章里的这段话</p>
+</blockquote>
+<ul>
+<li>官方推荐副本集的成员数量为奇数，最多12个副本集节点，最多7个节点参与选举。</li>
+<li>最多12个副本集节点是因为没必要一份数据复制那么多份，备份太多反而增加了网络负载和拖慢了集群性能；</li>
+<li>而最多7个节点参与选举是因为内部选举机制节点数量太多就会导致1分钟内还选不出主节点</li>
+</ul>
+<p>哪些限制参考官方文挡<a href="http://docs.mongodb.org/manual/reference/limits/" target="_blank" rel="noopener">MongoDB Limits and Thresholds</a>。<br>参考这个文章 <a href="http://www.itpub.net/thread-1740982-1-1.html" target="_blank" rel="noopener">这里</a>。后来突然看了一篇 stackoverflow 的文章终于顿悟了，mongodb 本身设计的就是一个可以跨 IDC 的分布式数据库，所以我们应该把它放到大的环境来看。</p>
+<h1 id="心跳"><a href="#心跳" class="headerlink" title="心跳"></a>心跳</h1><p>心跳 综上所述，整个集群需要保持一定的通信才能知道哪些节点活着哪些节点挂掉。mongodb节点会向副本集中的其他节点每两秒就会发送一次pings包，如果其他节点在10秒钟之内没有返回就标示为不能访问。每个节点内部都会维护一个状态映射表，表明当前每个节点是什么角色、日志时间戳等关键信息。如果是主节点，除了维护映射表外还需要检查自己能否和集群中内大部分节点通讯，如果不能则把自己降级为secondary只读节点。</p>
+<h1 id="同步"><a href="#同步" class="headerlink" title="同步"></a>同步</h1><p>副本集同步分为 <code>初始化同步</code> 和 <code>keep复制</code>。初始化同步指全量从主节点同步数据，如果主节点数据量比较大同步时间会比较长。而 keep 复制指初始化同步过后，节点之间的实时同步一般是增量同步。初始化同步不只是在第一次才会被处罚，有以下两种情况会触发：</p>
+<ul>
+<li>secondary 第一次加入，这个是肯定的。</li>
+<li>secondary 落后的数据量超过了 oplog 的大小，这样也会被全量复制。</li>
+</ul>
+<p>oplog 保存了数据的操作记录，secondary 复制 oplog 并把里面的操作在 secondary 执行一遍。但是 oplog 也是 mongodb 的一个集合，保存在 <strong>local.oplog.rs</strong> 里，但是这个 oplog 是一个 capped collection 也就是固定大小的集合，新数据加入超过集合的大小会覆盖。一旦 oplog 被覆盖，那么复制就会停止，所以这里需要注意，跨IDC的复制要设置合适的 oplogSize，避免在生产环境经常产生全量复制。</p>
+<ul>
+<li>oplogSize 可以通过 <code>–oplogSize</code> 设置大小，对于 linux 和windows 64位，oplog size 默认为剩余磁盘空间的5%。</li>
+<li>{ “resync” : 1} 命令进行手动执行同步，也可以启动时候用 <code>--autoresync</code> 进行重新同步</li>
+</ul>
+<p>同步也并非只能从主节点同步，假设集群中3个节点，节点1是主节点在 IDC1，节点2、节点3在 IDC2，初始化节点2、节点3会从节点1同步数据。后面节点2、节点3会使用就近原则从当前IDC的副本集中进行复制，只要有一个节点从 IDC1的节点1复制数据。</p>
+<h1 id="设置同步还要注意以下几点："><a href="#设置同步还要注意以下几点：" class="headerlink" title="设置同步还要注意以下几点："></a>设置同步还要注意以下几点：</h1><ul>
+<li>secondary 不会从 delayed 和 hidden 成员上复制数据。</li>
+<li>只要是需要同步，两个成员的 buildindexes 必须要相同无论是否是 true 和 false。buildindexes 主要用来设置是否这个节点的数据用于查询，默认为 true。</li>
+<li>如果同步操作30秒都没有反应，则会重新选择一个节点进行同步</li>
+</ul>
+<h1 id="状态"><a href="#状态" class="headerlink" title="状态"></a>状态</h1><p>复制集状态都保存在各自的 <code>local</code> 库里，并且不会被复制，确保每个节点只有一个本地库</p>
+<p>primary 上的复制状态还包括 secondary 节点列表，可以如下方式查看</p>
+<figure class="highlight stata"><table><tr><td class="code"><pre><span class="line">repset:PRIMARY&gt; <span class="keyword">use</span> <span class="keyword">local</span></span><br><span class="line">switched to <span class="keyword">db</span> <span class="keyword">local</span></span><br><span class="line">repset:PRIMARY&gt; <span class="keyword">db</span>.slaves.find()</span><br><span class="line">&#123; <span class="string">"_id"</span> : ObjectId(<span class="string">"546d4f22e3d8c20a0aefbfa2"</span>), <span class="string">"config"</span> : &#123; <span class="string">"_id"</span> : 1, <span class="string">"host"</span> : <span class="string">"172.16.105.129:27017"</span> &#125;, <span class="string">"ns"</span> : <span class="string">"local.oplog.rs"</span>, <span class="string">"syncedTo"</span> : Timestamp(1416449826, 1) &#125;</span><br></pre></td></tr></table></figure>
+<p><--- 未完待续="" ---=""></---></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/note/tags/mongodb复制集/" rel="tag"># mongodb复制集</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/note/django开发环境部署-四.html" rel="next" title="django开发环境部署(四)">
+                <i class="fa fa-chevron-left"></i> django开发环境部署(四)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/note/db_mongodb-sharding.html" rel="prev" title="mongodb sharding">
+                mongodb sharding <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">宋大明明</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/note/archives/">
+              
+                  <span class="site-state-item-count">78</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Bully-算法"><span class="nav-number">1.</span> <span class="nav-text">Bully 算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#选举触发条件"><span class="nav-number">2.</span> <span class="nav-text">选举触发条件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#复制集管理"><span class="nav-number">3.</span> <span class="nav-text">复制集管理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#成员数量"><span class="nav-number">4.</span> <span class="nav-text">成员数量</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#心跳"><span class="nav-number">5.</span> <span class="nav-text">心跳</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#同步"><span class="nav-number">6.</span> <span class="nav-text">同步</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#设置同步还要注意以下几点："><span class="nav-number">7.</span> <span class="nav-text">设置同步还要注意以下几点：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#状态"><span class="nav-number">8.</span> <span class="nav-text">状态</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2014 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">宋大明明</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/note/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/note/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/note/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

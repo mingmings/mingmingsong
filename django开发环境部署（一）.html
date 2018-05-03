@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/note/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/note/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/note/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/note/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/note/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/note/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/note/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="django,virtualenv," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="山有山的高度，水有水的深度，没必要攀比；风有风的自由，云有云的温柔，没必要模仿。你认为快乐的，就去寻找；你认为值得的，就去守候；你认为是幸福的，就去珍惜。没有不被评说的事，没有不被猜测的人。别太在乎别人的看法，做最真实的最朴实的自己，依心而行。才能无憾今生  之所以写这篇文章的原因在于 django 环境的确轻松搭建，之前 Ubuntu 上安装了，的确很轻松，但是后期我才知道随便做个环境出来很容易">
+<meta name="keywords" content="django,virtualenv">
+<meta property="og:type" content="article">
+<meta property="og:title" content="django开发环境部署（一）">
+<meta property="og:url" content="http://mingmings.org/note/django开发环境部署（一）.html">
+<meta property="og:site_name" content="异类深呼吸">
+<meta property="og:description" content="山有山的高度，水有水的深度，没必要攀比；风有风的自由，云有云的温柔，没必要模仿。你认为快乐的，就去寻找；你认为值得的，就去守候；你认为是幸福的，就去珍惜。没有不被评说的事，没有不被猜测的人。别太在乎别人的看法，做最真实的最朴实的自己，依心而行。才能无憾今生  之所以写这篇文章的原因在于 django 环境的确轻松搭建，之前 Ubuntu 上安装了，的确很轻松，但是后期我才知道随便做个环境出来很容易">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2015-07-12T03:56:10.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="django开发环境部署（一）">
+<meta name="twitter:description" content="山有山的高度，水有水的深度，没必要攀比；风有风的自由，云有云的温柔，没必要模仿。你认为快乐的，就去寻找；你认为值得的，就去守候；你认为是幸福的，就去珍惜。没有不被评说的事，没有不被猜测的人。别太在乎别人的看法，做最真实的最朴实的自己，依心而行。才能无憾今生  之所以写这篇文章的原因在于 django 环境的确轻松搭建，之前 Ubuntu 上安装了，的确很轻松，但是后期我才知道随便做个环境出来很容易">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/note/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://mingmings.org/note/django开发环境部署（一）.html"/>
+
+
+
+
+
+  <title>django开发环境部署（一） | 异类深呼吸</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-55424732-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?fe4164c60a9dd0e73810fa0243796a5d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/note/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">异类深呼吸</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/note/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/note/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/note/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/note/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://mingmings.org/note/note/django开发环境部署（一）.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="宋大明明">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/note/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="异类深呼吸">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">django开发环境部署（一）</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2014-10-29T14:57:20+08:00">
+                2014-10-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/note/categories/django/" itemprop="url" rel="index">
+                    <span itemprop="name">django</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote class="blockquote-center">山有山的高度，水有水的深度，没必要攀比；风有风的自由，云有云的温柔，没必要模仿。你认为快乐的，就去寻找；你认为值得的，就去守候；你认为是幸福的，就去珍惜。没有不被评说的事，没有不被猜测的人。别太在乎别人的看法，做最真实的最朴实的自己，依心而行。才能无憾今生</blockquote>
+
+<p>之所以写这篇文章的原因在于 django 环境的确轻松搭建，之前 Ubuntu 上安装了，的确很轻松，但是后期我才知道随便做个环境出来很容易到了后面很麻烦，污染了系统里的 python 版本，导致系统 python 环境异常崩溃，系统重装的 Ubuntu 的亲们你们是有感触吧，所以好多人采用 virtualenv 吧，但是期初用 virtualenv 的时候的确不需要系统的依赖包了，但是后来折腾来折腾去还是很麻烦，最后我不得已我又各种删，所以最后看到了一个哥们的文章，我才觉得找到了自己自己想要的东西了<br><a id="more"></a><br>所以重头再 mac 下已默认 python 2.7.5 为系统 python 系统版本，完全独立出来的虚拟环境，方便删除，挪动，更改环境中的各组件版本，也许我有轻微强迫症的人。不污染系统环境，不依赖于系统的 package，完全独立的 python 版本，独立的django 版本，独立的 django 依赖包，所以马上从头开始</p>
+<h2 id="一、安装-pip"><a href="#一、安装-pip" class="headerlink" title="一、安装 pip"></a>一、安装 pip</h2><p>在python中可以使用easy_install和pip安装python拓展但推荐使用pip，在stackoverflow看到个帖子，阐明了理由</p>
+<figure class="highlight stata"><table><tr><td class="code"><pre><span class="line">Don't <span class="keyword">use</span> easy_install, unless you like stabbing yourself <span class="keyword">in</span> the face. <span class="keyword">Use</span> pip.</span><br><span class="line"><span class="keyword">Two</span> reasons, there may be <span class="keyword">more</span>:</span><br><span class="line">- pip provides <span class="keyword">an</span> uninstall command</span><br><span class="line">- <span class="keyword">if</span> <span class="keyword">an</span> installation fails <span class="keyword">in</span> the middle, pip will leave you <span class="keyword">in</span> a clean state.</span><br></pre></td></tr></table></figure>
+<h3 id="1-1-pip-简介"><a href="#1-1-pip-简介" class="headerlink" title="1.1 pip 简介"></a>1.1 pip 简介</h3><p>Pip 是安装 python 包的工具，提供了安装包，列出已经安装的包，升级包以及卸载包的功能。<br>Pip 是对 easy_install 的取代，提供了和 easy_install 相同的查找包的功能，因此可以使用 easy_install 安装的包也同样可以使用pip进行安装。</p>
+<p>Pip 的安装可以通过源代码包，easy_install 或者脚本。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">因为easy_install:</span><br><span class="line"><span class="meta">$</span><span class="bash"> easy_install pip</span></span><br><span class="line"></span><br><span class="line">也可以通过这样的方式安装</span><br><span class="line"><span class="meta">#</span><span class="bash"> sudo apt-get install python-pip python-dev build-essential</span></span><br></pre></td></tr></table></figure>
+<h3 id="1-2-pip-使用"><a href="#1-2-pip-使用" class="headerlink" title="1.2 pip 使用"></a>1.2 pip 使用</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">安装 package</span><br><span class="line"><span class="meta">$</span><span class="bash"> pip install Markdown</span></span><br><span class="line"></span><br><span class="line">列出安装的packages</span><br><span class="line"><span class="meta">$</span><span class="bash"> pip freeze</span></span><br><span class="line"></span><br><span class="line">安装特定版本的package  </span><br><span class="line">通过使用==, &gt;=, &lt;=, &gt;, &lt;来指定一个版本号。  </span><br><span class="line"><span class="meta">$</span><span class="bash"> pip install Markdown&lt;2.0</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> pip install -v Markdown==2.3</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> pip install Markdown&gt;2.0,&lt;2.0.3</span></span><br><span class="line"></span><br><span class="line">升级包</span><br><span class="line">升级包到当前最新的版本，可以使用-U 或者 --upgrade</span><br><span class="line"><span class="meta">$</span><span class="bash"> pip install -U Markdown</span></span><br><span class="line"></span><br><span class="line">卸载包 </span><br><span class="line"><span class="meta">$</span><span class="bash"> pip uninstall Markdown</span></span><br><span class="line"></span><br><span class="line">查询包</span><br><span class="line">pip search Markdown</span><br><span class="line"></span><br><span class="line">更多详情</span><br><span class="line">pip help</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>国内碰到最多的问题，就是源连接超时之类的，所以下面这些方法都是针对这些情况下的</p>
+</blockquote>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">走代理</span><br><span class="line">pip install <span class="attribute">--proxy</span>=<span class="string">"http://domain\username:pwd@xxx.xxx.xxx.xxx:80"</span> Markdown</span><br><span class="line"></span><br><span class="line">如果没有代理，直接换个源下载吧，具体的源信息可以在参考链接里的 pypi<span class="built_in"> mirror </span>里找到，找到 CN 的就可以了</span><br><span class="line">pip install bpython --trusted-host e.pypi.python.org</span><br><span class="line">pip install bpython -i e.pypi.python.org/sample</span><br></pre></td></tr></table></figure>
+<h2 id="二、安装virtualenv"><a href="#二、安装virtualenv" class="headerlink" title="二、安装virtualenv"></a>二、安装virtualenv</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo pip install virtualenv</span></span><br><span class="line"></span><br><span class="line">使用方法：</span><br><span class="line">1、创建虚拟环境</span><br><span class="line"><span class="meta">$</span><span class="bash"> virtualenv env1    //创建虚拟环境env1</span></span><br></pre></td></tr></table></figure>
+<p>默认情况下，虚拟环境会依赖系统环境中的 <code>site packages</code>，就是说系统中已经安装好的第三方 package 也会安装在虚拟环境中，如果不想依赖这些 package ，那么可以加上参数 <code>--no-site-packages</code> 建立虚拟环境，可以用下面命令查看 package 安装位置</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> python -c <span class="string">"from distutils.sysconfig import get_python_lib;print(get_python_lib())"</span></span></span><br><span class="line">/usr/lib/python2.7/dist-packages    //Ubuntu下的路径</span><br><span class="line">/Library/Python/2.7/site-packages   //mac下的路径</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> virtualenv env2 --no-site-package</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这条命令安装完了之后site package就会安装到创建好的虚拟环境中，这样就实现了独立于系统之外，不污染系统了</p>
+</blockquote>
+<p>2、启用虚拟环境</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> env1</span><br><span class="line"><span class="built_in">source</span> ./bin/activate</span><br></pre></td></tr></table></figure>
+<p>注意此时命令行会多一个(env1)，ENV为虚拟环境名称，接下来所有模块都只会安装到该目录中去。</p>
+<p>3、退出虚拟环境</p>
+<figure class="highlight ebnf"><table><tr><td class="code"><pre><span class="line"><span class="attribute">deactivate</span></span><br></pre></td></tr></table></figure>
+<p>4、在虚拟环境中安装python module  </p>
+<figure class="highlight accesslog"><table><tr><td class="code"><pre><span class="line">pip install <span class="string">[套件名称]</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Virtualenv 附带有pip安装工具，因此需要安装的套件可以直接运行：</p>
+</blockquote>
+<p>如果没有启动虚拟环境，系统也安装了pip工具，那么套件将被安装在系统环境中，为了避免发生此事，可以在 ~/.bashrc 文件中加上：  </p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line"><span class="builtin-name">export</span> <span class="attribute">PIP_REQUIRE_VIRTUALENV</span>=<span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<p>或者让在执行pip的时候让系统自动开启虚拟环境：  </p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line"><span class="builtin-name">export</span> <span class="attribute">PIP_RESPECT_VIRTUALENV</span>=<span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<h2 id="三、安装-virtualenvwrapper"><a href="#三、安装-virtualenvwrapper" class="headerlink" title="三、安装 virtualenvwrapper"></a>三、安装 virtualenvwrapper</h2><p>Virtaulenvwrapper 是 virtualenv 的扩展包，用于更方便管理虚拟环境，它可以做：</p>
+<ul>
+<li>将所有虚拟环境整合在一个目录下</li>
+<li>管理（新增，删除，复制）虚拟环境</li>
+<li>快速切换虚拟环境</li>
+<li>tab 补全虚拟环境名字</li>
+<li>每個操作都提供允许使用者自己定制的 hooks</li>
+<li>可以编写比较容易分享的 extension plugin</li>
+</ul>
+<p>安装   </p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo pip install virtualenvwrapper</span></span><br></pre></td></tr></table></figure>
+<p>此时还不能使用 virtualenvwrapper，默认 virtualenvwrapper 安装在 /usr/local/bin 下面，实际上你需要运行 <code>virtualenvwrapper.sh</code> 文件才行</p>
+<p>配置.bashrc  </p>
+<figure class="highlight mel"><table><tr><td class="code"><pre><span class="line"><span class="keyword">alias</span> <span class="keyword">python</span>=<span class="string">"python2.7"</span></span><br></pre></td></tr></table></figure>
+<p>如果你的系统 python 安装的位置不是默认位置，请加上环境变量申明  </p>
+<figure class="highlight elixir"><table><tr><td class="code"><pre><span class="line">PATH=<span class="variable">$&#123;</span>PATH&#125;<span class="symbol">:/usr/local/share/python</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line">#virtualenvwrapper</span><br><span class="line"><span class="keyword">export</span> WORKON_HOME=$HOME/virtualenvs                    <span class="comment">//虚拟环境存放位置自己指定</span></span><br><span class="line">source /usr/local/bin/virtualenvwrapper.sh                <span class="comment">//指定virtualenvwrapper的执行文件路径</span></span><br><span class="line"><span class="keyword">export</span> VIRTUALENVWRAPPER_PYTHON=<span class="regexp">/usr/</span>bin/python2<span class="number">.7</span>        <span class="comment">//系统python2.7执行文件位置，根据自己环境而定</span></span><br><span class="line"><span class="keyword">export</span> VIRTUALENVWRAPPER_VIRTUALENV_ARGS=<span class="string">'--no-site-packages'</span>    <span class="comment">//启动时候指定参数，就是我们用的独立于系统的安装包</span></span><br><span class="line"><span class="keyword">export</span> PIP_VIRTUALENV_BASE=$WORKON_HOME                <span class="comment">//告知pip virtualenv的位置</span></span><br><span class="line"><span class="keyword">export</span> PIP_RESPECT_VIRTUALENV=<span class="literal">true</span>                    <span class="comment">//执行pip的时候让系统自动开启虚拟环境</span></span><br></pre></td></tr></table></figure>
+<p>如果是 mac 用户，由于 Terminal 在启动时加载的用户配置并非 .bashrc，而是 <code>~/.bash_profile</code>，所在还需要在 <code>~/.bash_profile</code> 加入<br><code>[ -r ~/.bashrc ] &amp;&amp; source ~/.bashrc</code></p>
+<p>使用方法<br>1、列出虚拟环境列表</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">workon</span><br><span class="line">或</span><br><span class="line">lsvirtualenv</span><br></pre></td></tr></table></figure>
+<p>2、新建虚拟环境</p>
+<figure class="highlight accesslog"><table><tr><td class="code"><pre><span class="line">mkvirtualenv <span class="string">[虚拟环境名称]</span></span><br></pre></td></tr></table></figure>
+<p>3、启动\切换虚拟环境</p>
+<figure class="highlight accesslog"><table><tr><td class="code"><pre><span class="line">workon <span class="string">[虚拟环境名称]</span></span><br></pre></td></tr></table></figure>
+<p>4、复制虚拟环境<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cpvirtualenv ENVNAME TARGETENVNAME</span></span><br></pre></td></tr></table></figure></p>
+<p>5、删除虚拟环境</p>
+<figure class="highlight accesslog"><table><tr><td class="code"><pre><span class="line">rmvirtualenv <span class="string">[虚拟环境名称]</span></span><br></pre></td></tr></table></figure>
+<p>6、离开虚拟环境</p>
+<figure class="highlight ebnf"><table><tr><td class="code"><pre><span class="line"><span class="attribute">deactivate</span></span><br></pre></td></tr></table></figure>
+<h2 id="四、安装-pythonbrew"><a href="#四、安装-pythonbrew" class="headerlink" title="四、安装 pythonbrew"></a>四、安装 pythonbrew</h2><p>对于日后想用不同的版本 python 进行代码测试的话自然少不了这个，接下来的内容中加上这部分</p>
+<h2 id="五、安装辅助组件"><a href="#五、安装辅助组件" class="headerlink" title="五、安装辅助组件"></a>五、安装辅助组件</h2><blockquote>
+<p>yolk是一个列出python安装包的工具</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> pip install yolk` </span></span><br><span class="line"><span class="meta">$</span><span class="bash"> yolk -l</span></span><br></pre></td></tr></table></figure>
+<h2 id="六、安装django"><a href="#六、安装django" class="headerlink" title="六、安装django"></a>六、安装django</h2><figure class="highlight elixir"><table><tr><td class="code"><pre><span class="line"><span class="comment">#安装</span></span><br><span class="line">ms<span class="variable">@mss</span><span class="symbol">:~</span><span class="variable">$ </span>workon test</span><br><span class="line">(test)ms<span class="variable">@mss</span><span class="symbol">:~</span><span class="variable">$ </span>pip install django</span><br><span class="line">    </span><br><span class="line"><span class="comment">#django安装的位置</span></span><br><span class="line">python -c <span class="string">"import sys; sys.path = sys.path[1:]; import django; print(django.__path__)"</span></span><br><span class="line">[<span class="string">'/home/ms/.virtualenvs/test/local/lib/python2.7/site-packages/django'</span>]    \\这里就是我虚拟环境中</span><br></pre></td></tr></table></figure>
+<p>到此本地的开发 django 环境也就安装完了，这样独立的开发环境，pythonbrew 安装的 python 版本，不依赖于系统，完全独立，直接删除没有任何影响，或者直接拷贝虚机环境修改里面的 python 版本和 django 版本就可以进行另外的测试了，和系统环境无关联，达到了我想要的结果，就不至于乱折腾系统了，我直接乱折腾虚拟环境</p>
+<blockquote>
+<p>参考阅读</p>
+<ul>
+<li><a href="https://github.com/yyuu/pyenv" target="_blank" rel="noopener">pyenv</a></li>
+<li><a href="http://www.pypi-mirrors.org/" target="_blank" rel="noopener">pypi mirrors</a></li>
+</ul>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/note/tags/django/" rel="tag"># django</a>
+          
+            <a href="/note/tags/virtualenv/" rel="tag"># virtualenv</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/note/工作_2014-年终总结.html" rel="prev" title="2014年年终总结">
+                2014年年终总结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">宋大明明</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/note/archives/">
+              
+                  <span class="site-state-item-count">78</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、安装-pip"><span class="nav-number">1.</span> <span class="nav-text">一、安装 pip</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-pip-简介"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 pip 简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-pip-使用"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 pip 使用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、安装virtualenv"><span class="nav-number">2.</span> <span class="nav-text">二、安装virtualenv</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、安装-virtualenvwrapper"><span class="nav-number">3.</span> <span class="nav-text">三、安装 virtualenvwrapper</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、安装-pythonbrew"><span class="nav-number">4.</span> <span class="nav-text">四、安装 pythonbrew</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、安装辅助组件"><span class="nav-number">5.</span> <span class="nav-text">五、安装辅助组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六、安装django"><span class="nav-number">6.</span> <span class="nav-text">六、安装django</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2014 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">宋大明明</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/note/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/note/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/note/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

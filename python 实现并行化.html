@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/note/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/note/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/note/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/note/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/note/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/note/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/note/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="python 并行化," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Python 在程序并行化方面学习，恰逢看到这篇文章的角度看到 python 并行化的教学显得另辟蹊径。转载自 http://www.zhangzhibo.net/2014/02/01/parallelism-in-one-line/">
+<meta name="keywords" content="python 并行化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python 并行化">
+<meta property="og:url" content="http://mingmings.org/note/python 实现并行化.html">
+<meta property="og:site_name" content="异类深呼吸">
+<meta property="og:description" content="Python 在程序并行化方面学习，恰逢看到这篇文章的角度看到 python 并行化的教学显得另辟蹊径。转载自 http://www.zhangzhibo.net/2014/02/01/parallelism-in-one-line/">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://mingmings.qiniudn.com/map.png">
+<meta property="og:updated_time" content="2015-05-04T17:15:28.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="python 并行化">
+<meta name="twitter:description" content="Python 在程序并行化方面学习，恰逢看到这篇文章的角度看到 python 并行化的教学显得另辟蹊径。转载自 http://www.zhangzhibo.net/2014/02/01/parallelism-in-one-line/">
+<meta name="twitter:image" content="http://mingmings.qiniudn.com/map.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/note/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://mingmings.org/note/python 实现并行化.html"/>
+
+
+
+
+
+  <title>python 并行化 | 异类深呼吸</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-55424732-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?fe4164c60a9dd0e73810fa0243796a5d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/note/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">异类深呼吸</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/note/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/note/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/note/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/note/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://mingmings.org/note/note/python 实现并行化.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="宋大明明">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/note/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="异类深呼吸">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">python 并行化</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-05-04T21:59:32+08:00">
+                2015-05-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/note/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Python 在程序并行化方面学习，恰逢看到这篇文章的角度看到 python 并行化的教学显得另辟蹊径。转载自 <a href="http://www.zhangzhibo.net/2014/02/01/parallelism-in-one-line/" target="_blank" rel="noopener">http://www.zhangzhibo.net/2014/02/01/parallelism-in-one-line/</a><br><a id="more"></a><br>Python 在程序并行化方面多少有些声名狼藉。撇开技术上的问题，例如线程的实现和 GIL，我觉得错误的教学指导才是主要问题。常见的经典 Python 多线程、多进程教程多显得偏“重”。而且往往隔靴搔痒，没有深入探讨日常工作中最有用的内容。</p>
+<h2 id="传统的例子"><a href="#传统的例子" class="headerlink" title="传统的例子"></a>传统的例子</h2><blockquote>
+<p>简单搜索下 “Python 多线程教程” ，不难发现几乎所有的教程都给出涉及类和队列的例子</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#Example.py</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">Standard Producer/Consumer Threading Pattern</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> time </span><br><span class="line"><span class="keyword">import</span> threading </span><br><span class="line"><span class="keyword">import</span> Queue </span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Consumer</span><span class="params">(threading.Thread)</span>:</span> </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, queue)</span>:</span> </span><br><span class="line">        threading.Thread.__init__(self)</span><br><span class="line">        self._queue = queue </span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">while</span> <span class="keyword">True</span>: </span><br><span class="line">            <span class="comment"># queue.get() blocks the current thread until </span></span><br><span class="line">            <span class="comment"># an item is retrieved. </span></span><br><span class="line">            msg = self._queue.get() </span><br><span class="line">            <span class="comment"># Checks if the current message is </span></span><br><span class="line">            <span class="comment"># the "Poison Pill"</span></span><br><span class="line">            <span class="keyword">if</span> isinstance(msg, str) <span class="keyword">and</span> msg == <span class="string">'quit'</span>:</span><br><span class="line">                <span class="comment"># if so, exists the loop</span></span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            <span class="comment"># "Processes" (or in our case, prints) the queue item   </span></span><br><span class="line">            <span class="keyword">print</span> <span class="string">"I'm a thread, and I received %s!!"</span> % msg</span><br><span class="line">        <span class="comment"># Always be friendly! </span></span><br><span class="line">        <span class="keyword">print</span> <span class="string">'Bye byes!'</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Producer</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="comment"># Queue is used to share items between</span></span><br><span class="line">    <span class="comment"># the threads.</span></span><br><span class="line">    queue = Queue.Queue()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Create an instance of the worker</span></span><br><span class="line">    worker = Consumer(queue)</span><br><span class="line">    <span class="comment"># start calls the internal run() method to </span></span><br><span class="line">    <span class="comment"># kick off the thread</span></span><br><span class="line">    worker.start() </span><br><span class="line"></span><br><span class="line">    <span class="comment"># variable to keep track of when we started</span></span><br><span class="line">    start_time = time.time() </span><br><span class="line">    <span class="comment"># While under 5 seconds.. </span></span><br><span class="line">    <span class="keyword">while</span> time.time() - start_time &amp;lt; <span class="number">5</span>: </span><br><span class="line">        <span class="comment"># "Produce" a piece of work and stick it in </span></span><br><span class="line">        <span class="comment"># the queue for the Consumer to process</span></span><br><span class="line">        queue.put(<span class="string">'something at %s'</span> % time.time())</span><br><span class="line">        <span class="comment"># Sleep a bit just to avoid an absurd number of messages</span></span><br><span class="line">        time.sleep(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># This the "poison pill" method of killing a thread. </span></span><br><span class="line">    queue.put(<span class="string">'quit'</span>)</span><br><span class="line">    <span class="comment"># wait for the thread to close down</span></span><br><span class="line">    worker.join()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    Producer()</span><br></pre></td></tr></table></figure>
+<p>哈，看起来有些像 Java 不是吗？</p>
+<p>我并不是说使用生产者/消费者模型处理多线程/多进程任务是错误的（事实上，这一模型自有其用武之地）。只是，处理日常脚本任务时我们可以使用更有效率的模型。</p>
+<h3 id="问题在于-…"><a href="#问题在于-…" class="headerlink" title="问题在于 …"></a>问题在于 …</h3><ul>
+<li>首先，你需要一个样板类；</li>
+<li>其次，你需要一个队列来传递对象；</li>
+<li>而且，你还需要在通道两端都构建相应的方法来协助其工作（如果需想要进行双向通信或是保存结果还需要再引入一个队列）。</li>
+</ul>
+<h3 id="worker-越多，问题越多"><a href="#worker-越多，问题越多" class="headerlink" title="worker 越多，问题越多"></a>worker 越多，问题越多</h3><p>按照这一思路，你现在需要一个 worker 线程的线程池。下面是 一篇 <a href="http://www.ibm.com/developerworks/aix/library/au-threadingpython/" target="_blank" rel="noopener">IBM 经典教程</a> 中的例子——在进行网页检索时通过多线程进行加速。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#Example2.py</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">A more realistic thread pool example </span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> time </span><br><span class="line"><span class="keyword">import</span> threading </span><br><span class="line"><span class="keyword">import</span> Queue </span><br><span class="line"><span class="keyword">import</span> urllib2 </span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Consumer</span><span class="params">(threading.Thread)</span>:</span> </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, queue)</span>:</span> </span><br><span class="line">        threading.Thread.__init__(self)</span><br><span class="line">        self._queue = queue </span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">while</span> <span class="keyword">True</span>: </span><br><span class="line">            content = self._queue.get() </span><br><span class="line">            <span class="keyword">if</span> isinstance(content, str) <span class="keyword">and</span> content == <span class="string">'quit'</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            response = urllib2.urlopen(content)</span><br><span class="line">        <span class="keyword">print</span> <span class="string">'Bye byes!'</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Producer</span><span class="params">()</span>:</span></span><br><span class="line">    urls = [</span><br><span class="line">        <span class="string">'http://www.python.org'</span>, <span class="string">'http://www.yahoo.com'</span></span><br><span class="line">        <span class="string">'http://www.scala.org'</span>, <span class="string">'http://www.google.com'</span></span><br><span class="line">        <span class="comment"># etc.. </span></span><br><span class="line">    ]</span><br><span class="line">    queue = Queue.Queue()</span><br><span class="line">    worker_threads = build_worker_pool(queue, <span class="number">4</span>)</span><br><span class="line">    start_time = time.time()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Add the urls to process</span></span><br><span class="line">    <span class="keyword">for</span> url <span class="keyword">in</span> urls: </span><br><span class="line">        queue.put(url)  </span><br><span class="line">    <span class="comment"># Add the poison pillv</span></span><br><span class="line">    <span class="keyword">for</span> worker <span class="keyword">in</span> worker_threads:</span><br><span class="line">        queue.put(<span class="string">'quit'</span>)</span><br><span class="line">    <span class="keyword">for</span> worker <span class="keyword">in</span> worker_threads:</span><br><span class="line">        worker.join()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">print</span> <span class="string">'Done! Time taken: &#123;&#125;'</span>.format(time.time() - start_time)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">build_worker_pool</span><span class="params">(queue, size)</span>:</span></span><br><span class="line">    workers = []</span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> range(size):</span><br><span class="line">        worker = Consumer(queue)</span><br><span class="line">        worker.start() </span><br><span class="line">        workers.append(worker)</span><br><span class="line">    <span class="keyword">return</span> workers</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    Producer()</span><br></pre></td></tr></table></figure>
+<p>这段代码能正确的运行，但仔细看看我们需要做些什么：构造不同的方法、追踪一系列的线程，还有为了解决恼人的死锁问题，我们需要进行一系列的 join 操作。这还只是开始……</p>
+<p>至此我们回顾了经典的多线程教程，多少有些空洞不是吗？样板化而且易出错，这样事倍功半的风格显然不那么适合日常使用，好在我们还有更好的方法。</p>
+<h3 id="何不试试-map"><a href="#何不试试-map" class="headerlink" title="何不试试 map"></a>何不试试 map</h3><p>map 这一小巧精致的函数是简捷实现 Python 程序并行化的关键。map 源于 Lisp 这类函数式编程语言。它可以通过一个序列实现两个函数之间的映射</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="attr">urls</span> = [<span class="string">'http://www.yahoo.com'</span>, <span class="string">'http://www.reddit.com'</span>]</span><br><span class="line"><span class="attr">results</span> = map(urllib2.urlopen, urls)</span><br></pre></td></tr></table></figure>
+<p>上面的这两行代码将 urls 这一序列中的每个元素作为参数传递到 urlopen 方法中，并将所有结果保存到 results 这一列表中。其结果大致相当于：</p>
+<figure class="highlight qml"><table><tr><td class="code"><pre><span class="line">results = []</span><br><span class="line"><span class="keyword">for</span> <span class="built_in">url</span> <span class="keyword">in</span> <span class="attribute">urls</span>: </span><br><span class="line">    results.append(urllib2.urlopen(<span class="built_in">url</span>))</span><br></pre></td></tr></table></figure>
+<p>map 函数一手包办了序列操作、参数传递和结果保存等一系列的操作。</p>
+<p>为什么这很重要呢？这是因为借助正确的库，map 可以轻松实现并行化操作。<br><img src="http://mingmings.qiniudn.com/map.png" alt="map"></p>
+<p>在 Python 中有个两个库包含了 map 函数： multiprocessing 和它鲜为人知的子库 multiprocessing.dummy.</p>
+<p>这里多扯两句： multiprocessing.dummy？ mltiprocessing 库的线程版克隆？这是虾米？即便在 multiprocessing 库的官方文档里关于这一子库也只有一句相关描述。而这句描述译成人话基本就是说:”嘛，有这么个东西，你知道就成.”相信我，这个库被严重低估了！</p>
+<p>dummy 是 multiprocessing 模块的完整克隆，唯一的不同在于 multiprocessing 作用于进程，而 dummy 模块作用于线程（因此也包括了 Python 所有常见的多线程限制）。<br>所以替换使用这两个库异常容易。你可以针对 IO 密集型任务和 CPU 密集型任务来选择不同的库。</p>
+<h3 id="动手尝试"><a href="#动手尝试" class="headerlink" title="动手尝试"></a>动手尝试</h3><p>使用下面的两行代码来引用包含并行化 map 函数的库：</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> multiprocessing import Pool</span><br><span class="line"><span class="keyword">from</span> multiprocessing.dummy import<span class="built_in"> Pool </span>as ThreadPool</span><br></pre></td></tr></table></figure>
+<p>实例化 Pool 对象：</p>
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="attr">pool</span> = ThreadPool()</span><br></pre></td></tr></table></figure>
+<p>这条简单的语句替代了 example2.py 中 build_worker_pool 函数 7 行代码的工作。它生成了一系列的 worker 线程并完成初始化工作、将它们储存在变量中以方便访问。</p>
+<p>Pool 对象有一些参数，这里我所需要关注的只是它的第一个参数：processes. 这一参数用于设定线程池中的线程数。其默认值为当前机器 CPU 的核数。</p>
+<p>一般来说，执行 CPU 密集型任务时，调用越多的核速度就越快。但是当处理网络密集型任务时，事情有有些难以预计了，通过实验来确定线程池的大小才是明智的。</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">pool = ThreadPool(4) # Sets the<span class="built_in"> pool </span>size <span class="keyword">to</span> 4</span><br></pre></td></tr></table></figure>
+<p>线程数过多时，切换线程所消耗的时间甚至会超过实际工作时间。对于不同的工作，通过尝试来找到线程池大小的最优值是个不错的主意。</p>
+<p>创建好 Pool 对象后，并行化的程序便呼之欲出了。我们来看看改写后的 example2.py</p>
+<figure class="highlight rust"><table><tr><td class="code"><pre><span class="line">import urllib2 </span><br><span class="line">from multiprocessing.dummy import Pool <span class="keyword">as</span> ThreadPool </span><br><span class="line"></span><br><span class="line">urls = [</span><br><span class="line">    <span class="symbol">'http</span>:<span class="comment">//www.python.org', </span></span><br><span class="line">    <span class="symbol">'http</span>:<span class="comment">//www.python.org/about/',</span></span><br><span class="line">    <span class="symbol">'http</span>:<span class="comment">//www.onlamp.com/pub/a/python/2003/04/17/metaclasses.html',</span></span><br><span class="line">    <span class="symbol">'http</span>:<span class="comment">//www.python.org/doc/',</span></span><br><span class="line">    <span class="symbol">'http</span>:<span class="comment">//www.python.org/download/',</span></span><br><span class="line">    <span class="symbol">'http</span>:<span class="comment">//www.python.org/getit/',</span></span><br><span class="line">    <span class="symbol">'http</span>:<span class="comment">//www.python.org/community/',</span></span><br><span class="line">    <span class="symbol">'https</span>:<span class="comment">//wiki.python.org/moin/',</span></span><br><span class="line">    <span class="symbol">'http</span>:<span class="comment">//planet.python.org/',</span></span><br><span class="line">    <span class="symbol">'https</span>:<span class="comment">//wiki.python.org/moin/LocalUserGroups',</span></span><br><span class="line">    <span class="symbol">'http</span>:<span class="comment">//www.python.org/psf/',</span></span><br><span class="line">    <span class="symbol">'http</span>:<span class="comment">//docs.python.org/devguide/',</span></span><br><span class="line">    <span class="symbol">'http</span>:<span class="comment">//www.python.org/community/awards/'</span></span><br><span class="line">    # etc.. </span><br><span class="line">    ]</span><br><span class="line"></span><br><span class="line"># Make the Pool of workers</span><br><span class="line">pool = ThreadPool(<span class="number">4</span>) </span><br><span class="line"># Open the urls <span class="keyword">in</span> their own threads</span><br><span class="line"># and <span class="keyword">return</span> the results</span><br><span class="line">results = pool.map(urllib2.urlopen, urls)</span><br><span class="line">#close the pool and wait <span class="keyword">for</span> the work to finish </span><br><span class="line">pool.close() </span><br><span class="line">pool.join()</span><br></pre></td></tr></table></figure>
+<p>实际起作用的代码只有 4 行，其中只有一行是关键的。map 函数轻而易举的取代了前文中超过 40 行的例子。为了更有趣一些，我统计了不同方法、不同线程池大小的耗时情况。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> results = [] </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="keyword">for</span> url <span class="keyword">in</span> urls:</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   result = urllib2.urlopen(url)</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   results.append(result)</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="comment"># ------- VERSUS ------- # </span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="comment"># ------- 4 Pool ------- # </span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> pool = ThreadPool(4) </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> results = pool.map(urllib2.urlopen, urls)</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="comment"># ------- 8 Pool ------- # </span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> pool = ThreadPool(8) </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> results = pool.map(urllib2.urlopen, urls)</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="comment"># ------- 13 Pool ------- # </span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> pool = ThreadPool(13) </span></span><br><span class="line"><span class="meta">#</span><span class="bash"> results = pool.map(urllib2.urlopen, urls)</span></span><br><span class="line"></span><br><span class="line">结果：</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">        Single thread:  14.4 Seconds </span></span><br><span class="line"><span class="meta">#</span><span class="bash">               4 Pool:   3.1 Seconds</span></span><br><span class="line"><span class="meta">#</span><span class="bash">               8 Pool:   1.4 Seconds</span></span><br><span class="line"><span class="meta">#</span><span class="bash">              13 Pool:   1.3 Seconds</span></span><br></pre></td></tr></table></figure>
+<p>很棒的结果不是吗？这一结果也说明了为什么要通过实验来确定线程池的大小。在我的机器上当线程池大小大于 9 带来的收益就十分有限了。</p>
+<h3 id="另一个真实的例子"><a href="#另一个真实的例子" class="headerlink" title="另一个真实的例子"></a>另一个真实的例子</h3><p>生成上千张图片的缩略图<br>这是一个 CPU 密集型的任务，并且十分适合进行并行化。</p>
+<h4 id="基础单进程版本"><a href="#基础单进程版本" class="headerlink" title="基础单进程版本"></a>基础单进程版本</h4><figure class="highlight lua"><table><tr><td class="code"><pre><span class="line">import <span class="built_in">os</span> </span><br><span class="line">import PIL </span><br><span class="line"></span><br><span class="line">from multiprocessing import Pool </span><br><span class="line">from PIL import Image</span><br><span class="line"></span><br><span class="line">SIZE = (<span class="number">75</span>,<span class="number">75</span>)</span><br><span class="line">SAVE_DIRECTORY = <span class="string">'thumbs'</span></span><br><span class="line"></span><br><span class="line">def get_image_paths(folder):</span><br><span class="line">    <span class="keyword">return</span> (<span class="built_in">os</span>.<span class="built_in">path</span>.join(folder, f) </span><br><span class="line">            <span class="keyword">for</span> f <span class="keyword">in</span> <span class="built_in">os</span>.listdir(folder) </span><br><span class="line">            <span class="keyword">if</span> <span class="string">'jpeg'</span> <span class="keyword">in</span> f)</span><br><span class="line"></span><br><span class="line">def create_thumbnail(filename): </span><br><span class="line">    im = Image.<span class="built_in">open</span>(filename)</span><br><span class="line">    im.thumbnail(SIZE, Image.ANTIALIAS)</span><br><span class="line">    base, fname = <span class="built_in">os</span>.<span class="built_in">path</span>.split(filename) </span><br><span class="line">    save_path = <span class="built_in">os</span>.<span class="built_in">path</span>.join(base, SAVE_DIRECTORY, fname)</span><br><span class="line">    im.save(save_path)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    folder = <span class="built_in">os</span>.<span class="built_in">path</span>.abspath(</span><br><span class="line">        <span class="string">'11_18_2013_R000_IQM_Big_Sur_Mon__e10d1958e7b766c3e840'</span>)</span><br><span class="line">    <span class="built_in">os</span>.mkdir(<span class="built_in">os</span>.<span class="built_in">path</span>.join(folder, SAVE_DIRECTORY))</span><br><span class="line"></span><br><span class="line">    images = get_image_paths(folder)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> image <span class="keyword">in</span> images:</span><br><span class="line">        create_thumbnail(Image)</span><br></pre></td></tr></table></figure>
+<p>上边这段代码的主要工作就是将遍历传入的文件夹中的图片文件，一一生成缩略图，并将这些缩略图保存到特定文件夹中。</p>
+<p>这我的机器上，用这一程序处理 6000 张图片需要花费 27.9 秒。</p>
+<p>如果我们使用 map 函数来代替 for 循环：</p>
+<figure class="highlight lua"><table><tr><td class="code"><pre><span class="line">import <span class="built_in">os</span> </span><br><span class="line">import PIL </span><br><span class="line"></span><br><span class="line">from multiprocessing import Pool </span><br><span class="line">from PIL import Image</span><br><span class="line"></span><br><span class="line">SIZE = (<span class="number">75</span>,<span class="number">75</span>)</span><br><span class="line">SAVE_DIRECTORY = <span class="string">'thumbs'</span></span><br><span class="line"></span><br><span class="line">def get_image_paths(folder):</span><br><span class="line">    <span class="keyword">return</span> (<span class="built_in">os</span>.<span class="built_in">path</span>.join(folder, f) </span><br><span class="line">            <span class="keyword">for</span> f <span class="keyword">in</span> <span class="built_in">os</span>.listdir(folder) </span><br><span class="line">            <span class="keyword">if</span> <span class="string">'jpeg'</span> <span class="keyword">in</span> f)</span><br><span class="line"></span><br><span class="line">def create_thumbnail(filename): </span><br><span class="line">    im = Image.<span class="built_in">open</span>(filename)</span><br><span class="line">    im.thumbnail(SIZE, Image.ANTIALIAS)</span><br><span class="line">    base, fname = <span class="built_in">os</span>.<span class="built_in">path</span>.split(filename) </span><br><span class="line">    save_path = <span class="built_in">os</span>.<span class="built_in">path</span>.join(base, SAVE_DIRECTORY, fname)</span><br><span class="line">    im.save(save_path)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    folder = <span class="built_in">os</span>.<span class="built_in">path</span>.abspath(</span><br><span class="line">        <span class="string">'11_18_2013_R000_IQM_Big_Sur_Mon__e10d1958e7b766c3e840'</span>)</span><br><span class="line">    <span class="built_in">os</span>.mkdir(<span class="built_in">os</span>.<span class="built_in">path</span>.join(folder, SAVE_DIRECTORY))</span><br><span class="line"></span><br><span class="line">    images = get_image_paths(folder)</span><br><span class="line"></span><br><span class="line">    pool = Pool()</span><br><span class="line">    pool.map(creat_thumbnail, images)</span><br><span class="line">    pool.<span class="built_in">close</span>()</span><br><span class="line">    pool.join()</span><br></pre></td></tr></table></figure>
+<p>5.6 秒！</p>
+<p>虽然只改动了几行代码，我们却明显提高了程序的执行速度。在生产环境中，我们可以为 CPU 密集型任务和 IO 密集型任务分别选择多进程和多线程库来进一步提高执行速度——这也是解决死锁问题的良方。此外，由于 map 函数并不支持手动线程管理，反而使得相关的 debug 工作也变得异常简单。</p>
+<p>到这里，我们就实现了（基本）通过一行 Python 实现并行化。</p>
+<p>原文网址：<a href="https://medium.com/building-things-on-the-internet/40e9b2b36148" target="_blank" rel="noopener">https://medium.com/building-things-on-the-internet/40e9b2b36148</a></p>
+<h3 id="Update"><a href="#Update" class="headerlink" title="Update:"></a>Update:</h3><p>译文已获作者 Chris 授权 <a href="https://medium.com/building-things-on-the-internet/40e9b2b36148#66bf-f06f781cb52b" target="_blank" rel="noopener">https://medium.com/building-things-on-the-internet/40e9b2b36148#66bf-f06f781cb52b</a></p>
+<h3 id="更多阅读"><a href="#更多阅读" class="headerlink" title="更多阅读"></a>更多阅读</h3><ul>
+<li><a href="http://www.zhangzhibo.net/2014/02/01/parallelism-in-one-line/" target="_blank" rel="noopener">一行 Python 实现并行化</a></li>
+<li><a href="https://medium.com/@thechriskiehl/parallelism-in-one-line-40e9b2b36148" target="_blank" rel="noopener">Parallelism in one line </a></li>
+<li><a href="http://stackoverflow.com/questions/3044580/multiprocessing-vs-threading-python" target="_blank" rel="noopener">关于 GIL（Global Interpretor Lock，全局解释器锁）更多的讨论</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/note/tags/python-并行化/" rel="tag"># python 并行化</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/note/zabbix-配置文件详解-转.html" rel="next" title="zabbix 配置文件详解">
+                <i class="fa fa-chevron-left"></i> zabbix 配置文件详解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/note/线程池原理及 python 实现.html" rel="prev" title="线程池原理及 python 实现">
+                线程池原理及 python 实现 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">宋大明明</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/note/archives/">
+              
+                  <span class="site-state-item-count">78</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#传统的例子"><span class="nav-number">1.</span> <span class="nav-text">传统的例子</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#问题在于-…"><span class="nav-number">1.1.</span> <span class="nav-text">问题在于 …</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#worker-越多，问题越多"><span class="nav-number">1.2.</span> <span class="nav-text">worker 越多，问题越多</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#何不试试-map"><span class="nav-number">1.3.</span> <span class="nav-text">何不试试 map</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动手尝试"><span class="nav-number">1.4.</span> <span class="nav-text">动手尝试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#另一个真实的例子"><span class="nav-number">1.5.</span> <span class="nav-text">另一个真实的例子</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#基础单进程版本"><span class="nav-number">1.5.1.</span> <span class="nav-text">基础单进程版本</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Update"><span class="nav-number">1.6.</span> <span class="nav-text">Update:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#更多阅读"><span class="nav-number">1.7.</span> <span class="nav-text">更多阅读</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2014 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">宋大明明</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/note/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/note/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/note/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

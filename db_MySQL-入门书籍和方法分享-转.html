@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/note/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/note/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/note/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/note/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/note/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/note/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/note/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="mysql 入门书籍和方法分享," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="这篇看到一个别人的帖子，介绍了 MySQL 的一些方法和书籍，自己补充一些学习资源和网站，可能并不是特别完全，有更好的资源保持更新">
+<meta name="keywords" content="mysql 入门书籍和方法分享">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL 入门书籍和方法分享(转)">
+<meta property="og:url" content="http://mingmings.org/note/db_MySQL-入门书籍和方法分享-转.html">
+<meta property="og:site_name" content="异类深呼吸">
+<meta property="og:description" content="这篇看到一个别人的帖子，介绍了 MySQL 的一些方法和书籍，自己补充一些学习资源和网站，可能并不是特别完全，有更好的资源保持更新">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-04-22T15:48:24.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MySQL 入门书籍和方法分享(转)">
+<meta name="twitter:description" content="这篇看到一个别人的帖子，介绍了 MySQL 的一些方法和书籍，自己补充一些学习资源和网站，可能并不是特别完全，有更好的资源保持更新">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/note/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://mingmings.org/note/db_MySQL-入门书籍和方法分享-转.html"/>
+
+
+
+
+
+  <title>MySQL 入门书籍和方法分享(转) | 异类深呼吸</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-55424732-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?fe4164c60a9dd0e73810fa0243796a5d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/note/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">异类深呼吸</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/note/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/note/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/note/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/note/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://mingmings.org/note/note/db_MySQL-入门书籍和方法分享-转.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="宋大明明">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/note/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="异类深呼吸">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">MySQL 入门书籍和方法分享(转)</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-04-09T15:13:29+08:00">
+                2015-04-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/note/categories/DB/" itemprop="url" rel="index">
+                    <span itemprop="name">DB</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这篇看到一个别人的帖子，介绍了 <code>MySQL</code> 的一些方法和书籍，自己补充一些学习资源和网站，可能并不是特别完全，有更好的资源保持更新<br><a id="more"></a></p>
+<h2 id="一、SQL-入门"><a href="#一、SQL-入门" class="headerlink" title="一、SQL 入门"></a>一、SQL 入门</h2><p>在准备成为 <code>MySQL DBA</code> 之前，能熟练的编写 <code>SQL</code> 是一个必要条件。<code>exists</code> 和 <code>join</code> 之间的等价转换；基本的行列转换；<code>SQL</code> 循环等的熟练掌握对之后的运维和调优工作都有很大的帮助。</p>
+<p>推荐书籍：</p>
+<ul>
+<li><p>SQL Cookbook<br>一本循序渐进的 <code>SQL</code> 指导手册。每一种业务需求，书中都用 <code>MySQL</code>，<code>SQL Server</code>，<code>Oracle</code> 三种语法进行解析。可以顺序的作为学习书籍，也可以之后作为工具书籍查阅</p>
+</li>
+<li><p>The Art of SQL<br>将 <code>SQL</code> 调优模拟成一场战役，进行战术分析。更多的是传授SQL架构设计方面的知识，实际的调优实例不多，翻译很烂，建议看原版</p>
+</li>
+<li><p>SQL应用重构</p>
+</li>
+<li>MySQL Stored Procedure Programming<br>学习 <code>MySQL</code> 存储过程语法和编写的最好教材。虽然版本比较老，但是大部分的语法都没有变更，比较推荐</li>
+</ul>
+<h2 id="二、SQL-进阶-amp-精通"><a href="#二、SQL-进阶-amp-精通" class="headerlink" title="二、SQL 进阶 &amp; 精通"></a>二、SQL 进阶 &amp; 精通</h2><p>如果你已经熟练掌握了基本的SQL编写技巧，就可以进入对于MySQL产品本身的入门学习了</p>
+<p>推荐书籍:</p>
+<ul>
+<li><p>High Performance MySQL<br><code>MySQL</code> 界的圣经，目前已经出到第三版。非常详细的介绍了 <code>MySQL</code> 运维的各个部分，可以通读了解，也可以作为工具书进行查阅</p>
+</li>
+<li><p>深入浅出MySQL数据库开发、优化与管理维护<br>中文原创书籍中比较适合入门的一本。教粗浅的介绍了 <code>MySQL</code> 的相关特性，比较适合 MySQL 运维的入门</p>
+</li>
+<li><p>MySQL技术内幕 innodb 存储引擎<br>很详细的从代码层面分析了 <code>Innodb</code> 的内部结构，适合深入学习 <code>innodb</code>。</p>
+</li>
+</ul>
+<h2 id="三、其他"><a href="#三、其他" class="headerlink" title="三、其他"></a>三、其他</h2><p><code>MySQL</code> 入门除了通过书本学习理论知识以外还有其他各种方式可以进行学习<br>推荐书籍：</p>
+<ul>
+<li><p>Our Episode<br>一个类似于 <code>MySQL</code> 电台的节目 ，每周会定期出一个音频讨论一个 <code>MySQL</code> 话题。 是学习 <code>MySQL&amp;学习英语</code> 的好选择</p>
+</li>
+<li><p>MySQL Planet<br>几乎涵盖了所有 <code>MySQL</code> 业界大牛的博客 RSS 汇总。强烈建议订阅</p>
+</li>
+<li><p>MOOC<br>各类公开课程网站都会有免费得 <code>MySQL</code> 入门课程试听。这里就不一一列举了</p>
+</li>
+</ul>
+<h2 id="四、运维-amp-数据思想"><a href="#四、运维-amp-数据思想" class="headerlink" title="四、运维 &amp; 数据思想"></a>四、运维 &amp; 数据思想</h2><p>推荐书籍：</p>
+<ul>
+<li><p>The Art of Capacity Planning<br>作为运维免不了要做容量规划和容量预测。这本书是一个很好的开始</p>
+</li>
+<li><p>Beautiful Data: The Stories Behind Elegant Data Solutions<br>数据库运维对于数据的敏感是一个重要特质。</p>
+</li>
+</ul>
+<h2 id="五、第三方下载"><a href="#五、第三方下载" class="headerlink" title="五、第三方下载"></a>五、第三方下载</h2><ul>
+<li><a href="http://ftp.nchu.edu.tw/Unix/Database/MySQL/Downloads/" target="_blank" rel="noopener">http://ftp.nchu.edu.tw/Unix/Database/MySQL/Downloads/</a></li>
+<li><a href="http://mirrors.sohu.com/mysql" target="_blank" rel="noopener">http://mirrors.sohu.com/mysql</a></li>
+<li><a href="http://mirrors.163.com/" target="_blank" rel="noopener">http://mirrors.163.com/</a></li>
+<li><a href="http://mirrors.aliyun.com/" target="_blank" rel="noopener">http://mirrors.aliyun.com/</a></li>
+<li><a href="http://mirrors.yun-idc.com/" target="_blank" rel="noopener">http://mirrors.yun-idc.com/</a></li>
+</ul>
+<h2 id="官方站点"><a href="#官方站点" class="headerlink" title="官方站点"></a>官方站点</h2><ul>
+<li><a href="http://dev.mysql.com/downloads/mysql/" target="_blank" rel="noopener">http://dev.mysql.com/downloads/mysql/</a> community server</li>
+<li><a href="http://dev.mysql.com/downloads/repo/yum/" target="_blank" rel="noopener">http://dev.mysql.com/downloads/repo/yum/</a> 官方yum源</li>
+<li><a href="http://dev.mysql.com/downloads/repo/apt/" target="_blank" rel="noopener">http://dev.mysql.com/downloads/repo/apt/</a> 官方apt源</li>
+<li><a href="http://www.percona.com/" target="_blank" rel="noopener">http://www.percona.com/</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/note/tags/mysql-入门书籍和方法分享/" rel="tag"># mysql 入门书籍和方法分享</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/note/db_redis-数据备份.html" rel="next" title="redis 数据备份">
+                <i class="fa fa-chevron-left"></i> redis 数据备份
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/note/db_mongodb-常见错误及解决办法.html" rel="prev" title="mongodb 常见错误及解决办法">
+                mongodb 常见错误及解决办法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微博</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">宋大明明</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/note/archives/">
+              
+                  <span class="site-state-item-count">78</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、SQL-入门"><span class="nav-number">1.</span> <span class="nav-text">一、SQL 入门</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、SQL-进阶-amp-精通"><span class="nav-number">2.</span> <span class="nav-text">二、SQL 进阶 &amp; 精通</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、其他"><span class="nav-number">3.</span> <span class="nav-text">三、其他</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、运维-amp-数据思想"><span class="nav-number">4.</span> <span class="nav-text">四、运维 &amp; 数据思想</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、第三方下载"><span class="nav-number">5.</span> <span class="nav-text">五、第三方下载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#官方站点"><span class="nav-number">6.</span> <span class="nav-text">官方站点</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2014 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">宋大明明</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/note/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/note/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/note/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/note/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/note/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
